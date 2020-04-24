@@ -41,20 +41,6 @@ video_schema = VideoSchema()
 videos_schema = VideoSchema(many=True)
 
 
-videos = [
-    {
-        'author_user': 'Frank',
-        'title': 'Mi Tutorial',
-        'desc': 'Mi primer tutorial!',
-    },
-    {
-        'author_user': 'Frank',
-        'title': 'Mis vacaciones',
-        'desc': 'Mi primer vlog',
-    }
-]
-
-
 @app.route('/video', methods=['POST'])
 def add_video():
 
