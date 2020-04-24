@@ -1,0 +1,14 @@
+sudo: required
+language: python
+python:
+- '3.6'
+services:
+- docker
+install: 
+script:
+- docker build -t chotuve-appserver .
+deploy:
+  provider: heroku
+  api_key:
+    secure: gCJRwzvfhl+MyokcefYu+gUM99Oa+rDRxMPgeaym1P/73xAndOWjvOuWrx5dBDOWR3uOhOyhhFb4TsYRqPWHfx8LsxI3deXcNrxhZI/E7MERp3E2GOX4udFQfGwbNPeYU7zRHb4Ki4EWDXk+AS7K7I5rXW0dAZfMpqIceuE//f7cXBSocqjlBBeKVFsHEMCMyYCz7oVT83U0y+za3qIXrDlNAVQS2w4SEkBY8KkB3Ap9FjMsovRNNLUSPIE+KFSX1EBRTj3nrX/nl2qkJQczT/6obP2bjK3kxkA9a2IOhWqS3AWjoW3xLAnuj6jaMMID2tCuK96DP6frAM9xi20sKT5AmSP9HrR5t3gYMuRhLy/AKIPKM57hocYk7F+QfJ0e/m0Bp7d9cFsgSz403/fXze0i6/+2KQnCxFdUulIYKCIdORQnVl/2dAzgM/JdZ/O2ESQ/C/IcEGPFFFg69X6OzoBRCvT8LqPtQGNhq71g/b5/th35hto0tCwaPKgxYtLcrCv/zfuJA3CgwD5VUWe1dI0dVSqmvAOyNlYO3ieSoYDTVA0Fm1rl8lYl2Swovw0DdJ1MRoeCWjES7+8dfMvpaXUjB7W/0IpW971ZU2ExvHpyuUZetLBNIcqxlOlVIe/HPyXrpRVaTZTUPzo+N8ndoZZlmzUE46sGSzr3Cr1lSoA=
+  on: master
