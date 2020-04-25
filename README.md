@@ -1,22 +1,25 @@
 # Chotuve - Application Server
+Grupo 11
+
+--------------
 
 
-### Requisitos para el desarrollo
-- [Docker Engine](https://docs.docker.com/engine/install/)
+## Instrucciones: dos opciones
 
-### Instrucciones
+#### Si se prefiere Docker
 
-#### Docker
+1. Instalar [Docker Engine](https://docs.docker.com/engine/install/)
 
-1. Buildear la imagen:
+
+2. Buildear la imagen:
 `docker build -t chotuve-appserver:latest .`
 
-2. Correr el servidor:
+3. Correr el servidor:
 `docker run -p 5000:5000 chotuve-appserver:latest`
 
-3. Probar la REST API en `0.0.0.0:5000`
+4. Probar la REST API en `0.0.0.0:5000`
 
-#### Local OS con `virtualenv`
+#### Si se prefiere Local OS con `virtualenv`
 
 
 1. Instalar herramienta virtualenv
@@ -47,10 +50,10 @@ gunicorn wsgi --log-file -
 
 6. Probar la REST API en `0.0.0.0:5000`
 
+---------------------------------------------
 
 
-
-### API
+## API
 
 - Obtener videos guardados en la database:
 `GET en 0.0.0.0:5000/video`
