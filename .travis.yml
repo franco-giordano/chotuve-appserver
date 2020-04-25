@@ -3,6 +3,7 @@ python:
 - '3.6'
 services:
 - docker
+if: commit_message !~ /(no-travis|wip)/
 install: 
 script:
 - docker build -t chotuve-appserver .
