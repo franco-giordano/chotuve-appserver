@@ -134,6 +134,11 @@ def post_reaction(id):
 
 #     return video_schema.jsonify(vid)
 
+@app.route('/user/<username>/videos', methods=['GET'])
+def get_videos_by_user(username):
+    videos=Video.query.filter(Video.username == username)
+    return jsonify([v.serialize() for v in videos])
+
 
 
 @app.errorhandler(404)
