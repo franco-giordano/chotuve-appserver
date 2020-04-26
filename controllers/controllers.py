@@ -1,4 +1,4 @@
-from models.models import Video, Comment
+from models.models import Video, Comment, VideoReaction
 
 from flask import request, jsonify, make_response, abort
 from run import app
@@ -84,6 +84,41 @@ def get_comments(id):
 
 
     return jsonify([c.serialize() for c in original_vid.comments])
+
+
+@app.route('/video/<id>/reactions', methods=['GET'])
+def get_reactions(id):
+    original_vid = Video.query.get(id)
+
+    if not original_vid:
+        return make_response(jsonify({'error': 'No video found with this ID'}), 404)
+
+
+    return jsonify([c.serialize() for c in original_vid.reactions])
+
+
+
+@app.route('/video/<id>/reactions', methods=['POST'])
+def post_reaction(id):
+
+    if not request.json or not 'username' in request.json or not 'likes_video' in request.json:
+        abort(400)
+
+    original_vid = Video.query.get(id)
+
+    if not original_vid:
+        return make_response(jsonify({'error': 'No video found with this ID'}), 404)
+
+    username = request.json['username']
+    likes_video = request.json['likes_video']
+
+    new_rctn = VideoReaction(username=username, likes_video=likes_video)
+    new_rctn.video = original_vid
+
+    db.session.add(new_rctn)
+    db.session.commit()
+
+    return jsonify(new_rctn.serialize())
 
 # @app.route('/video/<id>', methods=['DELETE'])
 # def delete_single_vid(id):
