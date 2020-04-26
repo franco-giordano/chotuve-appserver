@@ -7,7 +7,7 @@ Grupo 11
 1. Instalar y [configurar PostgreSQL con este video](https://www.youtube.com/watch?v=-LwI4HMR_Eg)
 
 2. Crear base de datos y migrarla
-```
+```bash
 createdb chotuve-appserver-dev
 createdb chotuve-appserver-prod
 
