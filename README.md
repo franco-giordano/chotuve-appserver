@@ -90,15 +90,14 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 - Obtener todos los videos guardados en la database:
 `GET 0.0.0.0:5000/video`
 
-- Obtener datos de un solo video:
+- Obtener datos de un solo video (sin comentarios):
 `GET 0.0.0.0:5000/video/<id>`
 
 - Obtener todos los comentarios de un video:
 `GET 0.0.0.0:5000/video/<id>/comments`
 
 - Postear un video:
-`POST 0.0.0.0:5000/video`
-con body:
+`POST 0.0.0.0:5000/video` con body:
 ```json
 {
 	
@@ -111,7 +110,7 @@ con body:
 ```
 
 - Postear un comentario:
-`POST 0.0.0.0:5000/video/<id>/comments`
+`POST 0.0.0.0:5000/video/<id>/comments` con body:
 ```json
 {
 	
@@ -121,5 +120,22 @@ con body:
 }
 ```
 
+- Obtener todas las reacciones a un video (username + like/dislike):
+`GET 0.0.0.0:5000/video/<id>/reactions` (en la respuesta: likes_video es true si es like, false si es dislike)
 
-_...a documentar_
+
+- Reaccionar a un video:
+`POST 0.0.0.0:5000/video/<id>/reactions` con body (true es like, false es dislike):
+```json
+{
+	
+	"username": "nombre_usuario",
+	"likes_video":true
+	
+}
+```
+_si el usuario ya reacciono al video, se actualiza su reaccion, no se crea una nueva_
+
+- Obtener videos subidos por un usuario
+```GET 0.0.0.0:5000/user/<username>/videos```
+
