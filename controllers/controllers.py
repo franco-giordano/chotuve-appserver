@@ -93,7 +93,6 @@ def get_reactions(id):
     if not original_vid:
         return make_response(jsonify({'error': 'No video found with this ID'}), 404)
 
-
     return jsonify([c.serialize() for c in original_vid.reactions])
 
 
@@ -112,13 +111,19 @@ def post_reaction(id):
     username = request.json['username']
     likes_video = request.json['likes_video']
 
-    new_rctn = VideoReaction(username=username, likes_video=likes_video)
-    new_rctn.video = original_vid
+    for r in original_vid.reactions:
+        if r.username == username:
+            r.likes_video = likes_video
+            db.session.commit()
+            return jsonify(r.serialize())
 
-    db.session.add(new_rctn)
+    rctn = VideoReaction(username=username, likes_video=likes_video)
+    rctn.video = original_vid
+
+    db.session.add(rctn)
     db.session.commit()
 
-    return jsonify(new_rctn.serialize())
+    return jsonify(rctn.serialize())
 
 # @app.route('/video/<id>', methods=['DELETE'])
 # def delete_single_vid(id):
@@ -136,9 +141,9 @@ def not_found(error):
     return make_response(jsonify({'error': 'Resource not found'}), 404)
 
 
-# @app.errorhandler(400)
-# def not_found(error):
-#     return make_response(jsonify({'error': 'Bad Request'}), 404)
+@app.errorhandler(400)
+def bad_req(error):
+    return make_response(jsonify({'error': 'Bad Request'}), 400)
 
 # @app.route('/')
 # def hi():

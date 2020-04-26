@@ -67,7 +67,6 @@ class Comment(db.Model):
         return '<Comment {}-{}>'.format(self.author_id, self.timestamp)
 
     def serialize(self):
-        print(self.video)
         return {
             'comment_id': self.id, 
             'comment_username': self.comment_username,
@@ -93,7 +92,6 @@ class VideoReaction(db.Model):
         return '<Reaction {}-{}>'.format(self.username, self.likes_video)
 
     def serialize(self):
-        print(self.video)
         return {
             'reaction_id': self.id, 
             'username': self.username,
