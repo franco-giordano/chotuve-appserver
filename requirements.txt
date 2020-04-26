@@ -1,6 +1,8 @@
-flask
-flask-sqlalchemy
-flask_script
-flask_migrate
-psycopg2-binary
-gunicorn
+Flask
+Flask-Migrate
+Flask-Script
+Flask-SQLAlchemy
+psycopg2-binary --no-binary psycopg2
+python-dotenv
+PyJWT
+requests
