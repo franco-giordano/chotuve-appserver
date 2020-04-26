@@ -115,7 +115,7 @@ con body:
 ```json
 {
 	
-	"author_user": "nombre_usuario",
+	"comment_username": "nombre_usuario",
 	"text":"comentario de ejemplo"
 	
 }
