@@ -2,11 +2,14 @@
 Grupo 11
 
 --------------
+## Pre Instrucciones
 
+1. Instalar y configurar PostgreSQL
+_... a documentar_
 
 ## Instrucciones: dos opciones
 
-#### Si se prefiere Docker
+#### ~~Si se prefiere Docker~~ roto hasta nuevo aviso, usar virtualenv
 
 1. Instalar [Docker Engine](https://docs.docker.com/engine/install/)
 
@@ -43,9 +46,9 @@ source venv/bin/activate
 pip install -Ur requirements.txt
 ```
 
-5. Ejecutar
+5. Ejecutar en debug mode
 ```
-gunicorn wsgi --log-file -
+flask run
 ```
 
 6. Probar la REST API en `0.0.0.0:5000`
@@ -53,9 +56,43 @@ gunicorn wsgi --log-file -
 ---------------------------------------------
 
 
-## API
+## API v0.1
 
-- Obtener videos guardados en la database:
-`GET en 0.0.0.0:5000/video`
+Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
+
+- Obtener todos los videos guardados en la database:
+`GET 0.0.0.0:5000/video`
+
+- Obtener datos de un solo video:
+`GET 0.0.0.0:5000/video/<id>`
+
+- Obtener todos los comentarios de un video:
+`GET 0.0.0.0:5000/video/<id>/comments`
+
+- Postear un video:
+`POST 0.0.0.0:5000/video`
+con body:
+```json
+{
+	
+	"username": "nombre_usuario",
+	"title":"titulo video",
+    "description": "descripcion de ejemplo",
+	"location":"lugar posteado"
+	
+}
+```
+
+- Postear un comentario:
+`POST 0.0.0.0:5000/video/<id>/comments`
+```json
+{
+	
+	"author_user": "nombre_usuario",
+	"text":"comentario de ejemplo"
+	
+}
+```
+
 
 _...a documentar_
