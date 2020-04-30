@@ -4,7 +4,6 @@
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
---------------
 ## Pre Instrucciones
 
 1. Instalar y [configurar PostgreSQL con este video](https://www.youtube.com/watch?v=-LwI4HMR_Eg)
