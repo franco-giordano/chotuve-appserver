@@ -4,83 +4,17 @@
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
-## Pre Instrucciones
 
-1. Instalar y [configurar PostgreSQL con este video](https://www.youtube.com/watch?v=-LwI4HMR_Eg)
+## Instrucciones
 
-2. Crear base de datos y migrarla
-```bash
-createdb chotuve-appserver-dev
-createdb chotuve-appserver-prod
+1. Instalar [Docker Engine](https://docs.docker.com/engine/install/) y [Docker Compose](https://docs.docker.com/compose/install/)
 
-cd chotuve-appserver
-python3 manage.py db init
-python3 manage.py db migrate
-python3 manage.py db upgrade
-```
-
-3. Reemplazar `franco_g` y `chotuve` por tu user y password de PostgreSQL en archivo .env:
-```bash
-...
-export DATABASE_DEV_URL="...franco_g:chotuve..."
-export DATABASE_PROD_URL="...franco_g:chotuve..."
-
-```
-
-## Instrucciones: dos opciones
-
-#### Si se prefiere Docker (sin gunicorn ni live update)
-
-1. Instalar [Docker Engine](https://docs.docker.com/engine/install/)
-
-2. Buildear la imagen:
-```
-docker build -t chotuve-appserver:latest .
-```
-
-3. Correr el servidor:
-```
-docker run --net host -p 5000:5000 chotuve-appserver
-```
+2. Levantar server + database
+```docker-compose up```
 
 4. Probar la REST API en `0.0.0.0:5000`
 
-#### Si se prefiere Local OS con `virtualenv` (con gunicorn y live update)
 
-
-1. Instalar herramienta virtualenv
-```
-pip3 install virtualenv
-```
-
-2. Crear un virtualenv en la carpeta del proyecto
-```
-cd chotuve-appserver
-virtualenv -p python3 venv
-```
-
-3. Activarlo
-```
-source venv/bin/activate
-```
-
-4. Ya activado el venv, instalamos dependencias
-```
-pip install -Ur requirements.txt
-```
-
-5. Definir variables de entorno:
-```
-source .env
-```
-
-
-6. Ejecutar en debug mode
-```
-gunicorn -b 0.0.0.0:5000 --reload run:app
-```
-
-7. Probar la REST API en `0.0.0.0:5000`
 
 ---------------------------------------------
 

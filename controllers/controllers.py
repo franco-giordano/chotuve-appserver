@@ -139,6 +139,9 @@ def get_videos_by_user(username):
     videos=Video.query.filter(Video.username == username)
     return jsonify([v.serialize() for v in videos])
 
+@app.route('/status', methods=['GET'])
+def status():
+    return jsonify({'appserver':'UP'})
 
 
 @app.errorhandler(404)
