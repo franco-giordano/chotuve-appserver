@@ -19,8 +19,7 @@ class Video(db.Model):
     comments = db.relationship('Comment', backref='video')
     reactions = db.relationship('VideoReaction', backref='video')
 
-
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    # EL TIMESTAMP LO GUARDA EL MEDIASV!!!
 
     def count_likes(self):
         likes=0
@@ -48,7 +47,6 @@ class Video(db.Model):
             'is_private': self.is_private,
             'likes':self.count_likes(),
             'dislikes':self.count_dislikes(),
-            'timestamp':self.timestamp,
         }
 
 class Comment(db.Model):
