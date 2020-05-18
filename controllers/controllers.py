@@ -5,10 +5,32 @@ from run import app
 
 from app import db
 
+from services.authsender import AuthSender
+from services.mediasender import MediaSender
 
+from functools import wraps
+import requests, os
 
+def token_required(f):
+
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            return make_response({'error' : 'Missing user token!'}, 401)
+
+        if not AuthSender.is_valid_token(token):
+            return make_response({'message' : 'Token is invalid!'}, 401)
+
+        return f(*args, **kwargs)
+
+    return decorated
 
 @app.route('/video', methods=['POST'])
+@token_required
 def add_video():
 
     if not request.json or not 'username' in request.json:
@@ -18,8 +40,12 @@ def add_video():
     title = request.json['title']
     description = request.json['description']
     location = request.json['location']
+    fb_url = request.json['firebase-url']
+
 
     new_vid = Video(title=title, description=description, username=user, location=location)
+
+    MediaSender.send_url_to_mediasv(new_vid.id,fb_url)
 
     db.session.add(new_vid)
     db.session.commit()
@@ -30,15 +56,30 @@ def add_video():
 
 
 @app.route('/video', methods=['GET'])
+@token_required
 def get_videos():
-    videos=Video.query.all()
-    return jsonify([v.serialize() for v in videos])
+    videos = Video.query.all()
+    videos = [v.serialize() for v in videos]
+
+    for video in videos:
+        video['firebase-url'] = MediaSender.get_url_from_mediasv(video['video_id'])
+
+    return jsonify(videos)
 
 
 @app.route('/video/<id>', methods=['GET'])
+@token_required
 def get_video(id):
     video=Video.query.get(id)
-    return jsonify(video.serialize())
+
+    if not video:
+        return make_response(jsonify({'error': 'No video found with this ID'}), 404)
+
+    serialized_video = video.serialize()
+
+    serialized_video['firebase-url'] = MediaSender.get_url_from_mediasv(video.id)
+
+    return jsonify(serialized_video)
 
 
 # @app.route('/video/<id>', methods=['GET'])
@@ -52,6 +93,7 @@ def get_video(id):
 
 
 @app.route('/video/<id>/comments', methods=['POST'])
+@token_required
 def post_comment(id):
 
     if not request.json or not 'comment_username' in request.json:
@@ -75,6 +117,7 @@ def post_comment(id):
     return jsonify(new_cmnt.serialize())
 
 @app.route('/video/<id>/comments', methods=['GET'])
+@token_required
 def get_comments(id):
     original_vid = Video.query.get(id)
 
@@ -87,6 +130,7 @@ def get_comments(id):
 
 
 @app.route('/video/<id>/reactions', methods=['GET'])
+@token_required
 def get_reactions(id):
     original_vid = Video.query.get(id)
 
@@ -98,6 +142,7 @@ def get_reactions(id):
 
 
 @app.route('/video/<id>/reactions', methods=['POST'])
+@token_required
 def post_reaction(id):
 
     if not request.json or not 'username' in request.json or not 'likes_video' in request.json:
@@ -135,6 +180,7 @@ def post_reaction(id):
 #     return video_schema.jsonify(vid)
 
 @app.route('/user/<username>/videos', methods=['GET'])
+@token_required
 def get_videos_by_user(username):
     videos=Video.query.filter(Video.username == username)
     return jsonify([v.serialize() for v in videos])
