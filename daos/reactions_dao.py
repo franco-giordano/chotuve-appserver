@@ -3,7 +3,7 @@ from app import db
 
 from flask_restful import abort
 
-from daos.videos_dao import VideoDAO
+import daos.videos_dao
 
 from models.models import VideoReaction
 
@@ -13,7 +13,7 @@ class ReactionDAO():
     def add_rctn(cls, vid_id, uuid,likes):
         with app.app_context():
             new_rctn = VideoReaction(uuid=uuid, likes_video=likes)
-            original_vid = VideoDAO.get_raw(vid_id)
+            original_vid = daos.videos_dao.VideoDAO.get_raw(vid_id)
 
             for r in original_vid.reactions:
                 if r.uuid == uuid:
@@ -30,7 +30,7 @@ class ReactionDAO():
     @classmethod
     def get_all_from(cls, vid_id):
         with app.app_context():
-            vid =  VideoDAO.get_raw(vid_id)
+            vid =  daos.videos_dao.VideoDAO.get_raw(vid_id)
 
             return [r.serialize() for r in vid.reactions]
 

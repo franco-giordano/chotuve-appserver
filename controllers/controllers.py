@@ -5,6 +5,7 @@ from run import app
 from resources.videos_routes import VideoRoute, UniqueVideoRoute
 from resources.comments_routes import CommentRoute
 from resources.reactions_route import ReactionRoute
+from resources.user_routes import UniqueUserRoute, UniqueUserVidsRoute
 
 api = Api(app)
 
@@ -21,14 +22,20 @@ def bad_req(error):
 
 
 api.add_resource(VideoRoute, '/video')
-api.add_resource(UniqueVideoRoute, '/video/<vid_id>')
-api.add_resource(CommentRoute, '/video/<vid_id>/comments')
-api.add_resource(ReactionRoute, '/video/<vid_id>/reactions')
+api.add_resource(UniqueVideoRoute, '/video/<int:vid_id>')
+api.add_resource(CommentRoute, '/video/<int:vid_id>/comments')
+api.add_resource(ReactionRoute, '/video/<int:vid_id>/reactions')
 
+api.add_resource(UniqueUserRoute, '/user/<int:user_id>')
+
+api.add_resource(UniqueUserVidsRoute, '/user/<int:user_id>/videos')
+
+# endpoints faltantes:
 # TODO users endpoint (buscar info de uno, vids de uno)
 # TODO login (session) endpoint
 # TODO agregar amigos
 # TODO chat (???)
+# TODO stats
 
 @app.route('/ping', methods=['GET'])
 def status():

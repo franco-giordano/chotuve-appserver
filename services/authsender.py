@@ -17,3 +17,7 @@ class AuthSender():
         #
 
         return int(token)
+
+    @classmethod
+    def get_user_info(cls, user_id):
+        pass
