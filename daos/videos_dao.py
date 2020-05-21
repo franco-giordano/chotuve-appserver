@@ -6,7 +6,13 @@ from flask_restful import abort
 import daos.reactions_dao
 from services.mediasender import MediaSender
 
+import logging
+
 class VideoDAO():
+
+    @classmethod
+    def logger(cls):
+        return logging.getLogger(cls.__name__)
 
     @classmethod
     def add_vid(cls, title, description, uuid, location, is_private):
@@ -61,6 +67,7 @@ class VideoDAO():
     @classmethod
     def add_extra_info(cls, serialized_vid, viewer_uuid):
         
+        cls.logger().debug(f"Requesting extra info from mediasv, for viewer {viewer_uuid}")
         serialized_vid['firebase-url'], serialized_vid['timestamp'] = MediaSender.get_info(serialized_vid['video_id'])
         serialized_vid['reaction'] = daos.reactions_dao.ReactionDAO.reaction_by(serialized_vid['video_id'], viewer_uuid)
 

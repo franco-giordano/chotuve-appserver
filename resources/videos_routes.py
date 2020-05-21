@@ -10,14 +10,7 @@ from models.models import Video
 
 from utils.decorators import token_required
 
-# video_fields = {
-#     'title': fields.String,
-#     'description': fields.String,
-#     'is_private': fields.Boolean,
-#     'uuid': fields.Url('task'),
-#     'location':fields.String,
-
-# }
+import logging
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument("x-access-token", location='headers')
@@ -31,16 +24,19 @@ post_parser.add_argument('firebase-url', type = str, required = True, help="No f
 
 class UniqueVideoRoute(Resource):
     def __init__(self):
+       self.logger = logging.getLogger(self.__class__.__name__)
        super(UniqueVideoRoute, self).__init__()
-        
+
     @token_required
     def get(self, vid_id):
         parser = reqparse.RequestParser()
         parser.add_argument("x-access-token", location='headers')
         args = parser.parse_args()
 
+        self.logger.debug("getting uuid from token, via authsv")
         uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
+        self.logger.debug("getting single vid from videoDAO")
         vid = VideoDAO.get(vid_id, uuid)
 
         return vid, 200
