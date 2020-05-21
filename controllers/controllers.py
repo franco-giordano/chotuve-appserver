@@ -30,7 +30,7 @@ api.add_resource(ReactionRoute, '/video/<vid_id>/reactions')
 # TODO agregar amigos
 # TODO chat (???)
 
-@app.route('/status', methods=['GET'])
+@app.route('/ping', methods=['GET'])
 def status():
     return jsonify({'appserver':'UP'})
 
