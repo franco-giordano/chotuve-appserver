@@ -8,3 +8,4 @@ PyJWT
 requests
 gunicorn
 pytest
+flask-restful

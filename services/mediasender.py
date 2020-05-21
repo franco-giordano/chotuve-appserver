@@ -1,21 +1,45 @@
 import requests
 import os
 
+from flask_restful import abort
+
+# from mockers.media_mocker import MediaMocker
 
 class MediaSender():
 
-    url = 'http://' + os.environ['CH_MEDIASV_URL']
+    url = 'http://' + os.environ['CH_MEDIASV_URL'] if os.environ['APP_SETTINGS'] == 'production' else None
+
+    mock_db = {}
 
     @classmethod
-    def send_url_to_mediasv(cls, vid_id,fb_url):
+    def send_url(cls, vid_id,fb_url):
+        if not cls.url:
+            return cls._mock_send(vid_id, fb_url)
+
         r = requests.post(cls.url + '/video', data={'videoId': vid_id, 'url': fb_url})
-        return r
+        return r.json['url'], r.json['timestamp']
 
     @classmethod
-    def get_url_from_mediasv(cls,vid_id):
+    def get_info(cls,vid_id):
+        if not cls.url:
+            return cls._mock_get(vid_id)
+
         r = requests.get(cls.url + '/video', data={'videoId': vid_id})
 
+        # TODO manejar mejor los errores de conexion
         if r.status_code != 200:
-            return ''
+            abort(500, message="Error contacting Media Server")
 
-        return r.json()['url']
+        return r.json()['url'], r.json['timestamp']
+
+    @classmethod
+    def _mock_send(cls, vid_id, fb_url):
+        cls.mock_db[vid_id] = fb_url
+
+        return fb_url, "PREV_TIMESTAMP"
+
+    @classmethod
+    def _mock_get(cls, vid_id):
+        vid_url = cls.mock_db.get(vid_id, "PREVIOUS_URL")
+
+        return vid_url, "PREV_TIMESTAMP"

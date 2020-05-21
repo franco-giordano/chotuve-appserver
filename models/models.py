@@ -10,14 +10,14 @@ class Video(db.Model):
 
     title = db.Column(db.String(100))
     description = db.Column(db.Text)
-    username = db.Column(db.String(100), nullable=False)
+    uuid = db.Column(db.Integer, nullable=False)
     location = db.Column(db.String(200))
 
     is_private = db.Column(db.Boolean, default=False)
     likes=db.Column(db.Integer, default=0)
     dislikes = db.Column(db.Integer, default=0)
     comments = db.relationship('Comment', backref='video')
-    reactions = db.relationship('VideoReaction', backref='video')
+    reactions = db.relationship('VideoReaction', backref='video', lazy="subquery")
 
     # EL TIMESTAMP LO GUARDA EL MEDIASV!!!
 
@@ -39,12 +39,12 @@ class Video(db.Model):
 
     def serialize(self):
         return {
-            'video_id': self.id, 
+            'video_id': self.id,
             'title': self.title,
             'description': self.description,
-            'username':self.username,
+            'uuid':self.uuid,
             'location':self.location,
-            'is_private': self.is_private,
+            'is-private': self.is_private,
             'likes':self.count_likes(),
             'dislikes':self.count_dislikes(),
         }
@@ -55,21 +55,21 @@ class Comment(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
 
-    comment_username = db.Column(db.String(100), nullable=False)
+    uuid = db.Column(db.Integer, nullable=False)
     text = db.Column(db.Text)
 
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     parent_video = db.Column(db.Integer, db.ForeignKey('videos.id'), nullable=False)
 
     def __repr__(self):
-        return '<Comment {}-{}>'.format(self.author_id, self.timestamp)
+        return '<Comment {}-{}>'.format(self.uuid, self.timestamp)
 
     def serialize(self):
         return {
             'comment_id': self.id, 
-            'comment_username': self.comment_username,
+            'uuid': self.uuid,
             'text': self.text,
-            'timestamp':self.timestamp,
+            'timestamp':str(self.timestamp),
             'parent_video':self.parent_video
         }
 
@@ -80,20 +80,20 @@ class VideoReaction(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
 
-    username = db.Column(db.String(100), nullable=False)
+    uuid = db.Column(db.Integer, nullable=False)
     likes_video = db.Column(db.Boolean, nullable=False)
 
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     parent_video = db.Column(db.Integer, db.ForeignKey('videos.id'), nullable=False)
 
     def __repr__(self):
-        return '<Reaction {}-{}>'.format(self.username, self.likes_video)
+        return '<Reaction {}-{}>'.format(self.uuid, self.likes_video)
 
     def serialize(self):
         return {
             'reaction_id': self.id, 
-            'username': self.username,
+            'uuid': self.uuid,
             'likes_video': self.likes_video,
-            'timestamp':self.timestamp,
+            'timestamp':str(self.timestamp),
             'parent_video':self.parent_video
         }

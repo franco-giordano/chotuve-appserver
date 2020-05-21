@@ -5,6 +5,7 @@ from config import app_config
 
 import os
 
+# TODO logging!
 
 db = SQLAlchemy()
 
