@@ -1,7 +1,5 @@
 import pytest
 
-# TODO hacer que funque algun test jajskajaskj
-
 def sum(x, y):
     return x + y
 

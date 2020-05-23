@@ -7,6 +7,8 @@ import daos.videos_dao
 
 from models.models import VideoReaction
 
+from exceptions.exceptions import ReactionBadRequestError
+
 class ReactionDAO():
 
     @classmethod
@@ -17,7 +19,7 @@ class ReactionDAO():
 
             for r in original_vid.reactions:
                 if r.uuid == uuid:
-                    abort(400,message="User already reacted to this video.")
+                    raise ReactionBadRequestError(f"User {uuid} already reacted to this video.")
             
             new_rctn.video = original_vid
 

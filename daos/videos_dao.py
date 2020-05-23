@@ -8,6 +8,8 @@ from services.mediasender import MediaSender
 
 import logging
 
+from exceptions.exceptions import VideoNotFoundError
+
 class VideoDAO():
 
     @classmethod
@@ -51,7 +53,8 @@ class VideoDAO():
         vid =  Video.query.get(vid_id)
 
         if not vid:
-            abort(404, message="No video found with this ID")
+            #abort(404, message="No video found with this ID")
+            raise VideoNotFoundError(f"No video found with ID: {vid_id}")
 
         return vid
 

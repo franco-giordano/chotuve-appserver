@@ -10,14 +10,14 @@ from resources.user_routes import UniqueUserRoute, UniqueUserVidsRoute
 api = Api(app)
 
 
-@app.errorhandler(404)
-def not_found(error):
-    return make_response({'message': 'Resource not found'}, 404)
+# @app.errorhandler(404)
+# def not_found(error):
+#     return make_response({'message': 'Resource not found'}, 404)
 
 
-@app.errorhandler(400)
-def bad_req(error):
-    return make_response({'message': 'Bad Request'}, 400)
+# @app.errorhandler(400)
+# def bad_req(error):
+#     return make_response({'message': 'Bad Request'}, 400)
 
 
 
@@ -27,11 +27,10 @@ api.add_resource(CommentRoute, '/video/<int:vid_id>/comments')
 api.add_resource(ReactionRoute, '/video/<int:vid_id>/reactions')
 
 api.add_resource(UniqueUserRoute, '/user/<int:user_id>')
-
 api.add_resource(UniqueUserVidsRoute, '/user/<int:user_id>/videos')
 
 # endpoints faltantes:
-# TODO users endpoint (buscar info de uno, vids de uno)
+# TODO users endpoint (buscar info de uno, vids de uno) [WIP]
 # TODO login (session) endpoint
 # TODO agregar amigos
 # TODO chat (???)
