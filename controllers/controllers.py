@@ -2,6 +2,8 @@ from flask import make_response, jsonify
 from flask_restful import Api
 from run import app
 
+# import requests, os
+
 from resources.videos_routes import VideoRoute, UniqueVideoRoute
 from resources.comments_routes import CommentRoute
 from resources.reactions_route import ReactionRoute
@@ -11,6 +13,8 @@ from resources.friends_routes import FriendsRoute
 
 api = Api(app)
 
+import logging
+logger = logging.getLogger(__name__)
 api.add_resource(VideoRoute, '/videos')
 api.add_resource(UniqueVideoRoute, '/videos/<int:vid_id>')
 api.add_resource(CommentRoute, '/videos/<int:vid_id>/comments')
@@ -50,4 +54,8 @@ def status():
 
 # @app.route('/')
 # def hi():
-#     return "HOLA"
+#     url = 'http://'+ os.environ['CH_MEDIASV_URL'] + '/'
+#     logger.debug(f"requesting for {url}")
+#     r = requests.get(url)
+
+#     return jsonify({"message":f"response {r.status_code}"}), r.status_code
