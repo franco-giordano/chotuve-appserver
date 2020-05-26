@@ -13,7 +13,7 @@ class ChotuveError(Exception):
         self.logger().error(self.message)
         return {"message":self.message}
 
-
+# ---------------------------------------------------
 
 
 class BadRequestError(ChotuveError):
@@ -28,7 +28,21 @@ class NotFoundError(ChotuveError):
     def __init__(self):
         super().__init__()
 
+class BadGatewayError(ChotuveError):
+    status_code = 502
 
+    def __init__(self):
+        super().__init__()
+
+class NotImplementedError(ChotuveError):
+    status_code = 501
+
+    def __init__(self):
+        super().__init__()
+
+
+
+# ---------------------------------------------------
 
 
 class ReactionBadRequestError(BadRequestError):
@@ -46,6 +60,17 @@ class UserNotFoundError(NotFoundError):
 
 class VideoNotFoundError(NotFoundError):
 
+    def __init__(self, message):
+        self.message = message
+        super().__init__()
+
+class FailedToContactAuthSvError(BadGatewayError):
+    def __init__(self, message):
+        self.message = message
+        super().__init__()
+
+
+class FailedToContactMediaSvError(BadGatewayError):
     def __init__(self, message):
         self.message = message
         super().__init__()

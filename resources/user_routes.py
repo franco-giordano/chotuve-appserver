@@ -19,10 +19,14 @@ class UniqueUserRoute(Resource):
     @token_required
     def get(self, user_id):
 
-        # TODO si hay datos privados, parsear viewer_uuid y pasarlo al authsv 
-        user = AuthSender.get_user_info(user_id)
+        parser = reqparse.RequestParser()
+        parser.add_argument("x-access-token", location='headers')
+        args = parser.parse_args()
 
-        return user, 200
+        # TODO si hay datos privados, parsear viewer_uuid y pasarlo al authsv 
+        msg, code = AuthSender.get_user_info(user_id, args['x-access-token'])
+
+        return msg, code
         
     @token_required
     def put(self, user_id):
@@ -51,18 +55,20 @@ class UsersRoute(Resource):
         super(UsersRoute, self).__init__()
 
 
+    # TODO aca no se usa token_required ???
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument("fullname", location="json", required=True, help="Missing user's full name.", type=str)
         parser.add_argument("email", location="json", required=True, help="Missing user's email.", type=str)
-        parser.add_argument("login-method", location="json", required=True,
-            choices=('email', 'facebook', 'google'), help='Bad choice: {error_msg}', type=str)
+        parser.add_argument("phone-number", location="json", required=False, default="", type=str)
         parser.add_argument("avatar", location="json", required=True, help="Missing avatar's url.", type=str)
+        parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
+
 
         args = parser.parse_args()
 
-        msg, code = AuthSender.register_user(fullname=args["fullname"], email=args['email'], method=args['login-method'],
-            avatar=args['avatar'])
+        msg, code = AuthSender.register_user(fullname=args["fullname"], email=args['email'], phone=args['phone-number'],
+            avatar=args['avatar'], token=args['x-access-token'])
 
         return msg, code
     
