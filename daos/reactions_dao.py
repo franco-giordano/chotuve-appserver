@@ -1,11 +1,10 @@
 from run import app
 from app import db
 
-from flask_restful import abort
 
 import daos.videos_dao
 
-from models.models import VideoReaction
+from models.video_elements import VideoReaction
 
 from exceptions.exceptions import ReactionBadRequestError
 

@@ -6,8 +6,6 @@ from services.authsender import AuthSender
 from daos.videos_dao import VideoDAO
 from daos.reactions_dao import ReactionDAO
 
-from models.models import Video
-
 from utils.decorators import token_required
 
 import logging

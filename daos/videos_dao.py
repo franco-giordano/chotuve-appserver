@@ -1,7 +1,5 @@
 from app import db
-from run import app
-from models.models import Video
-from flask_restful import abort
+from models.video_elements import Video
 
 import daos.reactions_dao
 from services.mediasender import MediaSender
@@ -53,7 +51,6 @@ class VideoDAO():
         vid =  Video.query.get(vid_id)
 
         if not vid:
-            #abort(404, message="No video found with this ID")
             raise VideoNotFoundError(f"No video found with ID: {vid_id}")
 
         return vid
