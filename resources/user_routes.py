@@ -57,10 +57,12 @@ class UsersRoute(Resource):
         parser.add_argument("email", location="json", required=True, help="Missing user's email.", type=str)
         parser.add_argument("login-method", location="json", required=True,
             choices=('email', 'facebook', 'google'), help='Bad choice: {error_msg}', type=str)
+        parser.add_argument("avatar", location="json", required=True, help="Missing avatar's url.", type=str)
 
         args = parser.parse_args()
 
-        msg, code = AuthSender.register_user(fullname=args["fullname"], email=args['email'], method=args['login-method'])
+        msg, code = AuthSender.register_user(fullname=args["fullname"], email=args['email'], method=args['login-method'],
+            avatar=args['avatar'])
 
         return msg, code
     

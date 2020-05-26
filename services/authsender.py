@@ -23,7 +23,7 @@ class AuthSender():
         pass
 
     @classmethod
-    def register_user(cls, fullname, email, method):
+    def register_user(cls, fullname, email, method, avatar):
         
         # r = requests.post(...)
 

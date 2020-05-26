@@ -32,6 +32,8 @@ api.add_resource(FriendsRoute, '/users/<int:user_id>/friends')
 # endpoints faltantes:
 # TODO users endpoint (buscar info de uno, vids de uno) [WIP]
 # TODO login (auth) endpoint + register [DONE ?]
+# TODO recuperar password
+# TODO ingresar nueva password
 # TODO agregar amigos
 # TODO chat (???)
 # TODO stats

@@ -41,3 +41,9 @@ GET /users/$myid$/friends/requests
 
 ##### Aceptar/Declinar solicitud
 POST /users/$myid$/friends/requests/$req-id$
+
+##### Recuperar password
+POST /users/RECOVER_ENDPOINT_NAME
+
+##### Escribir nueva password
+POST /users/NEWPW_ENDPOINT_NAME
