@@ -17,7 +17,7 @@ class MediaSender():
             return cls._mock_send(vid_id, fb_url)
 
         r = requests.post(cls.url + '/video', data={'videoId': vid_id, 'url': fb_url})
-        return r.json['url'], r.json['timestamp']
+        return r.json['url'], r.json()['timestamp']
 
     @classmethod
     def get_info(cls,vid_id):
@@ -30,7 +30,7 @@ class MediaSender():
         if r.status_code != 200:
             abort(500, message="Error contacting Media Server")
 
-        return r.json()['url'], r.json['timestamp']
+        return r.json()['url'], r.json()['timestamp']
 
     @classmethod
     def _mock_send(cls, vid_id, fb_url):
