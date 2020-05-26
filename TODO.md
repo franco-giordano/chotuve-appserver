@@ -7,18 +7,18 @@
 # Endpoints
 
 ### Videos
-GET POST /video
-GET /video/$id$
-GET POST /video/$id$/comments
-GET POST /video/$id$/reactions
+GET POST /videos
+GET /videos/$id$
+GET POST /videos/$id$/comments
+GET POST /videos/$id$/reactions
 
 ### Users
-GET /user/$id$
-GET /user/$id$/videos
-GET /user?q=$query$
+GET /users/$id$
+GET /users/$id$/videos
+GET /users?q=$query$
 
 ##### Registro
-POST /user
+POST /users
 
 ##### Login
 POST /auth
@@ -27,15 +27,17 @@ POST /auth
 DELETE /auth 
 
 ##### Cambiar datos personales
-PUT /user/me (o $myid$?)
+PUT /users/$myid$
 
 ### Amistades
+##### Ver amigos
+GET /users/$id$/friends
+
 ##### Enviar solicitud
-POST /user/$otherid$/friends
+POST /users/$otherid$/friends
 
 ##### Ver todas mis solicitudes pendientes
-GET /user/$myid$/friends/requests
+GET /users/$myid$/friends/requests
 
-##### Aceptar/Declinar/Ver solicitud
-GET /user/$myid$/friends/requests/$req-id$
-POST /user/$myid$/friends/requests/$req-id$
+##### Aceptar/Declinar solicitud
+POST /users/$myid$/friends/requests/$req-id$

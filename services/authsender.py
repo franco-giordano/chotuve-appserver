@@ -21,3 +21,10 @@ class AuthSender():
     @classmethod
     def get_user_info(cls, user_id):
         pass
+
+    @classmethod
+    def register_user(cls, fullname, email, method):
+        
+        # r = requests.post(...)
+
+        return {'message': 'User created'}, 201

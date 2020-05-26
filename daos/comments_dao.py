@@ -1,11 +1,10 @@
 from app import db
 from run import app
-from models.models import Video
-from flask_restful import abort
+from models.video_elements import Video
 
 from daos.videos_dao import VideoDAO
 
-from models.models import Comment
+from models.video_elements import Comment
 
 class CommentDAO():
 

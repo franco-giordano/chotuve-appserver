@@ -6,8 +6,6 @@ from services.authsender import AuthSender
 from daos.videos_dao import VideoDAO
 from daos.reactions_dao import ReactionDAO
 
-from models.models import Video
-
 from utils.decorators import token_required
 
 import logging
@@ -73,7 +71,7 @@ class VideoRoute(Resource):
                         location=args['location'], is_private=args['is-private'])
 
         # upload to mediasv
-        new_vid_with_url['firebase-url'], new_vid_with_url['timestamp'] = MediaSender.send_url(new_vid_with_url['id'],args['firebase-url'])
+        new_vid_with_url['firebase-url'], new_vid_with_url['timestamp'] = MediaSender.send_url(new_vid_with_url['video_id'],args['firebase-url'])
 
         return new_vid_with_url, 201
 
