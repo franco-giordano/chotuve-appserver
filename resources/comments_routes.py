@@ -3,7 +3,7 @@ from flask_restful import reqparse, Resource
 from daos.videos_dao import VideoDAO
 from daos.comments_dao import CommentDAO
 
-from models.models import Comment
+from models.video_elements import Comment
 
 from utils.decorators import token_required
 
