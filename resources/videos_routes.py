@@ -73,7 +73,7 @@ class VideoRoute(Resource):
                         location=args['location'], is_private=args['is-private'])
 
         # upload to mediasv
-        new_vid_with_url['firebase-url'], new_vid_with_url['timestamp'] = MediaSender.send_url(new_vid_with_url['id'],args['firebase-url'])
+        new_vid_with_url['firebase-url'], new_vid_with_url['timestamp'] = MediaSender.send_url(new_vid_with_url['video_id'],args['firebase-url'])
 
         return new_vid_with_url, 201
 
