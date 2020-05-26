@@ -104,10 +104,10 @@ _login-method DEBE ser alguno de los tres: "email", "facebook" o "google"_
 - Cerrar sesion (no hace **absolutamente** nada):
 ```DELETE 0.0.0.0:5000/auth```
 
+#### Amistades
+
 - Ver amigos de un usuario [WIP]:
 ```GET 0.0.0.0:5000/users/<uuid>/friends```
-
-#### Amistades
 
 - Enviar solicitud de amistad [NO IMPLEMENTADO]:
 ```POST 0.0.0.0:5000/users/<otheruuid>/friends```
