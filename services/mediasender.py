@@ -8,7 +8,7 @@ from exceptions.exceptions import FailedToContactMediaSvError
 
 class MediaSender():
 
-    url = os.environ['CH_MEDIASV_URL'] if os.environ['APP_SETTINGS'] == 'production' else None
+    url = os.environ['CH_MEDIASV_URL'] if os.environ['APP_SETTINGS'] != 'development' else None
 
     mock_db = {}
 

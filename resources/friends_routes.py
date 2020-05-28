@@ -5,6 +5,8 @@ from daos.users_dao import FriendshipsDAO
 
 import logging
 
+# TODO no usa friend requests! arreglar
+
 # /users/user_id/friends
 class FriendsRoute(Resource):
 

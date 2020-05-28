@@ -14,10 +14,15 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
+    LOG_LEVEL = "WARN"
+
+
+class StagingConfig(Config):
     LOG_LEVEL = "INFO"
 
 
 app_config = {
     'development': DevelopmentConfig,
-    'production': ProductionConfig
+    'production': ProductionConfig,
+    'staging': StagingConfig
 }

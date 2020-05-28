@@ -24,12 +24,11 @@ api.add_resource(UniqueUserRoute, '/users/<int:user_id>')
 api.add_resource(UniqueUserVidsRoute, '/users/<int:user_id>/videos')
 api.add_resource(UsersRoute, '/users')
 
-api.add_resource(FriendsRoute, '/users/<int:user_id>/friends')
+# api.add_resource(FriendsRoute, '/users/<int:user_id>/friends')
 
 
 # endpoints faltantes:
 # TODO users endpoint (buscar info de uno, vids de uno) [WIP]
-# TODO register endpoint [DONE ?]
 # TODO recuperar password
 # TODO ingresar nueva password
 # TODO agregar amigos

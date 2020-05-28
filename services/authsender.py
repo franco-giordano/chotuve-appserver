@@ -6,7 +6,7 @@ from exceptions.exceptions import FailedToContactAuthSvError
 # TODO hace cualquier cosa!
 class AuthSender():
 
-    url = os.environ['CH_AUTHSV_URL']
+    url = os.environ['CH_AUTHSV_URL'] if os.environ['APP_SETTINGS'] != 'development' else None
 
     @classmethod
     def logger(cls):
