@@ -8,7 +8,7 @@ from resources.videos_routes import VideoRoute, UniqueVideoRoute
 from resources.comments_routes import CommentRoute
 from resources.reactions_route import ReactionRoute
 from resources.user_routes import UniqueUserRoute, UniqueUserVidsRoute, UsersRoute
-from resources.auth_route import AuthRoute
+
 from resources.friends_routes import FriendsRoute
 
 api = Api(app)
