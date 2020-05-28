@@ -68,22 +68,31 @@ class AuthSender():
                 'phone_number':'+5423643265',
                 'image_location':"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"}, 200
 
-        
-        r = requests.post(cls.url + '/sign-up', 
-            json={'email':email, 'display_name':fullname, 'phone_number':phone, 'image_location': avatar},
-            headers={'x-access-token': token})
+        try:    
+            r = requests.post(cls.url + '/sign-up', 
+                json={'email':email, 'display_name':fullname, 'phone_number':phone, 'image_location': avatar},
+                headers={'x-access-token': token})
 
-        return r.json(), r.status_code
+            return r.json(), r.status_code
+
+        except requests.exceptions.RequestException:
+            cls.logger().error(f"Failed to contact AuthSv at url {cls.url}/sign-up with token {token}.")
+            raise FailedToContactAuthSvError(f"Failed to contact user backend.")
+
+
 
     @classmethod
     def modify_user(cls, user_id, args_dict):
         if not cls.url:
             return args_dict, 200
 
-        
-        r = requests.post(cls.url + '/users' + user_id, 
-            json=args_dict,
-            headers={'x-access-token': args_dict['x-access-token']})
+        try:
+            r = requests.post(cls.url + '/users' + user_id, 
+                json=args_dict,
+                headers={'x-access-token': args_dict['x-access-token']})
 
-        return r.json(), r.status_code
-        
+            return r.json(), r.status_code
+            
+        except requests.exceptions.RequestException:
+            cls.logger().error(f"Failed to contact AuthSv at url {cls.url}/users/{user_id} with token {args_dict['x-access-token']}.")
+            raise FailedToContactAuthSvError(f"Failed to contact user backend.")
