@@ -88,23 +88,25 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 con body:
 ```json
 {
-	"fullname":"Cosme Fulanito",
+	"display_name":"Cosme Fulanito",
 	"email":"cosme_rivercampeon@gmail.com",
-	"login-method":"facebook",
-	"avatar":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"
+	"image-location":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg",
+	"phone_number":"+542323232323"
 }
 ```
 
-_login-method DEBE ser alguno de los tres: "email", "facebook" o "google"_
-
-#### Login/Logout
-
-- Logearse (solo verifica el token):
-```POST 0.0.0.0:5000/auth```
-
-- Cerrar sesion (no hace **absolutamente** nada):
-```DELETE 0.0.0.0:5000/auth```
-
+- Modificar datos de un usuario:
+`PUT 0.0.0.0:4000/users/<id>` con body (pueden enviarse solo los datos que cambian):
+```json
+{
+	
+	"email": "juanperez@gmail.com",
+	"display_name":"Matias Perez",
+	"phone_number": "+5492264511422",
+	"image_location":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"
+	
+}
+```
 #### Amistades
 
 - Ver amigos de un usuario [WIP]:

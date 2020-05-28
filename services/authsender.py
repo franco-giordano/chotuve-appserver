@@ -16,6 +16,8 @@ class AuthSender():
 
     @classmethod
     def is_valid_token(cls, token):
+        if not cls.url:
+            return True
 
         try:
             r = requests.post(cls.url + '/sign-in', headers={'x-access-token':token})
@@ -38,6 +40,15 @@ class AuthSender():
 
     @classmethod
     def get_user_info(cls, user_id, token):
+        if not cls.url:
+            return {'id':user_id, 
+                'email':'example@example.com',
+                'display_name':'John Smith',
+                'phone_number':'+5423643265',
+                'image_location':"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"}, 200
+
+
+
         try:
             r = requests.get(cls.url + '/users/' + user_id, headers={'x-access-token':token})
             return r.json(), r.status_code
@@ -50,9 +61,29 @@ class AuthSender():
 
     @classmethod
     def register_user(cls, fullname, email, phone, avatar, token):
+        if not cls.url:
+            return {'id':123, 
+                'email':'example@example.com',
+                'display_name':'John Smith',
+                'phone_number':'+5423643265',
+                'image_location':"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"}, 200
+
         
         r = requests.post(cls.url + '/sign-up', 
             json={'email':email, 'display_name':fullname, 'phone_number':phone, 'image_location': avatar},
             headers={'x-access-token': token})
 
         return r.json(), r.status_code
+
+    @classmethod
+    def modify_user(cls, user_id, args_dict):
+        if not cls.url:
+            return args_dict, 200
+
+        
+        r = requests.post(cls.url + '/users' + user_id, 
+            json=args_dict,
+            headers={'x-access-token': args_dict['x-access-token']})
+
+        return r.json(), r.status_code
+        
