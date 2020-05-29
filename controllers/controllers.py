@@ -11,6 +11,7 @@ from resources.user_routes import UniqueUserRoute, UniqueUserVidsRoute, UsersRou
 
 from resources.friends_routes import FriendsRoute, RequestsRoute, UniqueRequestRoute
 
+
 api = Api(app)
 
 import logging
