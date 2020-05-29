@@ -127,3 +127,4 @@ con body:
 	"accept":true
 }
 ```
+(accept true para aceptar, accept false para rechazar)
