@@ -10,6 +10,8 @@ from services.authsender import AuthSender
 
 from daos.users_dao import FriendshipsDAO
 
+from exceptions.exceptions import EndpointNotImplementedError
+
 
 class UniqueUserRoute(Resource):
     def __init__(self):
@@ -89,3 +91,13 @@ class UsersRoute(Resource):
 
         return msg, code
     
+    def get(self):
+        raise EndpointNotImplementedError("User search not yet available!")
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("name", type=str)
+        parser.add_argument("email", type=str)
+        parser.add_argument("phone", type=str)
+        parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
+
+        args = parser.parse_args()
