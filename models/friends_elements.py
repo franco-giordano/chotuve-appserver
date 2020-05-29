@@ -1,6 +1,8 @@
 from datetime import datetime
 from app import db
 
+from exceptions.exceptions import NotFoundError
+
 friends = db.Table('friends',
     db.Column('user1_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('user2_id', db.Integer, db.ForeignKey('users.id'))
@@ -43,7 +45,49 @@ class User(db.Model):
 
     def serialize(self):
         return {
-            'user-id':self.id,
+            'user-id':self.id
+        }
+
+    def serializeFriends(self):
+        return {
             'friends':[f.serialize() for f in self.friends],
+        }
+    
+    def serializeReceivedReqs(self):
+        return {
             'pending-reqs':[p.serialize() for p in self.pending_requests]
         }
+    
+    def serializeSentReqs(self):
+        return {
+            'sent-reqs':[p.serialize() for p in self.sent_requests]
+        }
+
+    def is_friend_with(self, user2):
+        return self.friends.filter(friends.c.user2_id == user2.id).count() > 0
+
+    def received_request_from(self, user2):
+        return self.pending_requests.filter(requests.c.sender_id == user2.id).count() > 0
+
+
+    def accept_request_from(self, sender):
+        if self.received_request_from(sender):
+            self.pending_requests.remove(sender)
+
+            self.friends.append(sender)
+            sender.friends.append(self)
+
+            db.session.commit()
+
+        else:
+            raise NotFoundError(f"Friendship request from {sender.id} to {self.id} not found!")
+
+    def reject_request_from(self, sender):
+        if self.received_request_from(sender):
+            # TODO no funciona
+            self.pending_requests.remove(sender)
+
+            db.session.commit()
+
+        else:
+            raise NotFoundError(f"Friendship request from {sender.id} to {self.id} not found!")

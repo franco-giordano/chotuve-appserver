@@ -19,13 +19,15 @@ class ChotuveError(Exception):
 class BadRequestError(ChotuveError):
     status_code = 400
 
-    def __init__(self):
+    def __init__(self, message):
+        self.message = message
         super().__init__()
 
 class NotFoundError(ChotuveError):
     status_code = 404
 
-    def __init__(self):
+    def __init__(self, message):
+        self.message = message
         super().__init__()
 
 class BadGatewayError(ChotuveError):
@@ -34,11 +36,20 @@ class BadGatewayError(ChotuveError):
     def __init__(self):
         super().__init__()
 
-class NotImplementedError(ChotuveError):
+class EndpointNotImplementedError(ChotuveError):
     status_code = 501
 
-    def __init__(self):
+    def __init__(self, message):
+        self.message = message
         super().__init__()
+
+class InternalError(ChotuveError):
+    status_code = 500
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__()
+
 
 
 

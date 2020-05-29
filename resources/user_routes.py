@@ -8,7 +8,7 @@ from utils.decorators import token_required
 
 from services.authsender import AuthSender
 
-
+from daos.users_dao import FriendshipsDAO
 
 
 class UniqueUserRoute(Resource):
@@ -82,6 +82,10 @@ class UsersRoute(Resource):
 
         msg, code = AuthSender.register_user(fullname=args["display_name"], email=args['email'], phone=args['phone_number'],
             avatar=args['image_location'], token=args['x-access-token'])
+
+        if code == 201:
+            # TODO QUE LO AGREGUE CON EL MISMO ID QUE EL AUTHSV!!
+            FriendshipsDAO.add_user_to_db(msg['id'])
 
         return msg, code
     
