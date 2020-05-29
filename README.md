@@ -113,7 +113,7 @@ con body:
 ```GET 0.0.0.0:5000/users/<uuid>/friends```
 
 - Enviar solicitud de amistad:
-```POST 0.0.0.0:5000/users/<otheruuid>/friends``` sin body (obtiene el id de quien envia desde el token)
+```POST 0.0.0.0:5000/users/<otheruuid>/friends/requests``` sin body (obtiene el id de quien envia desde el token)
 
 
 - Ver mis solicitudes pendientes:
