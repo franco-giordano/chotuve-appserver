@@ -9,7 +9,8 @@ from resources.comments_routes import CommentRoute
 from resources.reactions_route import ReactionRoute
 from resources.user_routes import UniqueUserRoute, UniqueUserVidsRoute, UsersRoute
 
-from resources.friends_routes import FriendsRoute
+from resources.friends_routes import FriendsRoute, RequestsRoute, UniqueRequestRoute
+
 
 api = Api(app)
 
@@ -24,7 +25,10 @@ api.add_resource(UniqueUserRoute, '/users/<int:user_id>')
 api.add_resource(UniqueUserVidsRoute, '/users/<int:user_id>/videos')
 api.add_resource(UsersRoute, '/users')
 
-# api.add_resource(FriendsRoute, '/users/<int:user_id>/friends')
+api.add_resource(FriendsRoute, '/users/<int:user_id>/friends')
+api.add_resource(RequestsRoute, '/users/<int:user_id>/friends/requests')
+
+api.add_resource(UniqueRequestRoute, '/users/<int:my_id>/friends/requests/<int:sender_id>')
 
 
 # endpoints faltantes:

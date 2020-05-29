@@ -40,7 +40,7 @@ POST /users/$otherid$/friends
 GET /users/$myid$/friends/requests
 
 ##### Aceptar/Declinar solicitud
-POST /users/$myid$/friends/requests/$req-id$
+POST /users/$myid$/friends/requests/$otherid$
 
 ##### Recuperar password
 POST /users/RECOVER_ENDPOINT_NAME

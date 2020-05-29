@@ -8,7 +8,9 @@ from utils.decorators import token_required
 
 from services.authsender import AuthSender
 
+from daos.users_dao import FriendshipsDAO
 
+from exceptions.exceptions import EndpointNotImplementedError
 
 
 class UniqueUserRoute(Resource):
@@ -16,11 +18,10 @@ class UniqueUserRoute(Resource):
         super(UniqueUserRoute, self).__init__()
         
 
-    @token_required
     def get(self, user_id):
 
         parser = reqparse.RequestParser()
-        parser.add_argument("x-access-token", location='headers')
+        parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
         args = parser.parse_args()
 
         # TODO si hay datos privados, parsear viewer_uuid y pasarlo al authsv 
@@ -28,10 +29,25 @@ class UniqueUserRoute(Resource):
 
         return msg, code
         
-    @token_required
+
     def put(self, user_id):
-        # TODO edit my info
-        pass
+        parser = reqparse.RequestParser()
+        parser.add_argument("display_name", location="json", required=False, type=str)
+        parser.add_argument("email", location="json", required=False, type=str)
+        parser.add_argument("phone_number", location="json", required=False,type=str)
+        parser.add_argument("image_location", location="json", required=False, type=str)
+        parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
+
+        args_dict = parser.parse_args()
+        args_dict = {k:v for k,v in args_dict.items() if v is not None}
+
+        msg, code = AuthSender.modify_user(user_id ,args_dict)
+
+        return msg, code
+
+
+        
+        
 
 
 class UniqueUserVidsRoute(Resource):
@@ -50,25 +66,38 @@ class UniqueUserVidsRoute(Resource):
 
         return vids, 200
         
+
 class UsersRoute(Resource):
     def __init__(self):
         super(UsersRoute, self).__init__()
 
 
-    # TODO aca no se usa token_required ???
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument("fullname", location="json", required=True, help="Missing user's full name.", type=str)
+        parser.add_argument("display_name", location="json", required=True, help="Missing user's full name.", type=str)
         parser.add_argument("email", location="json", required=True, help="Missing user's email.", type=str)
-        parser.add_argument("phone-number", location="json", required=False, default="", type=str)
-        parser.add_argument("avatar", location="json", required=True, help="Missing avatar's url.", type=str)
+        parser.add_argument("phone_number", location="json", required=False, default="", type=str)
+        parser.add_argument("image_location", location="json", required=True, help="Missing avatar's url.", type=str)
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
-
 
         args = parser.parse_args()
 
-        msg, code = AuthSender.register_user(fullname=args["fullname"], email=args['email'], phone=args['phone-number'],
-            avatar=args['avatar'], token=args['x-access-token'])
+        msg, code = AuthSender.register_user(fullname=args["display_name"], email=args['email'], phone=args['phone_number'],
+            avatar=args['image_location'], token=args['x-access-token'])
+
+        if code == 201:
+            # TODO QUE LO AGREGUE CON EL MISMO ID QUE EL AUTHSV!!
+            FriendshipsDAO.add_user_to_db(msg['id'])
 
         return msg, code
     
+    def get(self):
+        raise EndpointNotImplementedError("User search not yet available!")
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("name", type=str)
+        parser.add_argument("email", type=str)
+        parser.add_argument("phone", type=str)
+        parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
+
+        args = parser.parse_args()

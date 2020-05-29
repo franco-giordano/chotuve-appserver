@@ -1,6 +1,6 @@
 # Chotuve - Application Server
 ![Grupo](https://img.shields.io/badge/grupo-11-blue) [![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=master)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-![api](https://img.shields.io/badge/api-v0.2-blueviolet)
+![api](https://img.shields.io/badge/api-v0.3-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -19,7 +19,7 @@
 ---------------------------------------------
 
 
-## API v0.2
+## API v0.3
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -88,35 +88,42 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 con body:
 ```json
 {
-	"fullname":"Cosme Fulanito",
+	"display_name":"Cosme Fulanito",
 	"email":"cosme_rivercampeon@gmail.com",
-	"login-method":"facebook",
-	"avatar":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"
+	"image_location":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg",
+	"phone_number":"+542323232323"
 }
 ```
 
-_login-method DEBE ser alguno de los tres: "email", "facebook" o "google"_
-
-#### Login/Logout
-
-- Logearse (solo verifica el token):
-```POST 0.0.0.0:5000/auth```
-
-- Cerrar sesion (no hace **absolutamente** nada):
-```DELETE 0.0.0.0:5000/auth```
-
+- Modificar datos de un usuario:
+`PUT 0.0.0.0:4000/users/<id>` con body (pueden enviarse solo los datos que cambian):
+```json
+{
+	
+	"email": "juanperez@gmail.com",
+	"display_name":"Matias Perez",
+	"phone_number": "+5492264511422",
+	"image_location":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"
+	
+}
+```
 #### Amistades
 
-- Ver amigos de un usuario [WIP]:
+- Ver amigos de un usuario:
 ```GET 0.0.0.0:5000/users/<uuid>/friends```
 
-- Enviar solicitud de amistad [NO IMPLEMENTADO]:
-```POST 0.0.0.0:5000/users/<otheruuid>/friends```
+- Enviar solicitud de amistad:
+```POST 0.0.0.0:5000/users/<otheruuid>/friends``` sin body (obtiene el id de quien envia desde el token)
 
 
-- Ver solicitudes pendientes [NO IMPLEMENTADO]:
+- Ver mis solicitudes pendientes:
 ```GET 0.0.0.0:5000/users/<myuuid>/friends/requests```
 
 
-- Aceptar/Rechazar solicitud pendient [NO IMPLEMENTADO]:
-```GET 0.0.0.0:5000/users/<myuuid>/friends/requests/<otheruuid>```
+- Aceptar/Rechazar solicitud pendiente:
+```POST 0.0.0.0:5000/users/<myuuid>/friends/requests/<otheruuid>``` con body
+```json
+{
+	"accept":true
+}
+```
