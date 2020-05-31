@@ -36,9 +36,16 @@ class AuthSender():
 
     @classmethod
     def get_uuid_from_token(cls, token):
-        #
+        if not cls.url:
+            return int(token)
 
-        return int(token)
+        try:
+            r = requests.get(cls.url + '/users/id', headers={'x-access-token':token})
+            return r.json()["uid"]
+
+        except requests.exceptions.RequestException:
+            cls.logger().error(f"Failed to contact AuthSv at url {cls.url}/users/id with token {token}.")
+            raise FailedToContactAuthSvError(f"Failed to contact user backend.")
 
     @classmethod
     def get_user_info(cls, user_id, token):
