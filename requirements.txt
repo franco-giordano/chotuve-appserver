@@ -8,4 +8,5 @@ PyJWT
 requests
 gunicorn
 pytest
+pytest-env
 flask-restful

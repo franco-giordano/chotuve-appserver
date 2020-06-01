@@ -60,10 +60,10 @@ class InternalError(ChotuveError):
 class FailedToContactAuthSvError(BadGatewayError):
     def __init__(self, message):
         self.message = message
-        super(message).__init__()
+        super().__init__(message)
 
 
 class FailedToContactMediaSvError(BadGatewayError):
     def __init__(self, message):
         self.message = message
-        super(message).__init__()
+        super().__init__(message)
