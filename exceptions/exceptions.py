@@ -33,7 +33,8 @@ class NotFoundError(ChotuveError):
 class BadGatewayError(ChotuveError):
     status_code = 502
 
-    def __init__(self):
+    def __init__(self, message):
+        self.message = message
         super().__init__()
 
 class EndpointNotImplementedError(ChotuveError):
@@ -56,32 +57,13 @@ class InternalError(ChotuveError):
 # ---------------------------------------------------
 
 
-class ReactionBadRequestError(BadRequestError):
-    
-    def __init__(self, message):
-        self.message = message
-        super().__init__()
-
-
-class UserNotFoundError(NotFoundError):
-
-    def __init__(self, message):
-        self.message = message
-        super().__init__()
-
-class VideoNotFoundError(NotFoundError):
-
-    def __init__(self, message):
-        self.message = message
-        super().__init__()
-
 class FailedToContactAuthSvError(BadGatewayError):
     def __init__(self, message):
         self.message = message
-        super().__init__()
+        super().__init__(message)
 
 
 class FailedToContactMediaSvError(BadGatewayError):
     def __init__(self, message):
         self.message = message
-        super().__init__()
+        super().__init__(message)

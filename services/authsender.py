@@ -6,7 +6,7 @@ from exceptions.exceptions import FailedToContactAuthSvError, NotFoundError
 # TODO hace cualquier cosa!
 class AuthSender():
 
-    url = os.environ['CH_AUTHSV_URL'] if os.environ['APP_SETTINGS'] != 'development' else None
+    url = os.environ['CH_AUTHSV_URL'] if os.environ['APP_SETTINGS'] != 'testing' else None
 
     mock_db = []
 
