@@ -21,7 +21,7 @@ script:
   - docker build -t chotuve-appserver .
   
   # testing the app server
-  - docker run --rm -d --env PORT=5000 -p 5000:5000 --name chotuve-appserver chotuve-appserver
+  - docker run --rm -d --env APP_SETTINGS development --env PORT=5000 -p 5000:5000 --name chotuve-appserver chotuve-appserver
   - docker exec -it chotuve-appserver pytest
 
 deploy:
