@@ -41,6 +41,9 @@ class AuthSender():
 
         try:
             r = requests.get(cls.url + '/users/id', headers={'x-access-token':token})
+            if r.status_code != 200:
+                raise NotFoundError(f"User with token {token} not found")
+
             return r.json()["uid"]
 
         except requests.exceptions.RequestException:
@@ -53,7 +56,7 @@ class AuthSender():
             return cls._mock_get_info(user_id)
 
         try:
-            r = requests.get(cls.url + '/users/' + user_id, headers={'x-access-token':token})
+            r = requests.get(cls.url + '/users/' + str(user_id), headers={'x-access-token':token})
             return r.json(), r.status_code
 
         except requests.exceptions.RequestException:
@@ -85,7 +88,7 @@ class AuthSender():
             return cls._mock_modify(user_id,args_dict)
 
         try:
-            r = requests.post(cls.url + '/users' + user_id, 
+            r = requests.post(cls.url + '/users' + str(user_id), 
                 json=args_dict,
                 headers={'x-access-token': args_dict['x-access-token']})
 
