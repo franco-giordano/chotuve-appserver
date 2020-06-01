@@ -57,7 +57,8 @@ class AuthSender():
 
         try:
             r = requests.get(cls.url + '/users/' + str(user_id), headers={'x-access-token':token})
-            return r.json(), r.status_code
+            msg = cls.msg_from_authsv(r.json())
+            return msg, r.status_code
 
         except requests.exceptions.RequestException:
             cls.logger().error(f"Failed to contact AuthSv at url {cls.url}/users/{user_id} with token {token}.")
@@ -73,8 +74,8 @@ class AuthSender():
             r = requests.post(cls.url + '/sign-up', 
                 json={'email':email, 'display_name':fullname, 'phone_number':phone, 'image_location': avatar},
                 headers={'x-access-token': token})
-
-            return r.json(), r.status_code
+            msg = cls.msg_from_authsv(r.json())
+            return msg, r.status_code
 
         except requests.exceptions.RequestException:
             cls.logger().error(f"Failed to contact AuthSv at url {cls.url}/sign-up with token {token}.")
@@ -92,7 +93,8 @@ class AuthSender():
                 json=args_dict,
                 headers={'x-access-token': args_dict['x-access-token']})
 
-            return r.json(), r.status_code
+            msg = cls.msg_from_authsv(r.json())
+            return msg, r.status_code
             
         except requests.exceptions.RequestException:
             cls.logger().error(f"Failed to contact AuthSv at url {cls.url}/users/{user_id} with token {args_dict['x-access-token']}.")
@@ -130,3 +132,8 @@ class AuthSender():
         cls.mock_db[user_id-1] = args_dict
 
         return cls.mock_db[user_id-1], 200
+
+    @classmethod
+    def msg_from_authsv(cls, json):
+        json["from"] = "Authentication backend"
+        return json
