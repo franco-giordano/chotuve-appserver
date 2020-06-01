@@ -10,3 +10,4 @@ gunicorn
 pytest
 pytest-env
 flask-restful
+coverage
