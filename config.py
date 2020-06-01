@@ -4,6 +4,8 @@ class Config(object):
     DEBUG = False
     SECRET_KEY = 'this-really-needs-to-be-changed'
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL','sqlite://')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    BUNDLE_ERRORS = True
 
 
 
@@ -17,12 +19,14 @@ class ProductionConfig(Config):
     LOG_LEVEL = "WARN"
 
 
-class StagingConfig(Config):
-    LOG_LEVEL = "INFO"
+
+class TestConfig(Config):
+    TESTING = True
+    LOG_LEVEL = "DEBUG"
 
 
 app_config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
-    'staging': StagingConfig
+    'testing':TestConfig
 }
