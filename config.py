@@ -16,8 +16,8 @@ class DevelopmentConfig(Config):
 
 
 class ProductionConfig(Config):
-    LOG_LEVEL = "WARN"
-
+    LOG_LEVEL = "INFO"
+    PROPAGATE_EXCEPTIONS = True
 
 
 class TestConfig(Config):
