@@ -39,7 +39,7 @@ def test_cant_register_without_token(testapp):
 
     assert r.status_code == 400
 
-def test_error_if_missing_field(testapp):
+def test_error_if_missing_field1(testapp):
     r = testapp.post('/users', json={"email":"prueba@gmail.com",
                     "phone_number":"+123123123",
                     "image_location":"https://duckduckgo.com/assets/common/dax-logo.svg"},headers={'x-access-token':'1'})
@@ -47,13 +47,13 @@ def test_error_if_missing_field(testapp):
     assert r.status_code == 400
 
 
-def test_error_if_missing_field(testapp):
+def test_error_if_missing_field2(testapp):
     r = testapp.post('/users', json={"phone_number":"+123123123",
                     "image_location":"https://duckduckgo.com/assets/common/dax-logo.svg"},headers={'x-access-token':'1'})
 
     assert r.status_code == 400
 
-def test_error_if_missing_field(testapp):
+def test_error_if_missing_field3(testapp):
     r = testapp.post('/users', json={"phone_number":"+123123123",
                     "email":"prueba@protonmail.com"},headers={'x-access-token':'1'})
 
