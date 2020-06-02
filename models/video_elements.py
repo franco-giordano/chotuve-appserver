@@ -44,7 +44,7 @@ class Video(db.Model):
             'description': self.description,
             'uuid':self.uuid,
             'location':self.location,
-            'is-private': self.is_private,
+            'is_private': self.is_private,
             'likes':self.count_likes(),
             'dislikes':self.count_dislikes(),
         }

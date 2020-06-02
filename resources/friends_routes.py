@@ -9,7 +9,6 @@ from exceptions.exceptions import EndpointNotImplementedError, BadRequestError
 
 import logging
 
-# TODO no usa friend requests! arreglar
 
 # /users/user_id/friends
 class FriendsRoute(Resource):
@@ -59,7 +58,6 @@ class RequestsRoute(Resource):
 
         return msg, code
 
-# TODO aceptar/denegar requests!
 
 # /users/myid/friends/requests/otherid
 class UniqueRequestRoute(Resource):

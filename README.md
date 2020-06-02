@@ -44,7 +44,7 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 	"title":"titulo video",
 	"description": "descripcion de ejemplo",
 	"location":"lugar posteado",
-	"firebase-url":"...firebase.com..."
+	"firebase_url":"...firebase.com..."
 }
 ```
 
@@ -67,7 +67,7 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 ```json
 {
 	
-	"likes-video":true
+	"likes_video":true
 	
 }
 ```

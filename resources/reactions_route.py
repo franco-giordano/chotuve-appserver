@@ -12,7 +12,7 @@ class ReactionRoute(Resource):
     def __init__(self):
         self.rctn_parser = reqparse.RequestParser()
         self.rctn_parser.add_argument('x-access-token',location='headers')
-        self.rctn_parser.add_argument('likes-video', type = bool, required=True, 
+        self.rctn_parser.add_argument('likes_video', type = bool, required=True, 
             help="No reaction provided." ,location = 'json')
         super(ReactionRoute, self).__init__()
         
@@ -29,7 +29,7 @@ class ReactionRoute(Resource):
 
         uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
-        new_rctn = ReactionDAO.add_rctn(vid_id, uuid=uuid, likes=args['likes-video'])
+        new_rctn = ReactionDAO.add_rctn(vid_id, uuid=uuid, likes=args['likes_video'])
 
         return new_rctn, 201
 

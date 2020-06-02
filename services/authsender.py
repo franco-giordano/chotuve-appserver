@@ -1,9 +1,8 @@
 import requests
 import os, logging
 
-from exceptions.exceptions import FailedToContactAuthSvError, NotFoundError
+from exceptions.exceptions import FailedToContactAuthSvError, NotFoundError, UnauthorizedError
 
-# TODO hace cualquier cosa!
 class AuthSender():
 
     url = os.environ['CH_AUTHSV_URL'] if os.environ['APP_SETTINGS'] != 'testing' else None
@@ -37,6 +36,7 @@ class AuthSender():
     @classmethod
     def get_uuid_from_token(cls, token):
         if not cls.url:
+            cls._mock_get_info(int(token))
             return int(token)
 
         try:
@@ -127,9 +127,13 @@ class AuthSender():
         if not 0 < user_id <= len(cls.mock_db):
             raise NotFoundError(f"User with ID {user_id} not found")
         
+        if user_id != cls.get_uuid_from_token(args_dict["x-access-token"]):
+            raise UnauthorizedError(f"You cant edit others info!")
+
         del args_dict["x-access-token"]
 
-        cls.mock_db[user_id-1] = args_dict
+        for k in args_dict.keys():
+            cls.mock_db[user_id-1][k] = args_dict[k]
 
         return cls.mock_db[user_id-1], 200
 

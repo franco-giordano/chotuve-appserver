@@ -1,5 +1,4 @@
 import pytest
-from tests.conftest import *
 
 def test_ping(testapp):
     response = testapp.get('/ping')
