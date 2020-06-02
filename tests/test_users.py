@@ -59,6 +59,12 @@ def test_error_if_missing_field3(testapp):
 
     assert r.status_code == 400
 
+def test_non_existant(testapp):
+
+    r = testapp.get('/users/1123123', headers={'x-access-token':'1'})
+
+    assert r.status_code == 404
+
 
 def test_get_my_info(testapp):
 
@@ -87,6 +93,12 @@ def test_modify_my_info_name(testapp):
     assert data["phone_number"] =="+123123123"
     assert data["id"] == 1
 
+
+def test_modify_non_existant(testapp):
+
+    r = testapp.put('/users/123123', json={"display_name":"Carlos"},headers={'x-access-token':'123123'})
+
+    assert r.status_code == 404
 
 def test_modify_my_info_phone(testapp):
 

@@ -84,6 +84,7 @@ def test_can_accept_req(testapp):
     assert len(data["sent_reqs"]) == 1
 
     r = testapp.post('/users/1/friends/requests/2', json={'accept':True}, headers=create_tkn(1))
+    assert r.status_code == 200
 
 def test_now_friends(testapp):
     r = testapp.get('/users/1/friends', headers=create_tkn(1))
@@ -98,3 +99,8 @@ def test_now_friends(testapp):
 
     assert data["friends"][0]["user_id"] == 1
     assert len(data["friends"]) == 1
+
+def test_cant_add_myself(testapp):
+    r = testapp.post('/users/1/friends/requests', headers=create_tkn(1))
+    
+    assert r.status_code == 400
