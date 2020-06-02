@@ -23,6 +23,14 @@ class BadRequestError(ChotuveError):
         self.message = message
         super().__init__()
 
+    
+class UnauthorizedError(ChotuveError):
+    status_code = 401
+
+    def __init__(self, message):
+        self.message = message
+        super().__init__()
+
 class NotFoundError(ChotuveError):
     status_code = 404
 

@@ -1,9 +1,3 @@
-# Tablas:
-- amigos
-- solicitudes amistad
-- stats (???)
-- chats (lo puede hacer firebase)
-
 # Endpoints
 
 ### Videos
@@ -19,12 +13,6 @@ GET /users?q=$query$
 
 ##### Registro
 POST /users
-
-##### Login
-POST /auth
-
-##### Logout
-DELETE /auth 
 
 ##### Cambiar datos personales
 PUT /users/$myid$

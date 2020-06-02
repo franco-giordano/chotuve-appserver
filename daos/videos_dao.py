@@ -2,11 +2,12 @@ from app import db
 from models.video_elements import Video
 
 import daos.reactions_dao
+from daos.users_dao import FriendshipsDAO
 from services.mediasender import MediaSender
 
 import logging
 
-from exceptions.exceptions import NotFoundError
+from exceptions.exceptions import NotFoundError, UnauthorizedError
 
 class VideoDAO():
 
@@ -42,6 +43,9 @@ class VideoDAO():
     def get(cls, vid_id, viewer_uuid):
         vid = cls.get_raw(vid_id).serialize()
 
+        if vid["is_private"] and not FriendshipsDAO.are_friends(viewer_uuid, vid['uuid']):
+            raise UnauthorizedError(f"Trying to access private video, while not being friends with the author")
+
         cls.add_extra_info(vid, viewer_uuid)
 
         return vid
@@ -68,6 +72,6 @@ class VideoDAO():
     def add_extra_info(cls, serialized_vid, viewer_uuid):
         
         cls.logger().debug(f"Requesting extra info from mediasv, for viewer {viewer_uuid}")
-        serialized_vid['firebase-url'], serialized_vid['timestamp'] = MediaSender.get_info(serialized_vid['video_id'])
+        serialized_vid['firebase_url'], serialized_vid['timestamp'] = MediaSender.get_info(serialized_vid['video_id'])
         serialized_vid['reaction'] = daos.reactions_dao.ReactionDAO.reaction_by(serialized_vid['video_id'], viewer_uuid)
 

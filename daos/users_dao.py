@@ -105,3 +105,10 @@ class FriendshipsDAO():
             me.reject_request_from(sender)
 
         return {'message':'OK'}, 200
+
+    @classmethod
+    def are_friends(cls, id1, id2):
+        id1 = cls.get_raw(id1)
+        id2 = cls.get_raw(id2)
+
+        return id2 in id1.friends 

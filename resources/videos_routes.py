@@ -15,8 +15,8 @@ post_parser.add_argument("x-access-token", location='headers')
 post_parser.add_argument('description', type = str, default = "", location = 'json')
 post_parser.add_argument('location', type = str, default = "", location = 'json')
 post_parser.add_argument('title', type = str, default = "", location = 'json')
-post_parser.add_argument('is-private', type = bool, default = False, location = 'json')
-post_parser.add_argument('firebase-url', type = str, required = True, help="No firebase URL provided", location = 'json')
+post_parser.add_argument('is_private', type = bool, default = False, location = 'json')
+post_parser.add_argument('firebase_url', type = str, required = True, help="No firebase URL provided", location = 'json')
 
 
 
@@ -40,6 +40,8 @@ class UniqueVideoRoute(Resource):
         return vid, 200
 
     # TODO delete(cls)
+
+    # TODO put
         
 
 
@@ -56,6 +58,7 @@ class VideoRoute(Resource):
         # TODO esto de uuid esta repetido en todos los route, ver como generalizar (decorator?)
         uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
+        # TODO reemplazar por el motor de reglas
         videos = VideoDAO.get_all(uuid)
 
         return videos, 200
@@ -68,10 +71,10 @@ class VideoRoute(Resource):
 
         # add to local db
         new_vid_with_url = VideoDAO.add_vid(title=args['title'], description=args['description'], uuid=uuid, 
-                        location=args['location'], is_private=args['is-private'])
+                        location=args['location'], is_private=args['is_private'])
 
         # upload to mediasv
-        new_vid_with_url['firebase-url'], new_vid_with_url['timestamp'] = MediaSender.send_url(new_vid_with_url['video_id'],args['firebase-url'])
+        new_vid_with_url['firebase_url'], new_vid_with_url['timestamp'] = MediaSender.send_url(new_vid_with_url['video_id'],args['firebase_url'])
 
         return new_vid_with_url, 201
 

@@ -45,7 +45,7 @@ class User(db.Model):
 
     def serialize(self):
         return {
-            'user-id':self.id
+            'user_id':self.id
         }
 
     def serializeFriends(self):
@@ -55,12 +55,12 @@ class User(db.Model):
     
     def serializeReceivedReqs(self):
         return {
-            'pending-reqs':[p.serialize() for p in self.pending_requests]
+            'pending_reqs':[p.serialize() for p in self.pending_requests]
         }
     
     def serializeSentReqs(self):
         return {
-            'sent-reqs':[p.serialize() for p in self.sent_requests]
+            'sent_reqs':[p.serialize() for p in self.sent_requests]
         }
 
     def is_friend_with(self, user2):
