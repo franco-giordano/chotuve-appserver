@@ -2,7 +2,7 @@ FROM python:3.8.1-slim-buster
 WORKDIR /app
 
 # install netcat to wait database server to start
-RUN apt-get update && apt-get install -y netcat git
+RUN apt-get update && apt-get install -y netcat
 
 COPY ./requirements.txt .
 
