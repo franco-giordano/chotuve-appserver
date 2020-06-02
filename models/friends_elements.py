@@ -4,16 +4,21 @@ from app import db
 from exceptions.exceptions import NotFoundError
 
 friends = db.Table('friends',
-    db.Column('user1_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('user2_id', db.Integer, db.ForeignKey('users.id'))
-)
+                   db.Column('user1_id', db.Integer,
+                             db.ForeignKey('users.id')),
+                   db.Column('user2_id', db.Integer, db.ForeignKey('users.id'))
+                   )
 
 requests = db.Table('requests',
-    db.Column('sender_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('recver_id', db.Integer, db.ForeignKey('users.id'))
-)
+                    db.Column('sender_id', db.Integer,
+                              db.ForeignKey('users.id')),
+                    db.Column('recver_id', db.Integer,
+                              db.ForeignKey('users.id'))
+                    )
 
 # modelo
+
+
 class User(db.Model):
 
     __tablename__ = 'users'
@@ -45,22 +50,22 @@ class User(db.Model):
 
     def serialize(self):
         return {
-            'user_id':self.id
+            'user_id': self.id
         }
 
     def serializeFriends(self):
         return {
-            'friends':[f.serialize() for f in self.friends],
+            'friends': [f.serialize() for f in self.friends],
         }
-    
+
     def serializeReceivedReqs(self):
         return {
-            'pending_reqs':[p.serialize() for p in self.pending_requests]
+            'pending_reqs': [p.serialize() for p in self.pending_requests]
         }
-    
+
     def serializeSentReqs(self):
         return {
-            'sent_reqs':[p.serialize() for p in self.sent_requests]
+            'sent_reqs': [p.serialize() for p in self.sent_requests]
         }
 
     def is_friend_with(self, user2):
@@ -68,7 +73,6 @@ class User(db.Model):
 
     def received_request_from(self, user2):
         return self.pending_requests.filter(requests.c.sender_id == user2.id).count() > 0
-
 
     def accept_request_from(self, sender):
         if self.received_request_from(sender):
@@ -80,14 +84,15 @@ class User(db.Model):
             db.session.commit()
 
         else:
-            raise NotFoundError(f"Friendship request from {sender.id} to {self.id} not found!")
+            raise NotFoundError(
+                f"Friendship request from {sender.id} to {self.id} not found!")
 
     def reject_request_from(self, sender):
         if self.received_request_from(sender):
-            # TODO no funciona
             self.pending_requests.remove(sender)
 
             db.session.commit()
 
         else:
-            raise NotFoundError(f"Friendship request from {sender.id} to {self.id} not found!")
+            raise NotFoundError(
+                f"Friendship request from {sender.id} to {self.id} not found!")

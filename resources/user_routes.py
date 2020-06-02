@@ -90,7 +90,8 @@ class UsersRoute(Resource):
             FriendshipsDAO.add_user_to_db(msg['id'])
 
         return msg, code
-    
+
+    # TODO /users?name=...
     def get(self):
         raise EndpointNotImplementedError("User search not yet available!")
 

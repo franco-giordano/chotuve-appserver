@@ -30,8 +30,26 @@ GET /users/$myid$/friends/requests
 ##### Aceptar/Declinar solicitud
 POST /users/$myid$/friends/requests/$otherid$
 
-##### Recuperar password
+##### TODO Recuperar password
 POST /users/RECOVER_ENDPOINT_NAME
 
-##### Escribir nueva password
+##### TODO Escribir nueva password 
 POST /users/NEWPW_ENDPOINT_NAME
+
+
+# ALL TODOs:
+- Resetear contrasenia
+- stats
+- chatting
+- modificar metadata videos
+- modificar comentarios
+- modificar reaccion
+- borrar video
+- borrar comentario
+- borrar reaccion
+- buscar usuario (/users?name=...)
+- sugerir videos segun motor de reglas
+- pylint
+- Manuales:
+    - Manual de administrador: Instalación y configuración
+    - Definición de Arquitectura / Diseño de la aplicación (Debe incluir especificación de Api REST: OpenAPI 2.0)
