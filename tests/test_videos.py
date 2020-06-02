@@ -1,4 +1,5 @@
 import pytest
+from tests.tools import *
 
 FIRST_VIDEO_INFO = {
             "title":"My first video",
@@ -13,8 +14,6 @@ SECOND_VIDEO_INFO = {
             "firebase_url":"marcos.com/mi_video",
             "is_private":True}
 
-def create_tkn(id):
-    return {'x-access-token':str(id)}
 
 def test_get_videos(testapp):
     r = testapp.get("/videos", headers=create_tkn(1))
