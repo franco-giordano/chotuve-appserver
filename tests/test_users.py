@@ -130,3 +130,8 @@ def test_no_videos_uploaded(testapp):
 
     assert r.status_code == 200
     assert r.get_json() == []
+
+def test_users_not_implemented(testapp):
+    r = testapp.get('/users', headers={'x-access-token':'1'})
+
+    assert r.status_code == 501
