@@ -11,4 +11,4 @@ pytest
 pytest-env
 flask-restful
 coverage
-coveralls
+coveralls[yaml]
