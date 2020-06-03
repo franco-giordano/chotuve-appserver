@@ -80,7 +80,7 @@ class AuthSender():
         if not cls.url:
             return cls._mock_register(fullname, email, phone, avatar)
         try:
-            r = requests.post(cls.url + '/sign-up',
+            r = requests.post(cls.url + '/users',
                               json={'email': email, 'display_name': fullname,
                                     'phone_number': phone, 'image_location': avatar},
                               headers={'x-access-token': token})
@@ -89,7 +89,7 @@ class AuthSender():
 
         except requests.exceptions.RequestException:
             cls.logger().error(
-                f"Failed to contact AuthSv at url {cls.url}/sign-up with token {token}.")
+                f"Failed to contact AuthSv at url {cls.url}/users with token {token}.")
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
