@@ -4,13 +4,13 @@ from flask_restful import Api
 from config import app_config
 
 
-
 db = SQLAlchemy()
 
 api = Api()
 
 from resources import register_routes
 from handlers import register_error_handlers
+
 
 def create_app(config_name):
 
@@ -29,9 +29,8 @@ def create_app(config_name):
 
     register_routes(api)
     register_error_handlers(app)
-    
+
     api.init_app(app)
     db.init_app(app)
 
     return app
-

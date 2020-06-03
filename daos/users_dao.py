@@ -9,6 +9,7 @@ from exceptions.exceptions import NotFoundError, BadRequestError, InternalError
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
 
+
 class FriendshipsDAO():
 
     @classmethod
@@ -17,7 +18,7 @@ class FriendshipsDAO():
 
     @classmethod
     def add_friendship(cls, rcv_id, sender_id):
-        
+
         snd = cls.get_raw(sender_id)
         rcv = cls.get_raw(rcv_id)
 
@@ -32,7 +33,7 @@ class FriendshipsDAO():
 
     @classmethod
     def get_friends(cls, user_id):
-        user =  cls.get_raw(user_id)
+        user = cls.get_raw(user_id)
 
         return user.serializeFriends()
 
@@ -45,15 +46,13 @@ class FriendshipsDAO():
 
         return user
 
-
-
     @classmethod
     def create_raw(cls, user_id):
         try:
             new_user = User(id=user_id)
             db.session.add(new_user)
             db.session.commit()
-        except (UniqueViolation,IntegrityError) as e:
+        except (UniqueViolation, IntegrityError) as e:
             cls.logger().error(e)
             raise InternalError(f"User already exists with ID {user_id}")
 
@@ -66,17 +65,19 @@ class FriendshipsDAO():
     @classmethod
     def send_request(cls, snd_id, rcv_id):
         if snd_id == rcv_id:
-            raise BadRequestError("You can't send a friend request to yourself!")
+            raise BadRequestError(
+                "You can't send a friend request to yourself!")
 
         snd = cls.get_raw(snd_id)
         rcv = cls.get_raw(rcv_id)
 
         if rcv.received_request_from(snd) or snd.is_friend_with(rcv):
-            raise BadRequestError(f"You already sent a request, or are already friends.")
-        
+            raise BadRequestError(
+                f"You already sent a request, or are already friends.")
+
         if snd.received_request_from(rcv):
-            raise BadRequestError(f"You have a pending request from this user, try accepting or rejecting it first.")
-        
+            raise BadRequestError(
+                f"You have a pending request from this user, try accepting or rejecting it first.")
 
         snd.sent_requests.append(rcv)
         db.session.commit()
@@ -94,7 +95,7 @@ class FriendshipsDAO():
 
     @classmethod
     def respond_request(cls, my_id, sender_id, accept):
-        
+
         me = cls.get_raw(my_id)
         sender = cls.get_raw(sender_id)
 
@@ -104,11 +105,11 @@ class FriendshipsDAO():
         else:
             me.reject_request_from(sender)
 
-        return {'message':'OK'}, 200
+        return {'message': 'OK'}, 200
 
     @classmethod
     def are_friends(cls, id1, id2):
         id1 = cls.get_raw(id1)
         id2 = cls.get_raw(id2)
 
-        return id2 in id1.friends 
+        return id2 in id1.friends

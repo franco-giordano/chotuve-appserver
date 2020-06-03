@@ -5,7 +5,7 @@ from daos.users_dao import FriendshipsDAO
 
 from services.authsender import AuthSender
 
-from exceptions.exceptions import EndpointNotImplementedError, BadRequestError
+from exceptions.exceptions import EndpointNotImplementedError, BadRequestError, UnauthorizedError
 
 import logging
 
@@ -41,7 +41,7 @@ class RequestsRoute(Resource):
         sender_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
         if sender_uuid != user_id:
-            raise BadRequestError("You can't view friend requests from someone else!")
+            raise UnauthorizedError("You can't view other user's friend requests!")
 
         return FriendshipsDAO.view_pending_reqs(user_id), 200
 
@@ -76,7 +76,7 @@ class UniqueRequestRoute(Resource):
         viewer_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
         if viewer_uuid != my_id:
-            raise BadRequestError("You can't respond other user's friend requests!")
+            raise UnauthorizedError("You can't respond other user's friend requests!")
 
         msg, code = FriendshipsDAO.respond_request(my_id, sender_id, accept=args["accept"])
 

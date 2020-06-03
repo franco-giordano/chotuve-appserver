@@ -1,12 +1,12 @@
 import os
 
+
 class Config(object):
     DEBUG = False
     SECRET_KEY = 'this-really-needs-to-be-changed'
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL','sqlite://')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'sqlite://')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BUNDLE_ERRORS = True
-
 
 
 class DevelopmentConfig(Config):
@@ -28,5 +28,5 @@ class TestConfig(Config):
 app_config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
-    'testing':TestConfig
+    'testing': TestConfig
 }
