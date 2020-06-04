@@ -84,6 +84,8 @@ class AuthSender():
                               json={'email': email, 'display_name': fullname,
                                     'phone_number': phone, 'image_location': avatar},
                               headers={'x-access-token': token})
+
+            cls.logger().debug(r)
             msg = cls.msg_from_authsv(r.json())
             return msg, r.status_code
 

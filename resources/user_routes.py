@@ -77,7 +77,7 @@ class UsersRoute(Resource):
         parser.add_argument("display_name", location="json", required=True, help="Missing user's full name.", type=str)
         parser.add_argument("email", location="json", required=True, help="Missing user's email.", type=str)
         parser.add_argument("phone_number", location="json", required=False, default="", type=str)
-        parser.add_argument("image_location", location="json", required=True, help="Missing avatar's url.", type=str)
+        parser.add_argument("image_location", location="json", required=False, default="", type=str)
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
 
         args = parser.parse_args()

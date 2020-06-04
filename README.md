@@ -1,7 +1,7 @@
 # Chotuve - Application Server
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
-[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=development)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=development&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=development)
+[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
+[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
 ![api](https://img.shields.io/badge/api-v0.3-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
@@ -116,7 +116,7 @@ con body:
 ```GET 0.0.0.0:5000/users/<uuid>/friends```
 
 - Enviar solicitud de amistad:
-```POST 0.0.0.0:5000/users/<otheruuid>/friends``` sin body (obtiene el id de quien envia desde el token)
+```POST 0.0.0.0:5000/users/<otheruuid>/friends/requests``` sin body (obtiene el id de quien envia desde el token)
 
 
 - Ver mis solicitudes pendientes:
@@ -130,3 +130,4 @@ con body:
 	"accept":true
 }
 ```
+(accept true para aceptar, accept false para rechazar)
