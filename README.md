@@ -22,11 +22,11 @@
 ---------------------------------------------
 
 
-## API v0.3
+## API v0.3.1
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
-**Salvo por registrarse o loguearse, TODOS los endpoints REQUIEREN el campo "x-access-token" en los headers, con un token valido**
+**Salvo por /ping, TODOS los endpoints REQUIEREN el campo "x-access-token" en los headers, con un token valido**
 
 #### Videos
 
@@ -40,19 +40,20 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 `GET 0.0.0.0:5000/videos/<id>/comments`
 
 - Postear un video:
-`POST 0.0.0.0:5000/videos` con body:
+`POST 0.0.0.0:5000/videos` con body (todos opcionales salvo firebase_url):
 ```json
 {
 	
 	"title":"titulo video",
 	"description": "descripcion de ejemplo",
 	"location":"lugar posteado",
-	"firebase_url":"...firebase.com..."
+	"firebase_url":"...firebase.com...",
+	"is_private":false
 }
 ```
 
 - Postear un comentario:
-`POST 0.0.0.0:5000/videos/<id>/comments` con body:
+`POST 0.0.0.0:5000/videos/<id>/comments` con body (text obligatorio):
 ```json
 {
 	
@@ -66,7 +67,7 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 
 
 - Reaccionar a un video:
-`POST 0.0.0.0:5000/videos/<id>/reactions` con body (true es like, false es dislike):
+`POST 0.0.0.0:5000/videos/<id>/reactions` con body (true es like, false es dislike; campo obligatorio):
 ```json
 {
 	
@@ -88,7 +89,7 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 
 - Registrar un nuevo usuario:
 ```POST 0.0.0.0:5000/users```
-con body:
+con body (display_name e email obligatorios, resto opcional):
 ```json
 {
 	"display_name":"Cosme Fulanito",
@@ -99,7 +100,7 @@ con body:
 ```
 
 - Modificar datos de un usuario:
-`PUT 0.0.0.0:4000/users/<id>` con body (pueden enviarse solo los datos que cambian):
+`PUT 0.0.0.0:4000/users/<id>` con body (todos opcionales):
 ```json
 {
 	
@@ -124,10 +125,37 @@ con body:
 
 
 - Aceptar/Rechazar solicitud pendiente:
-```POST 0.0.0.0:5000/users/<myuuid>/friends/requests/<otheruuid>``` con body
+```POST 0.0.0.0:5000/users/<myuuid>/friends/requests/<otheruuid>``` con body (campo obligatorio)
 ```json
 {
 	"accept":true
 }
 ```
 (accept true para aceptar, accept false para rechazar)
+
+#### Ping
+
+- Chequear estado del appserver:
+``` GET 0.0.0.0:5000/ping```
+
+(devuelve {"appserver":"UP"} con codigo 200)
+
+#### Estadisticas de uso
+
+_[NO IMPLEMENTADO]_
+
+#### Mensajes y Chats
+
+_[NO IMPLEMENTADO]_
+
+#### Recuperacion de Passwords
+
+_[NO IMPLEMENTADO]_
+
+#### Modificar o borrar videos/comentarios/reacciones/amistades
+
+_[NO IMPLEMENTADO]_
+
+#### Ver videos sugeridos por motor de reglas
+
+_[NO IMPLEMENTADO]_
