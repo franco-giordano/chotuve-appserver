@@ -27,7 +27,7 @@ class MediaSender():
 
             if r.status_code != 201:
                 raise FailedToContactMediaSvError(
-                    f"Failed to upload video. Response {r.status_code}")
+                    f"Failed to upload video. Response {r.status_code} from media backend")
 
             return r.json()['url'], r.json()['timestamp']
 
