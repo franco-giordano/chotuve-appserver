@@ -12,7 +12,7 @@ from services.authsender import AuthSender
 
 postcmnt_parser = reqparse.RequestParser()
 postcmnt_parser.add_argument("x-access-token", location='headers')
-postcmnt_parser.add_argument('text', type = str, default = "", location = 'json')       
+postcmnt_parser.add_argument('text', type = str, required=True, help="Missing comment text!",location = 'json')       
 
 
 class CommentRoute(Resource):
