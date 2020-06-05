@@ -27,7 +27,7 @@ class AuthSender():
             if r.status_code == 200:
                 return True
 
-            if r.status_code == 401:
+            if r.status_code == 400:
                 return False
 
         except requests.exceptions.RequestException:
