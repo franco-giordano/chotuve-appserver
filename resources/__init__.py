@@ -6,7 +6,7 @@ from resources.user_routes import UniqueUserRoute, UniqueUserVidsRoute, UsersRou
 
 from resources.friends_routes import FriendsRoute, RequestsRoute, UniqueRequestRoute
 
-from resources.extra_routes import PingRoute
+from resources.extra_routes import PingRoute, AuthRoutes
 
 def register_routes(api):
     api.add_resource(VideoRoute, '/videos')
@@ -24,3 +24,4 @@ def register_routes(api):
     api.add_resource(UniqueRequestRoute, '/users/<int:my_id>/friends/requests/<int:sender_id>')
 
     api.add_resource(PingRoute, '/ping')
+    api.add_resource(AuthRoutes, '/auth')

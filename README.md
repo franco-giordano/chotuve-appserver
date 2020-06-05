@@ -78,6 +78,9 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 
 #### Usuarios
 
+- Obtener mi ID de usuario al loguearme:
+```GET 0.0.0.0:5000/auth```, devuelve {"id":int}
+
 - Obtener datos publicos de un usuario
 ```GET 0.0.0.0:5000/users/<uuid>```
 
