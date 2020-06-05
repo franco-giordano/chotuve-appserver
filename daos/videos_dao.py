@@ -18,10 +18,10 @@ class VideoDAO():
         return logging.getLogger(cls.__name__)
 
     @classmethod
-    def add_vid(cls, title, description, uuid, location, is_private):
+    def add_vid(cls, title, description, uuid, location, is_private, thumbnail_url):
 
         new_vid = Video(title=title, description=description, uuid=uuid,
-                        location=location, is_private=is_private)
+                        location=location, is_private=is_private, thumbnail_url=thumbnail_url)
         db.session.add(new_vid)
         db.session.commit()
 

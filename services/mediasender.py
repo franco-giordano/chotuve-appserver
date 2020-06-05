@@ -30,6 +30,7 @@ class MediaSender():
                 raise FailedToContactMediaSvError(
                     f"Failed to upload video. Response {r.status_code} from media backend")
 
+            cls.logger().debug(f"MediaSv response: {r.json()}")
             return r.json()['url'], r.json()['timestamp']
 
         except requests.exceptions.RequestException:
