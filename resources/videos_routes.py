@@ -15,6 +15,7 @@ post_parser.add_argument("x-access-token", location='headers')
 post_parser.add_argument('description', type = str, default = "", location = 'json')
 post_parser.add_argument('location', type = str, default = "", location = 'json')
 post_parser.add_argument('title', type = str, default = "", location = 'json')
+post_parser.add_argument('thumbnail_url', type = str, required = True, location = 'json')
 post_parser.add_argument('is_private', type = bool, default = False, location = 'json')
 post_parser.add_argument('firebase_url', type = str, required = True, help="No firebase URL provided", location = 'json')
 
@@ -73,7 +74,7 @@ class VideoRoute(Resource):
 
         # add to local db
         new_vid_with_url = VideoDAO.add_vid(title=args['title'], description=args['description'], uuid=uuid, 
-                        location=args['location'], is_private=args['is_private'])
+                        location=args['location'], is_private=args['is_private'], thumbnail_url=args['thumbnail_url'])
 
         # upload to mediasv
         new_vid_with_url['firebase_url'], new_vid_with_url['timestamp'] = MediaSender.send_url(new_vid_with_url['video_id'],args['firebase_url'])
