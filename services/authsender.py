@@ -76,7 +76,8 @@ class AuthSender():
     @classmethod
     def get_author_name(cls, user_id, token):
         if not cls.url:
-            return cls._mock_get_info(user_id)["display_name"]
+            info, code = cls._mock_get_info(user_id)
+            return info["display_name"]
 
         try:
             r = requests.get(cls.url + '/users/' + str(user_id),
