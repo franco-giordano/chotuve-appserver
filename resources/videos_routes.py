@@ -37,6 +37,8 @@ class UniqueVideoRoute(Resource):
         self.logger.debug("getting single vid from videoDAO")
         vid = VideoDAO.get(vid_id, uuid)
 
+        vid["author"] = AuthSender.get_author_name(vid["uuid"], args["x-access-token"])
+
         return vid, 200
 
     # TODO delete(cls)
@@ -59,7 +61,7 @@ class VideoRoute(Resource):
         uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
         # TODO reemplazar por el motor de reglas
-        videos = VideoDAO.get_all(uuid)
+        videos = VideoDAO.get_all(uuid, args["x-access-token"])
 
         return videos, 200
 

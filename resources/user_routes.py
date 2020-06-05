@@ -62,7 +62,7 @@ class UniqueUserVidsRoute(Resource):
         args = parser.parse_args()
         uuid = AuthSender.get_uuid_from_token(args['x-access-token'])
         
-        vids = VideoDAO.get_videos_by(user_id, uuid)
+        vids = VideoDAO.get_videos_by(user_id, uuid, args["x-access-token"])
 
         return vids, 200
         
