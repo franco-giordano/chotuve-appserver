@@ -5,14 +5,16 @@ FIRST_VIDEO_INFO = {
     "title": "My first video",
     "description": "my awesome desc",
     "location": "Magic Land",
-    "firebase_url": "carlos.com/videos/1"}
+    "firebase_url": "carlos.com/videos/1",
+    "thumbnail_url":"www.google.com/thumbnail1"}
 
 SECOND_VIDEO_INFO = {
     "title": "videazo",
     "description": "descripcion",
     "location": "Cosmic Land",
     "firebase_url": "marcos.com/mi_video",
-    "is_private": True}
+    "is_private": True,
+    "thumbnail_url":"www.google.com/thumbnail2"}
 
 
 def test_get_videos(testapp):

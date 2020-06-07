@@ -4,6 +4,7 @@ from models.video_elements import Video
 import daos.reactions_dao
 from daos.users_dao import FriendshipsDAO
 from services.mediasender import MediaSender
+from services.authsender import AuthSender
 
 import logging
 
@@ -17,17 +18,17 @@ class VideoDAO():
         return logging.getLogger(cls.__name__)
 
     @classmethod
-    def add_vid(cls, title, description, uuid, location, is_private):
+    def add_vid(cls, title, description, uuid, location, is_private, thumbnail_url):
 
         new_vid = Video(title=title, description=description, uuid=uuid,
-                        location=location, is_private=is_private)
+                        location=location, is_private=is_private, thumbnail_url=thumbnail_url)
         db.session.add(new_vid)
         db.session.commit()
 
         return new_vid.serialize()
 
     @classmethod
-    def get_all(cls, viewer_uuid):
+    def get_all(cls, viewer_uuid, token):
         all_vids = Video.query.all()
 
         final_vids = []
@@ -35,6 +36,7 @@ class VideoDAO():
         for v in all_vids:
             res = v.serialize()
             cls.add_extra_info(res, viewer_uuid)
+            res["author"] = AuthSender.get_author_name(res["uuid"], token)
             final_vids.append(res)
 
         return final_vids
@@ -61,12 +63,13 @@ class VideoDAO():
         return vid
 
     @classmethod
-    def get_videos_by(cls, user_id, viewer_uuid):
+    def get_videos_by(cls, user_id, viewer_uuid, token):
         videos = [v.serialize()
                   for v in Video.query.filter(Video.uuid == user_id)]
 
         for v in videos:
             cls.add_extra_info(v, viewer_uuid)
+            v["author"] = AuthSender.get_author_name(v["uuid"], token)
 
         return videos
 

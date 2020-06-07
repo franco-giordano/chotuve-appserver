@@ -27,7 +27,7 @@ class AuthSender():
             if r.status_code == 200:
                 return True
 
-            if r.status_code == 401:
+            if r.status_code == 400:
                 return False
 
         except requests.exceptions.RequestException:
@@ -73,7 +73,23 @@ class AuthSender():
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
-    # TODO AUTHSV DEBE MANDARME USERID EN LA RTA
+    @classmethod
+    def get_author_name(cls, user_id, token):
+        if not cls.url:
+            info, code = cls._mock_get_info(user_id)
+            return info["display_name"]
+
+        try:
+            r = requests.get(cls.url + '/users/' + str(user_id),
+                             headers={'x-access-token': token})
+            
+            return r.json()["display_name"]
+
+        except requests.exceptions.RequestException:
+            cls.logger().error(
+                f"Failed to contact AuthSv at url {cls.url}/users/{user_id} with token {token}.")
+            raise FailedToContactAuthSvError(
+                f"Failed to contact user backend.")
 
     @classmethod
     def register_user(cls, fullname, email, phone, avatar, token):
@@ -101,7 +117,7 @@ class AuthSender():
             return cls._mock_modify(user_id, args_dict)
 
         try:
-            r = requests.post(cls.url + '/users' + str(user_id),
+            r = requests.post(cls.url + '/users/' + str(user_id),
                               json=args_dict,
                               headers={'x-access-token': args_dict['x-access-token']})
 

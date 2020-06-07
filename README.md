@@ -1,8 +1,8 @@
 # Chotuve - Application Server
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
-[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=development&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=development)
-[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=development)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-![api](https://img.shields.io/badge/api-v0.3.1-blueviolet)
+[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
+[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
+![api](https://img.shields.io/badge/api-v0.3.2-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -22,7 +22,7 @@
 ---------------------------------------------
 
 
-## API v0.3.1
+## API v0.3.2
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -40,7 +40,7 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 `GET 0.0.0.0:5000/videos/<id>/comments`
 
 - Postear un video:
-`POST 0.0.0.0:5000/videos` con body (todos opcionales salvo firebase_url):
+`POST 0.0.0.0:5000/videos` con body (todos opcionales salvo firebase_url y thumbnail_url):
 ```json
 {
 	
@@ -48,7 +48,8 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 	"description": "descripcion de ejemplo",
 	"location":"lugar posteado",
 	"firebase_url":"...firebase.com...",
-	"is_private":false
+	"is_private":false,
+	"thumbnail_url":"www.url.com..."
 }
 ```
 

@@ -26,9 +26,11 @@ class MediaSender():
                               json={'videoId': vid_id, 'url': fb_url})
 
             if r.status_code != 201:
+                cls.logger().error(f"Error uploading video for ID: {vid_id}. Response: {r.json()}, code {r.status_code}")
                 raise FailedToContactMediaSvError(
                     f"Failed to upload video. Response {r.status_code} from media backend")
 
+            cls.logger().debug(f"MediaSv response: {r.json()}")
             return r.json()['url'], r.json()['timestamp']
 
         except requests.exceptions.RequestException:
@@ -49,6 +51,7 @@ class MediaSender():
             r = requests.get(cls.url + '/video', json={'videoId': vid_id})
 
             if r.status_code != 200:
+                cls.logger().error(f"Error getting video info for ID: {vid_id}. Response: {r.json()}, code {r.status_code}")
                 raise FailedToContactMediaSvError(
                     f"Failed to get video info. Response {r.status_code}")
 

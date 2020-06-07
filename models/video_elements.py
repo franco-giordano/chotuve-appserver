@@ -14,6 +14,8 @@ class Video(db.Model):
     description = db.Column(db.Text)
     uuid = db.Column(db.Integer, nullable=False)
     location = db.Column(db.String(200))
+    thumbnail_url = db.Column(db.String(100))
+
 
     is_private = db.Column(db.Boolean, default=False)
     likes = db.Column(db.Integer, default=0)
@@ -44,6 +46,7 @@ class Video(db.Model):
             'video_id': self.id,
             'title': self.title,
             'description': self.description,
+            'thumbnail_url': self.thumbnail_url,
             'uuid': self.uuid,
             'location': self.location,
             'is_private': self.is_private,
