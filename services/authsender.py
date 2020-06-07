@@ -117,7 +117,7 @@ class AuthSender():
             return cls._mock_modify(user_id, args_dict)
 
         try:
-            r = requests.post(cls.url + '/users' + str(user_id),
+            r = requests.post(cls.url + '/users/' + str(user_id),
                               json=args_dict,
                               headers={'x-access-token': args_dict['x-access-token']})
 
