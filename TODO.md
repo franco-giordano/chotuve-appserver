@@ -53,3 +53,10 @@ POST /users/NEWPW_ENDPOINT_NAME
 - Manuales:
     - Manual de administrador: Instalación y configuración
     - Definición de Arquitectura / Diseño de la aplicación (Debe incluir especificación de Api REST: OpenAPI 2.0)
+
+
+
+# Corrections
+
+- Requests own endpoint @ root: /requests w/ body {id:int}
+- Security token for app->auth, app->media

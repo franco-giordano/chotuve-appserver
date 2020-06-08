@@ -86,19 +86,22 @@ class UsersRoute(Resource):
             avatar=args['image_location'], token=args['x-access-token'])
 
         if code == 201:
-            # TODO QUE LO AGREGUE CON EL MISMO ID QUE EL AUTHSV!!
             FriendshipsDAO.add_user_to_db(msg['id'])
 
         return msg, code
 
     # TODO /users?name=...
     def get(self):
-        raise EndpointNotImplementedError("User search not yet available!")
 
         parser = reqparse.RequestParser()
-        parser.add_argument("name", type=str)
-        parser.add_argument("email", type=str)
-        parser.add_argument("phone", type=str)
+
+        parser.add_argument("name", type=str, required=False)
+        parser.add_argument("email", type=str, required=False)
+        parser.add_argument("phone", type=str, required=False)
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
 
         args = parser.parse_args()
+
+        msg, code = AuthSender.find_user(args["x-access-token"], args["name"], args["email"], args["phone"])
+
+        return msg, code
