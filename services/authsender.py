@@ -131,6 +131,36 @@ class AuthSender():
                 f"Failed to contact user backend.")
 
     @classmethod
+    def find_user(cls, token, name=None, email=None, phone=None):
+        if not cls.url:
+            return cls._mock_find(name, email, phone)
+
+        query = "?"
+
+        if name:
+            query += f"name={name}"
+        if email:
+            query += f"&email={email}"
+        if phone:
+            query += f"&phone={phone}"
+
+        try:
+            r = requests.get(cls.url + '/users' + query,
+                              headers={'x-access-token': token})
+
+            msg = cls.msg_from_authsv(r.json())
+            return msg, r.status_code
+
+        except requests.exceptions.RequestException:
+            cls.logger().error(
+                f"Failed to contact AuthSv at url {cls.url}/users?name={name}&phone={phone}&email={email} with token {token}.")
+            raise FailedToContactAuthSvError(
+                f"Failed to contact user backend.")
+
+        
+        
+
+    @classmethod
     def _mock_register(cls, fullname, email, phone, avatar):
         user_id = len(cls.mock_db) + 1
 
@@ -165,6 +195,25 @@ class AuthSender():
             cls.mock_db[user_id - 1][k] = args_dict[k]
 
         return cls.mock_db[user_id - 1], 200
+
+    @classmethod
+    def _mock_find(cls, name=None, email=None, phone=None):
+        found = cls.mock_db.copy()
+
+        if name:
+            found = [u for u in found if name in u["display_name"]]
+
+        if email:
+            found = [u for u in found if email == u["email"]]
+
+        if phone:
+            found = [u for u in found if phone == u["phone_number"]]
+
+        return { 'users': found }, 200
+
+
+        
+        
 
     @classmethod
     def msg_from_authsv(cls, json):

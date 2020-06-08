@@ -2,7 +2,7 @@
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
 [![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=development&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=development)
 [![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=development)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-![api](https://img.shields.io/badge/api-v0.3.2-blueviolet)
+![api](https://img.shields.io/badge/api-v0.3.3-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -22,7 +22,7 @@
 ---------------------------------------------
 
 
-## API v0.3.2
+## API v0.3.3
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -85,8 +85,13 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 - Obtener datos publicos de un usuario
 ```GET 0.0.0.0:5000/users/<uuid>```
 
-- Buscar usuarios con datos coincidentes [NO IMPLEMENTADO]:
-```GET 0.0.0.0:5000/users?q=<name>```
+- Buscar usuarios con datos coincidentes:
+```GET 0.0.0.0:5000/users?name=<name>&email=<email>&phone=<phone>```
+Notas:
+	- Cualquier argumento es opcional
+	- Name busca coincidencia parcial (si busco 'Fran' encuentro 'Franco'). Email y Phone son coincidencias EXACTAS.
+	- Si quiero incluir un '+' en la busqueda (para phone, por ej), se debe escribirlo como '%2B' (si quiero buscar '+54 9 ...' debo buscar '%2B54 9 ...'). Probablemente ocurra lo mismo para otros caracteres especiales, [ver tabla de encodings aqui](https://www.w3schools.com/tags/ref_urlencode.asp). Esto NO ocurre con el @
+
 
 - Obtener videos subidos por un usuario
 ```GET 0.0.0.0:5000/users/<uuid>/videos```
@@ -104,7 +109,7 @@ con body (display_name e email obligatorios, resto opcional):
 ```
 
 - Modificar datos de un usuario:
-`PUT 0.0.0.0:4000/users/<id>` con body (todos opcionales):
+`PUT 0.0.0.0:5000/users/<id>` con body (todos opcionales):
 ```json
 {
 	
