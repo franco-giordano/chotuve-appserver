@@ -8,6 +8,8 @@ from resources.friends_routes import FriendsRoute, RequestsRoute, UniqueRequestR
 
 from resources.extra_routes import PingRoute, AuthRoutes
 
+from resources.msg_routes import MessagesRoute
+
 def register_routes(api):
     api.add_resource(VideoRoute, '/videos')
     api.add_resource(UniqueVideoRoute, '/videos/<int:vid_id>')
@@ -22,6 +24,8 @@ def register_routes(api):
     api.add_resource(RequestsRoute, '/users/<int:user_id>/friends/requests')
 
     api.add_resource(UniqueRequestRoute, '/users/<int:my_id>/friends/requests/<int:sender_id>')
+
+    api.add_resource(MessagesRoute, '/messages')
 
     api.add_resource(PingRoute, '/ping')
     api.add_resource(AuthRoutes, '/auth')

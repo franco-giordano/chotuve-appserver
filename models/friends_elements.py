@@ -36,14 +36,6 @@ class User(db.Model):
         secondaryjoin=(requests.c.recver_id == id),
         backref=db.backref('pending_requests', lazy='dynamic'), lazy='dynamic')
 
-    # uuid = db.Column(db.Integer, nullable=False)
-    # location = db.Column(db.String(200))
-
-    # is_private = db.Column(db.Boolean, default=False)
-    # likes=db.Column(db.Integer, default=0)
-    # dislikes = db.Column(db.Integer, default=0)
-    # comments = db.relationship('Comment', backref='video')
-    # reactions = db.relationship('VideoReaction', backref='video', lazy="subquery")
 
     def __repr__(self):
         return '<User {}>'.format(self.id)
