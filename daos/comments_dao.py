@@ -10,8 +10,8 @@ from models.video_elements import Comment
 class CommentDAO():
 
     @classmethod
-    def add_cmnt(cls, vid_id, uuid, text):
-        new_cmnt = Comment(uuid=uuid, text=text)
+    def add_cmnt(cls, vid_id, uuid, text, time):
+        new_cmnt = Comment(uuid=uuid, text=text, vid_time=time)
         new_cmnt.video = VideoDAO.get_raw(vid_id)
 
         db.session.add(new_cmnt)
