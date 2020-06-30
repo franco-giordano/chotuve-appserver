@@ -47,7 +47,6 @@ POST /users/NEWPW_ENDPOINT_NAME
 - borrar video
 - borrar comentario
 - borrar reaccion
-- buscar usuario (/users?name=...)
 - sugerir videos segun motor de reglas
 - pylint
 - Manuales:
@@ -60,3 +59,29 @@ POST /users/NEWPW_ENDPOINT_NAME
 
 - Requests own endpoint @ root: /requests w/ body {id:int}
 - Security token for app->auth, app->media
+
+
+En extra un campo type que define el tipo 'message' o 'request/friendreq' es un JSON.
+{
+    "type":...,
+    "uuid":32,
+    "id":12312321312213,
+    "msg":"Hola como estas"
+}
+
+endpoints de mandar y obtener mensajes (primeros 20 por ej)
+
+endpoint de mandar un push token (donde guardarlo?)
+
+~~arreglar busqueda de amigos~~
+
+eliminar amigo
+
+POST /messages
+{
+    "to":1123,
+    "msg":"que onda",
+}
+
+
+

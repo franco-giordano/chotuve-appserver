@@ -2,7 +2,7 @@
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
 [![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
 [![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-![api](https://img.shields.io/badge/api-v0.3.3-blueviolet)
+![api](https://img.shields.io/badge/api-v0.4-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -22,7 +22,7 @@
 ---------------------------------------------
 
 
-## API v0.3.3
+## API v0.4
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -54,11 +54,12 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 ```
 
 - Postear un comentario:
-`POST 0.0.0.0:5000/videos/<id>/comments` con body (text obligatorio):
+`POST 0.0.0.0:5000/videos/<id>/comments` con body (text obligatorio, vid_time opcional):
 ```json
 {
 	
-	"text":"comentario de ejemplo"
+	"text":"comentario de ejemplo",
+	"vid_time":"5:43"
 	
 }
 ```
@@ -86,11 +87,12 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 ```GET 0.0.0.0:5000/users/<uuid>```
 
 - Buscar usuarios con datos coincidentes:
-```GET 0.0.0.0:5000/users?name=<name>&email=<email>&phone=<phone>```
+```GET 0.0.0.0:5000/users?name=<name>&email=<email>&phone=<phone>&per_page=<int>&page=<int>```
 Notas:
 	- Cualquier argumento es opcional
-	- Name busca coincidencia parcial (si busco 'Fran' encuentro 'Franco'). Email y Phone son coincidencias EXACTAS.
-	- Si quiero incluir un '+' en la busqueda (para phone, por ej), se debe escribirlo como '%2B' (si quiero buscar '+54 9 ...' debo buscar '%2B54 9 ...'). Probablemente ocurra lo mismo para otros caracteres especiales, [ver tabla de encodings aqui](https://www.w3schools.com/tags/ref_urlencode.asp). Esto NO ocurre con el @
+	- TODOS buscan coincidencias parciales (si busco 'Fran' encuentro 'Franco').
+	- Si quiero incluir un '+' en la busqueda (para phone, por ej), se debe escribirlo como '%2B' (si quiero buscar '+54 9 ...' debo buscar '%2B54 9 ...'). Probablemente ocurra lo mismo para otros caracteres especiales, [ver tabla de encodings aqui](https://www.w3schools.com/tags/ref_urlencode.asp). Esto NO ocurre con el @.
+	- per_page: cuantos resultados en la rta, page: numero de pagina a ver 
 
 
 - Obtener videos subidos por un usuario
@@ -149,11 +151,53 @@ con body (display_name e email obligatorios, resto opcional):
 
 (devuelve {"appserver":"UP"} con codigo 200)
 
-#### Estadisticas de uso
+#### Mensajes y Chats
 
+- Ver mensajes entre otro usuario y yo:
+```GET 0.0.0.0:5000/messages```
+con body:
+```json
+{
+	"chat_with":<other_user_id>,
+	"page":1,
+	"per_page":50
+}
+```
+page y per_page similares al endpoint GET /users
+
+-> devuelve, por ejemplo (si mi id: 40, otro id:28):
+```json
+[
+    {
+        "id": 3,
+        "sender_id": 40,
+        "recver_id": 28,
+        "text": "Hola bro",
+        "timestamp": "2020-06-30 21:31:56.770661"
+    },
+    {
+        "id": 4,
+        "sender_id": 28,
+        "recver_id": 40,
+        "text": "commo anda la fiuba",
+        "timestamp": "2020-06-30 21:33:00.032960"
+    }
+]
+```
+
+- Enviar mensaje
+```POST 0.0.0.0:5000/messages``` con body:
+```json
+{
+	"chat_with":<other_user_id>,
+	"text":"Buenas tardes"
+}
+```
+
+#### Registrar Push Token
 _[NO IMPLEMENTADO]_
 
-#### Mensajes y Chats
+#### Estadisticas de uso
 
 _[NO IMPLEMENTADO]_
 

@@ -95,13 +95,17 @@ class UsersRoute(Resource):
 
         parser = reqparse.RequestParser()
 
-        parser.add_argument("name", type=str, required=False)
-        parser.add_argument("email", type=str, required=False)
-        parser.add_argument("phone", type=str, required=False)
+        parser.add_argument("name", type=str, required=False, location='args')
+        parser.add_argument("email", type=str, required=False, location='args')
+        parser.add_argument("phone", type=str, required=False, location='args')
+
+        parser.add_argument('per_page', type=int, required=False, location='args')
+        parser.add_argument('page', type=int, required=False, location='args')
+
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
 
         args = parser.parse_args()
 
-        msg, code = AuthSender.find_user(args["x-access-token"], args["name"], args["email"], args["phone"])
+        msg, code = AuthSender.find_user(args["x-access-token"], args["name"], args["email"], args["phone"], args["per_page"], args["page"])
 
         return msg, code

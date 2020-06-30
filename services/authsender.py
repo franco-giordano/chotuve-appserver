@@ -131,7 +131,7 @@ class AuthSender():
                 f"Failed to contact user backend.")
 
     @classmethod
-    def find_user(cls, token, name=None, email=None, phone=None):
+    def find_user(cls, token, name=None, email=None, phone=None, per_page=None, page=None):
         if not cls.url:
             return cls._mock_find(name, email, phone)
 
@@ -143,6 +143,10 @@ class AuthSender():
             query += f"&email={email}"
         if phone:
             query += f"&phone={phone}"
+        if per_page:
+            query += f"&per_page={per_page}"
+        if page:
+            query += f"&page={page}"
 
         try:
             r = requests.get(cls.url + '/users' + query,
@@ -153,7 +157,7 @@ class AuthSender():
 
         except requests.exceptions.RequestException:
             cls.logger().error(
-                f"Failed to contact AuthSv at url {cls.url}/users?name={name}&phone={phone}&email={email} with token {token}.")
+                f"Failed to contact AuthSv at url {cls.url}/users?name={name}&phone={phone}&email={email}&per_page={per_page}&page={page} with token {token}.")
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
