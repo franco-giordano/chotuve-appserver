@@ -2,7 +2,7 @@
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
 [![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=development&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=development)
 [![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=development)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-![api](https://img.shields.io/badge/api-v0.3.4-blueviolet)
+![api](https://img.shields.io/badge/api-v0.3.5-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -22,7 +22,7 @@
 ---------------------------------------------
 
 
-## API v0.3.4
+## API v0.3.5
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -54,11 +54,12 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 ```
 
 - Postear un comentario:
-`POST 0.0.0.0:5000/videos/<id>/comments` con body (text obligatorio):
+`POST 0.0.0.0:5000/videos/<id>/comments` con body (text obligatorio, vid_time opcional):
 ```json
 {
 	
-	"text":"comentario de ejemplo"
+	"text":"comentario de ejemplo",
+	"vid_time":"5:43"
 	
 }
 ```

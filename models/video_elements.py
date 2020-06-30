@@ -63,7 +63,7 @@ class Comment(db.Model):
 
     uuid = db.Column(db.Integer, nullable=False)
     text = db.Column(db.Text)
-    vid_time = db.Column(db.String(10))
+    vid_time = db.Column(db.String(50))
 
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     parent_video = db.Column(
