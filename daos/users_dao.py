@@ -86,9 +86,9 @@ class UsersDAO():
         cls.logger().debug(f"Sent requests: {snd.serializeSentReqs()}")
         cls.logger().debug(f"Received reqs: {rcv.serializeReceivedReqs()}")
         
-        
+
         from services.usernotifier import UserNotifier, MessageTypes
-        UserNotifier.send_notification(rcv_id, "Nueva solicitud de amistad", "Ve a la seccion notificaciones!", MessageTypes.FRIEND_REQ, {})
+        UserNotifier.send_notification(rcv_id, "Nueva solicitud de amistad", "Ve a la seccion notificaciones!", MessageTypes.FRIEND_REQ.value, {})
 
 
         return snd.serializeSentReqs(), 201
