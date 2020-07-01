@@ -38,7 +38,7 @@ class UserNotifier():
 
 
     @classmethod
-    def _make_push(user_id,token, title, subtitle, extra):
+    def _make_push(cls, user_id, token, title, subtitle, extra):
         try:
             response = PushClient().publish(
                 PushMessage(to=token,
