@@ -34,7 +34,7 @@ class UserNotifier():
         data = extra_data.copy()
         data["type"] = message_type
 
-        cls._make_push(user_id, token, title, subtitle, extra=data)
+        cls._make_push(user_id, token, title, subtitle, data)
 
 
     @classmethod
