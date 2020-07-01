@@ -9,6 +9,8 @@ from exceptions.exceptions import NotFoundError, BadRequestError, InternalError
 from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
 
+from services.usernotifier import UserNotifier, MessageTypes
+
 
 class UsersDAO():
 
