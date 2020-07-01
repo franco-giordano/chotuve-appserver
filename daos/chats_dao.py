@@ -35,7 +35,7 @@ class ChatsDAO():
         db.session.add(new_msg)
         db.session.commit()
 
-        UserNotifier.send_notification(recver_uuid, "New unread message", text, MessageTypes.MESSAGE, {"id":new_msg.id, "msg":text, "uuid": sender_uuid})
+        UserNotifier.send_notification(recver_uuid, "Nuevo mensaje sin leer", text, MessageTypes.MESSAGE, {"id":new_msg.id, "msg":text, "uuid": sender_uuid})
 
         return new_msg.serialize()
 
