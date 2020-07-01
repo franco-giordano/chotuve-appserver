@@ -8,7 +8,7 @@ from utils.decorators import token_required
 
 from services.authsender import AuthSender
 
-from daos.users_dao import FriendshipsDAO
+from daos.users_dao import UsersDAO
 
 from exceptions.exceptions import EndpointNotImplementedError
 
@@ -86,7 +86,7 @@ class UsersRoute(Resource):
             avatar=args['image_location'], token=args['x-access-token'])
 
         if code == 201:
-            FriendshipsDAO.add_user_to_db(msg['id'])
+            UsersDAO.add_user_to_db(msg['id'])
 
         return msg, code
 

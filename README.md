@@ -2,7 +2,7 @@
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
 [![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
 [![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-![api](https://img.shields.io/badge/api-v0.4-blueviolet)
+![api](https://img.shields.io/badge/api-v0.5-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -12,8 +12,7 @@
 
 1. Instalar [Docker Engine](https://docs.docker.com/engine/install/) y [Docker Compose](https://docs.docker.com/compose/install/)
 
-2. Levantar server + database
-```docker-compose up```
+2. Levantar server + database: `docker-compose up`
 
 4. Probar la REST API en `0.0.0.0:5000`
 
@@ -22,7 +21,7 @@
 ---------------------------------------------
 
 
-## API v0.4
+## API v0.5
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -154,15 +153,8 @@ con body (display_name e email obligatorios, resto opcional):
 #### Mensajes y Chats
 
 - Ver mensajes entre otro usuario y yo:
-```GET 0.0.0.0:5000/messages```
-con body:
-```json
-{
-	"chat_with":<other_user_id>,
-	"page":1,
-	"per_page":50
-}
-```
+```GET 0.0.0.0:5000/messages/<other_user_id>?page=1&per_page=20```
+
 page y per_page similares al endpoint GET /users
 
 -> devuelve, por ejemplo (si mi id: 40, otro id:28):
@@ -186,16 +178,30 @@ page y per_page similares al endpoint GET /users
 ```
 
 - Enviar mensaje
-```POST 0.0.0.0:5000/messages``` con body:
+```POST 0.0.0.0:5000/messages/<other_user_id>``` con body:
 ```json
 {
-	"chat_with":<other_user_id>,
 	"text":"Buenas tardes"
 }
 ```
 
 #### Registrar Push Token
-_[NO IMPLEMENTADO]_
+- Subir mi push tkn
+```POST 0.0.0.0:5000/tokens``` con body:
+```json
+{
+	"push_token": "ExponentPushToken[XXX]"
+}
+```
+
+- Ver mi push tkn (por las dudas)
+```GET 0.0.0.0:5000/tokens```
+-> devuelve:
+```json
+{
+	"push_token":...
+}
+```
 
 #### Estadisticas de uso
 

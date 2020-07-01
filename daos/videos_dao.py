@@ -2,7 +2,7 @@ from app import db
 from models.video_elements import Video
 
 import daos.reactions_dao
-from daos.users_dao import FriendshipsDAO
+from daos.users_dao import UsersDAO
 from services.mediasender import MediaSender
 from services.authsender import AuthSender
 
@@ -45,7 +45,7 @@ class VideoDAO():
     def get(cls, vid_id, viewer_uuid):
         vid = cls.get_raw(vid_id).serialize()
 
-        if vid["is_private"] and not FriendshipsDAO.are_friends(viewer_uuid, vid['uuid']):
+        if vid["is_private"] and not UsersDAO.are_friends(viewer_uuid, vid['uuid']):
             raise UnauthorizedError(
                 f"Trying to access private video, while not being friends with the author")
 

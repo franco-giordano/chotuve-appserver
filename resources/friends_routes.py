@@ -1,7 +1,7 @@
 from utils.decorators import token_required
 from flask_restful import Resource, reqparse
 
-from daos.users_dao import FriendshipsDAO
+from daos.users_dao import UsersDAO
 
 from services.authsender import AuthSender
 
@@ -21,7 +21,7 @@ class FriendsRoute(Resource):
     def get(self, user_id):
         self.logger.debug(f"Starting friends search for user {user_id}")
 
-        return FriendshipsDAO.get_friends(user_id), 200
+        return UsersDAO.get_friends(user_id), 200
 
 
 # /users/id/friends/requests
@@ -43,7 +43,7 @@ class RequestsRoute(Resource):
         if sender_uuid != user_id:
             raise UnauthorizedError("You can't view other user's friend requests!")
 
-        return FriendshipsDAO.view_pending_reqs(user_id), 200
+        return UsersDAO.view_pending_reqs(user_id), 200
 
     @token_required
     def post(self, user_id):
@@ -54,7 +54,7 @@ class RequestsRoute(Resource):
 
         sender_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
-        msg, code = FriendshipsDAO.send_request(sender_uuid, user_id)
+        msg, code = UsersDAO.send_request(sender_uuid, user_id)
 
         return msg, code
 
@@ -78,6 +78,6 @@ class UniqueRequestRoute(Resource):
         if viewer_uuid != my_id:
             raise UnauthorizedError("You can't respond other user's friend requests!")
 
-        msg, code = FriendshipsDAO.respond_request(my_id, sender_id, accept=args["accept"])
+        msg, code = UsersDAO.respond_request(my_id, sender_id, accept=args["accept"])
 
         return msg, code
