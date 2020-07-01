@@ -36,6 +36,7 @@ class User(db.Model):
         secondaryjoin=(requests.c.recver_id == id),
         backref=db.backref('pending_requests', lazy='dynamic'), lazy='dynamic')
 
+    push_token = db.Column(db.String(50))
 
     def __repr__(self):
         return '<User {}>'.format(self.id)

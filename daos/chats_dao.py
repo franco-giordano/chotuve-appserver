@@ -1,7 +1,7 @@
 from app import db
 from models.msg_elements import Chat, Message
 
-
+from services.usernotifier import UserNotifier, MessageTypes
 
 class ChatsDAO():
     
@@ -34,6 +34,8 @@ class ChatsDAO():
 
         db.session.add(new_msg)
         db.session.commit()
+
+        UserNotifier.send_notification(recver_uuid, "New unread message", text, MessageTypes.MESSAGE, {"id":new_msg.id, "msg":text, "uuid": sender_uuid})
 
         return new_msg.serialize()
 

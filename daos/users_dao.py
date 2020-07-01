@@ -1,6 +1,6 @@
 from app import db
 
-from models.friends_elements import User
+from models.users_elements import User
 
 import logging
 
@@ -10,7 +10,7 @@ from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
 
 
-class FriendshipsDAO():
+class UsersDAO():
 
     @classmethod
     def logger(cls):
@@ -113,3 +113,23 @@ class FriendshipsDAO():
         id2 = cls.get_raw(id2)
 
         return id2 in id1.friends
+
+    @classmethod
+    def get_tkn(cls, id):
+        return cls.get_raw(id).push_token
+
+    @classmethod
+    def set_tkn(cls, id, tkn):
+        usr = cls.get_raw(id)
+        usr.push_token = tkn
+
+        db.session.commit()
+
+    @classmethod
+    def delete_tkn(cls, id):
+        usr = cls.get_raw(id)
+        usr.push_token = None
+
+        db.session.commit()
+
+
