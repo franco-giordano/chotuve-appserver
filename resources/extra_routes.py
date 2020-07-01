@@ -56,7 +56,7 @@ class PushTokensRoutes(Resource):
         
         id = AuthSender.get_uuid_from_token(args_dict["x-access-token"])
 
-        UsersDAO.set_tkn(id, args["push_token"])
+        UsersDAO.set_tkn(id, args_dict["push_token"])
 
         return {"message":"OK"}, 200
 
