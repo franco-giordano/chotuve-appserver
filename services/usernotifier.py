@@ -15,6 +15,9 @@ class MessageTypes(Enum):
     MESSAGE = "message"
     FRIEND_REQ = "friend_req"
 
+    def __str__(self):
+        return f'{self.value}'
+
 
 class UserNotifier():
 
