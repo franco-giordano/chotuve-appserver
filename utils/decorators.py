@@ -12,7 +12,7 @@ def token_required(f):
             token = request.headers['x-access-token']
 
         if not token:
-            return make_response({'message': 'Missing user token!'}, 401)
+            return make_response({'message': 'Missing user token!'}, 400)
 
         if not AuthSender.is_valid_token(token):
             return make_response({'message': 'Token is invalid!'}, 401)

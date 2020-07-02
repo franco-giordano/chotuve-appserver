@@ -25,6 +25,8 @@ class VideoDAO():
         db.session.add(new_vid)
         db.session.commit()
 
+        cls.logger().info(f"New video uploaded: {new_vid.serialize()}")
+
         return new_vid.serialize()
 
     @classmethod
@@ -35,6 +37,10 @@ class VideoDAO():
 
         for v in all_vids:
             res = v.serialize()
+
+            if cls._cant_view(res["is_private"], res["uuid"], viewer_uuid):
+                continue
+
             cls.add_extra_info(res, viewer_uuid)
             res["author"] = AuthSender.get_author_name(res["uuid"], token)
             final_vids.append(res)
@@ -45,7 +51,7 @@ class VideoDAO():
     def get(cls, vid_id, viewer_uuid):
         vid = cls.get_raw(vid_id).serialize()
 
-        if vid["is_private"] and not UsersDAO.are_friends(viewer_uuid, vid['uuid']):
+        if cls._cant_view(vid["is_private"], viewer_uuid, vid['uuid']):
             raise UnauthorizedError(
                 f"Trying to access private video, while not being friends with the author")
 
@@ -64,14 +70,19 @@ class VideoDAO():
 
     @classmethod
     def get_videos_by(cls, user_id, viewer_uuid, token):
+        cls.logger().info(f"Grabbing all videos by user {user_id}")
         videos = [v.serialize()
                   for v in Video.query.filter(Video.uuid == user_id)]
 
-        for v in videos:
-            cls.add_extra_info(v, viewer_uuid)
-            v["author"] = AuthSender.get_author_name(v["uuid"], token)
+        cls.logger().info(f"Filtering by viewable videos for viewer {viewer_uuid}")
+        filtered = [f for f in videos if not cls._cant_view(f["is_private"], viewer_uuid, user_id)]
 
-        return videos
+        for f in filtered:
+            cls.add_extra_info(f, viewer_uuid)
+            f["author"] = AuthSender.get_author_name(f["uuid"], token)
+
+        cls.logger().info(f"Found {len(filtered)} viewable videos uploaded by user {user_id}")
+        return filtered
 
     @classmethod
     def add_extra_info(cls, serialized_vid, viewer_uuid):
@@ -82,3 +93,7 @@ class VideoDAO():
             serialized_vid['video_id'])
         serialized_vid['reaction'] = daos.reactions_dao.ReactionDAO.reaction_by(
             serialized_vid['video_id'], viewer_uuid)
+
+    @classmethod
+    def _cant_view(cls, is_private, user1_id, user2_id):
+        return is_private and user1_id != user2_id and not UsersDAO.are_friends(user1_id, user2_id)

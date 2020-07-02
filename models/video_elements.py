@@ -16,13 +16,13 @@ class Video(db.Model):
     location = db.Column(db.String(200))
     thumbnail_url = db.Column(db.String(100))
 
-
     is_private = db.Column(db.Boolean, default=False)
-    likes = db.Column(db.Integer, default=0)
-    dislikes = db.Column(db.Integer, default=0)
+
     comments = db.relationship('Comment', backref='video')
     reactions = db.relationship(
         'VideoReaction', backref='video', lazy="subquery")
+
+    view_count = db.Column(db.Integer, default=0)
 
     # EL TIMESTAMP LO GUARDA EL MEDIASV!!!
 
@@ -52,7 +52,13 @@ class Video(db.Model):
             'is_private': self.is_private,
             'likes': self.count_likes(),
             'dislikes': self.count_dislikes(),
+            'view_count': self.view_count
         }
+
+    def increase_view_count(self):
+        self.view_count += 1
+        db.session.commit()
+        return self.view_count
 
 
 class Comment(db.Model):

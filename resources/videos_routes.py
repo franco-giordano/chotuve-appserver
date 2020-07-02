@@ -40,6 +40,7 @@ class UniqueVideoRoute(Resource):
 
         vid["author"] = AuthSender.get_author_name(vid["uuid"], args["x-access-token"])
 
+        self.logger.info(f"Retrieved single video, id {vid_id}, info: {vid}. RESPONSECODE:200")
         return vid, 200
 
     # TODO delete(cls)
@@ -50,6 +51,7 @@ class UniqueVideoRoute(Resource):
 
 class VideoRoute(Resource):
     def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
         super(VideoRoute, self).__init__()
         
     @token_required
@@ -64,6 +66,7 @@ class VideoRoute(Resource):
         # TODO reemplazar por el motor de reglas
         videos = VideoDAO.get_all(uuid, args["x-access-token"])
 
+        self.logger.info(f"Executed /videos search, found {len(videos)} videos. RESPONSECODE:200")
         return videos, 200
 
     @token_required
@@ -79,6 +82,7 @@ class VideoRoute(Resource):
         # upload to mediasv
         new_vid_with_url['firebase_url'], new_vid_with_url['timestamp'] = MediaSender.send_url(new_vid_with_url['video_id'],args['firebase_url'])
 
+        self.logger.info(f"New video uploaded, video info: {new_vid_with_url}. RESPONSECODE:201")
         return new_vid_with_url, 201
 
 

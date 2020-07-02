@@ -21,6 +21,7 @@ class AuthSender():
             return True
 
         try:
+            cls.logger().info(f"is_valid_token: Launching POST request at /sign-in for AuthSv with user token: {token[:10]}...")
             r = requests.post(cls.url + '/sign-in',
                               headers={'x-access-token': token})
 
@@ -32,7 +33,7 @@ class AuthSender():
 
         except requests.exceptions.RequestException:
             cls.logger().error(
-                f"Failed to contact AuthSv at url {cls.url}/sign-in with token {token}.")
+                f"Failed to contact AuthSv at url {cls.url}/sign-in with token {token[:10]}...")
             raise FailedToContactAuthSvError(
                 f"Failed to contact sign-in backend.")
 
@@ -43,16 +44,17 @@ class AuthSender():
             return int(token)
 
         try:
+            cls.logger().info(f"get_uuid_from_token: Launching GET request at /users/id for AuthSv with token: {token[:10]}...")
             r = requests.get(cls.url + '/users/id',
                              headers={'x-access-token': token})
             if r.status_code != 200:
-                raise NotFoundError(f"User with token {token} not found")
+                raise NotFoundError(f"User with token {token[:10]}... not found")
 
             return r.json()["uid"]
 
         except requests.exceptions.RequestException:
             cls.logger().error(
-                f"Failed to contact AuthSv at url {cls.url}/users/id with token {token}.")
+                f"Failed to contact AuthSv at url {cls.url}/users/id with token {token[:10]}...")
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
@@ -62,6 +64,7 @@ class AuthSender():
             return cls._mock_get_info(user_id)
 
         try:
+            cls.logger().info(f"get_user_info: Launching GET request at /users/{user_id} for AuthSv with token: {token[:10]}...")
             r = requests.get(cls.url + '/users/' + str(user_id),
                              headers={'x-access-token': token})
             msg = cls.msg_from_authsv(r.json())
@@ -69,7 +72,7 @@ class AuthSender():
 
         except requests.exceptions.RequestException:
             cls.logger().error(
-                f"Failed to contact AuthSv at url {cls.url}/users/{user_id} with token {token}.")
+                f"Failed to contact AuthSv at url {cls.url}/users/{user_id} with token {token[:10]}...")
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
@@ -80,6 +83,7 @@ class AuthSender():
             return info["display_name"]
 
         try:
+            cls.logger().info(f"get_author_name: Launching GET request at /users/{user_id} for AuthSv with token: {token[:10]}...")
             r = requests.get(cls.url + '/users/' + str(user_id),
                              headers={'x-access-token': token})
             
@@ -87,7 +91,7 @@ class AuthSender():
 
         except requests.exceptions.RequestException:
             cls.logger().error(
-                f"Failed to contact AuthSv at url {cls.url}/users/{user_id} with token {token}.")
+                f"Failed to contact AuthSv at url {cls.url}/users/{user_id} with token {token[:10]}...")
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
@@ -95,10 +99,14 @@ class AuthSender():
     def register_user(cls, fullname, email, phone, avatar, token):
         if not cls.url:
             return cls._mock_register(fullname, email, phone, avatar)
+
+        payload = {'email': email, 'display_name': fullname,
+                                    'phone_number': phone, 'image_location': avatar}
+
         try:
+            cls.logger().info(f"register_user: Launching POST request at /users for AuthSv with token: {token[:10]}... . Payload: {payload}")
             r = requests.post(cls.url + '/users',
-                              json={'email': email, 'display_name': fullname,
-                                    'phone_number': phone, 'image_location': avatar},
+                              json=payload,
                               headers={'x-access-token': token})
 
             cls.logger().debug(r)
@@ -107,7 +115,7 @@ class AuthSender():
 
         except requests.exceptions.RequestException:
             cls.logger().error(
-                f"Failed to contact AuthSv at url {cls.url}/users with token {token}.")
+                f"Failed to contact AuthSv at url {cls.url}/users with token {token[:10]}...")
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
@@ -117,6 +125,7 @@ class AuthSender():
             return cls._mock_modify(user_id, args_dict)
 
         try:
+            cls.logger().info(f"modify_user: Launching PUT request at /users/{user_id} for AuthSv with token: {args_dict['x-access-token'][:10]}... . Payload: {args_dict}")
             r = requests.put(cls.url + '/users/' + str(user_id),
                               json=args_dict,
                               headers={'x-access-token': args_dict['x-access-token']})
@@ -149,6 +158,7 @@ class AuthSender():
             query += f"&page={page}"
 
         try:
+            cls.logger().info(f"find_user: Launching GET request at /users for AuthSv with token: {token[:10]}... . Query args: {query}")
             r = requests.get(cls.url + '/users' + query,
                               headers={'x-access-token': token})
 
@@ -157,7 +167,7 @@ class AuthSender():
 
         except requests.exceptions.RequestException:
             cls.logger().error(
-                f"Failed to contact AuthSv at url {cls.url}/users?name={name}&phone={phone}&email={email}&per_page={per_page}&page={page} with token {token}.")
+                f"Failed to contact AuthSv at url {cls.url}/users?name={name}&phone={phone}&email={email}&per_page={per_page}&page={page} with token {token[:10]}.")
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
@@ -214,10 +224,6 @@ class AuthSender():
             found = [u for u in found if phone == u["phone_number"]]
 
         return { 'users': found }, 200
-
-
-        
-        
 
     @classmethod
     def msg_from_authsv(cls, json):

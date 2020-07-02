@@ -2,10 +2,11 @@
 from flask_restful import Resource, reqparse
 
 from daos.chats_dao import ChatsDAO
+from daos.users_dao import UsersDAO
 
 from services.authsender import AuthSender
 
-from exceptions.exceptions import EndpointNotImplementedError, BadRequestError, UnauthorizedError
+from exceptions.exceptions import BadRequestError, UnauthorizedError
 
 import logging
 
@@ -14,6 +15,7 @@ import logging
 class MessagesRoute(Resource):
     
     def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
         super(MessagesRoute, self).__init__()
         
     def get(self, other_user_id):
@@ -26,8 +28,9 @@ class MessagesRoute(Resource):
 
         uuid1 = AuthSender.get_uuid_from_token(args['x-access-token'])
 
-        msgs = ChatsDAO.get_messages_between(uuid1, other_user_id)
+        msgs = ChatsDAO.get_messages_between(uuid1, other_user_id, args["page"], args["per_page"])
 
+        self.logger.info(f"Found {len(msgs)} messages between users {uuid1, other_user_id}. RESPONSECODE:200")
         return msgs, 200
 
     def post(self, other_user_id):
@@ -37,8 +40,15 @@ class MessagesRoute(Resource):
         
         args = parser.parse_args()
 
+        if args["text"] == "":
+            raise BadRequestError("Invalid message length")
+
         sender_uuid = AuthSender.get_uuid_from_token(args['x-access-token'])
+
+        if not UsersDAO.are_friends(sender_uuid, other_user_id):
+            raise BadRequestError("You are not friends with this user")
 
         msg = ChatsDAO.send_message(sender_uuid, other_user_id, args["text"])
 
+        self.logger.info(f"Succesfully sent message from user {sender_uuid} to {other_user_id}. RESPONSECODE:200")
         return msg, 200

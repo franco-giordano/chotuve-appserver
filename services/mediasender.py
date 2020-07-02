@@ -20,10 +20,13 @@ class MediaSender():
     def send_url(cls, vid_id, fb_url):
         if not cls.url:
             return cls._mock_send(vid_id, fb_url)
+        
+        payload = {'videoId': vid_id, 'url': fb_url}
 
         try:
+            cls.logger().info(f"send_url: Launching POST request at /video for MediaSv. Payload: {payload}")
             r = requests.post(cls.url + '/video',
-                              json={'videoId': vid_id, 'url': fb_url})
+                              json=payload)
 
             if r.status_code != 201:
                 cls.logger().error(f"Error uploading video for ID: {vid_id}. Response: {r.json()}, code {r.status_code}")
@@ -45,9 +48,8 @@ class MediaSender():
         if not cls.url:
             return cls._mock_get(vid_id)
 
-        cls.logger().info(f"Sending request to {cls.url}")
-
         try:
+            cls.logger().info(f"send_url: Launching GET request at /video for MediaSv at video {vid_id}")
             r = requests.get(cls.url + '/video', json={'videoId': vid_id})
 
             if r.status_code != 200:

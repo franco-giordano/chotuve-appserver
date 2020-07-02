@@ -15,6 +15,9 @@ class MessageTypes(Enum):
     MESSAGE = "message"
     FRIEND_REQ = "friend_req"
 
+    def __str__(self):
+        return f'{self.value}'
+
 
 class UserNotifier():
 
@@ -24,6 +27,8 @@ class UserNotifier():
 
     @classmethod
     def send_notification(cls, user_id, title, subtitle, message_type, extra_data):
+
+        cls.logger().info(f"send_notification: Sending to user {user_id}. Title: {title}. Subtitle: {subtitle}. MsgType: {message_type}. ExtraData: {extra_data}")
         
         token = UsersDAO.get_tkn(user_id)
 
@@ -34,11 +39,12 @@ class UserNotifier():
         data = extra_data.copy()
         data["type"] = message_type
 
-        cls._make_push(user_id, token, title, subtitle, extra=data)
+        cls.logger().info(f"send_notification: Valid token found, sending notification...")
+        cls._make_push(user_id, token, title, subtitle, data)
 
 
     @classmethod
-    def _make_push(user_id,token, title, subtitle, extra):
+    def _make_push(cls, user_id, token, title, subtitle, extra):
         try:
             response = PushClient().publish(
                 PushMessage(to=token,
@@ -47,12 +53,12 @@ class UserNotifier():
                             data=extra))
         except PushServerError as exc:
             # Encountered some likely formatting/validation error.
-            cls.logger().error(f"Failed to push notification. Token: {token}, Msg: {subtitle}, Extra: {extra}, Error: {exc.errors}, Response Data: {exc.response_data}")
+            cls.logger().error(f"Failed to push notification. Token: {token[:10]}.., Msg: {subtitle}, Extra: {extra}, Error: {exc.errors}, Response Data: {exc.response_data}")
             
         except (ConnectionError, HTTPError) as exc:
             # Encountered some Connection or HTTP error - retry a few times in
             # case it is transient.
-            cls.logger().error(f"Failed to push notification. Token: {token}, Msg: {subtitle}, Extra: {extra}, Error: {exc}")
+            cls.logger().error(f"Failed to push notification. Token: {token[:10]}.., Msg: {subtitle}, Extra: {extra}, Error: {exc}")
 
 
         try:
@@ -65,4 +71,4 @@ class UserNotifier():
             UsersDAO.delete_tkn(user_id)
         except PushResponseError as exc:
             # Encountered some other per-notification error.
-            cls.logger().error(f"Failed to push notification. Token: {token}, Msg: {subtitle}, Extra: {extra}, Error: {exc.errors}, Response Data: {exc.push_response._asdict}")
+            cls.logger().error(f"Failed to push notification. Token: {token[:10]}.., Msg: {subtitle}, Extra: {extra}, Error: {exc.errors}, Response Data: {exc.push_response._asdict}")

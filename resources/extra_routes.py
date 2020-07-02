@@ -13,7 +13,7 @@ class PingRoute(Resource):
         super(PingRoute, self).__init__()
 
     def get(self):
-        self.logger.info(f"Received PING request")
+        self.logger.info(f"Incoming PING request. RESPONSECODE:200")
 
         return {'appserver':'UP'}, 200
 
@@ -21,6 +21,7 @@ class PingRoute(Resource):
 class AuthRoutes(Resource):
 
     def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
         super().__init__()
 
     def get(self):
@@ -30,13 +31,15 @@ class AuthRoutes(Resource):
         
         id = AuthSender.get_uuid_from_token(args_dict["x-access-token"])
 
+        self.logger.info(f"Responding ID query for user {id}. RESPONSECODE:200")
         return  {"id":id}, 200
 
 
 # /tokens
 class PushTokensRoutes(Resource):
 
-    def ___init__(self):
+    def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
         super().__init__()
 
     def get(self):
@@ -46,6 +49,7 @@ class PushTokensRoutes(Resource):
         
         id = AuthSender.get_uuid_from_token(args_dict["x-access-token"])
 
+        self.logger.info(f"Returning push token for user {id}. RESPONSECODE:200")
         return { "push_token": UsersDAO.get_tkn(id) }, 200
     
     def post(self):
@@ -56,7 +60,8 @@ class PushTokensRoutes(Resource):
         
         id = AuthSender.get_uuid_from_token(args_dict["x-access-token"])
 
-        UsersDAO.set_tkn(id, args["push_token"])
+        UsersDAO.set_tkn(id, args_dict["push_token"])
 
+        self.logger.info(f"Added new push token for user {id}. RESPONSECODE:200")
         return {"message":"OK"}, 200
 
