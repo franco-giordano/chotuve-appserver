@@ -20,9 +20,10 @@ class ChatsDAO():
         chat = Chat.query.get((minUID, maxUID))
 
         if chat:
-            msgs = chat.messages.paginate(per_page=per_page, page=page).items
+            cls.logger().debug(f"Tipo de chat.messages: {type(chat.messages)}")
+
             cls.logger().info(f"Found chat between users {uuid1}, {uuid1}. Serializing...")
-            return [m.serialize() for m in msgs]
+            return [m.serialize() for m in chat.messages]
 
         cls.logger().info(f"No messages found for users {uuid1}, {uuid2}")
         
