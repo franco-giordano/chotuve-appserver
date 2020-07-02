@@ -38,7 +38,7 @@ class AuthRoutes(Resource):
 # /tokens
 class PushTokensRoutes(Resource):
 
-    def ___init__(self):
+    def __init__(self):
         self.logger = logging.getLogger(self.__class__.__name__)
         super().__init__()
 
@@ -48,6 +48,7 @@ class PushTokensRoutes(Resource):
         args_dict = parser.parse_args()
         
         id = AuthSender.get_uuid_from_token(args_dict["x-access-token"])
+
         self.logger.info(f"Returning push token for user {id}. RESPONSECODE:200")
         return { "push_token": UsersDAO.get_tkn(id) }, 200
     
