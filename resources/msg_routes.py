@@ -45,7 +45,7 @@ class MessagesRoute(Resource):
 
         sender_uuid = AuthSender.get_uuid_from_token(args['x-access-token'])
 
-        if not UsersDAO.are_friends():
+        if not UsersDAO.are_friends(sender_uuid, other_user_id):
             raise BadRequestError("You are not friends with this user")
 
         msg = ChatsDAO.send_message(sender_uuid, other_user_id, args["text"])
