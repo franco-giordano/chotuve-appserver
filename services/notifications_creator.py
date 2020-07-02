@@ -14,7 +14,7 @@ class NotificationsCreator():
     def notify_message(cls, sender_uuid, rcver_uuid, msg_id, msg_text, author_name):
         
         subtitle = author_name + ": " + msg_text
-        UserNotifier.send_notification(recver_uuid, MESSAGE_TITLE, subtitle, MessageTypes.MESSAGE.value, {"id":msg_id, "msg":msg_text, "uuid": sender_uuid})
+        UserNotifier.send_notification(rcver_uuid, MESSAGE_TITLE, subtitle, MessageTypes.MESSAGE.value, {"id":msg_id, "msg":msg_text, "uuid": sender_uuid})
 
 
     @classmethod
