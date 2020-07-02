@@ -37,4 +37,19 @@ class ReactionRoute(Resource):
         self.logger.info(f"Posted new reaction to vid {vid_id}. Is a like: {args['likes_video']} by {uuid}. RESPONSECODE:201")
         return new_rctn, 201
 
+
+    @token_required
+    def patch(self, vid_id):
+
+        parser = self.rctn_parser.parse_args()
+        parser.add_argument('x-access-token',location='headers')
+
+        uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
+
+        edited_rctn = ReactionDAO.edit_rctn(vid_id, uuid=uuid, likes=args['likes_video'])
+
+        self.logger.info(f"Edited reaction to vid {vid_id}. Is a like: {args['likes_video']} by {uuid}. RESPONSECODE:201")
+        return edited_rctn, 200
+
+
     # TODO delete

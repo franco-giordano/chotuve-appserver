@@ -56,3 +56,18 @@ class ReactionDAO():
                 cls.logger().info(f"Reaction from user {uuid} found for video {vid_id}. Reaction: {reaction}")
 
         return reaction
+
+    @classmethod
+    def edit_rctn(cls, vid_id, uuid, likes):
+        original_vid = daos.videos_dao.VideoDAO.get_raw(vid_id)
+
+        cls.logger().debug(f"Checking if user {uuid} already reacted to vid {vid_id}...")
+
+        for r in original_vid.reactions:
+            if r.uuid == uuid:
+                r.likes_video = likes
+                db.session.commit()
+                cls.logger().info(f"Reaction from user {uuid} edited for video {vid_id}. New reaction is a like: {likes}")
+                return
+        
+        raise BadRequestError(f"User {uuid} hasn't reacted to video {vid_id} yet, try POST'ing one first.")
