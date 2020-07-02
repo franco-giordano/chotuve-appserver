@@ -120,6 +120,18 @@ class UsersDAO():
 
         return id2 in id1.friends
 
+
+    @classmethod
+    def already_pending_request(cls, u1, u2):
+        user1 = cls.get_raw(u1)
+        user2 = cls.get_raw(u2)
+
+        if rcv.received_request_from(snd) or snd.received_request_from(rcv):
+            return True
+
+        return False
+            
+
     @classmethod
     def get_tkn(cls, id):
         return cls.get_raw(id).push_token
@@ -138,4 +150,13 @@ class UsersDAO():
 
         db.session.commit()
 
+    @classmethod
+    def get_friendship_status(cls, uuid1, uuid2):
+        if cls.are_friends(uuid1, uuid2):
+            return 'accepted'
+
+        if cls.already_pending_request(uuid1, uuid2):
+            return 'pending'
+
+        return 'unknown'
 

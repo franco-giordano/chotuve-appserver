@@ -24,6 +24,8 @@ class Video(db.Model):
     reactions = db.relationship(
         'VideoReaction', backref='video', lazy="subquery")
 
+    view_count = db.Column(db.Integer, default=0)
+
     # EL TIMESTAMP LO GUARDA EL MEDIASV!!!
 
     def count_likes(self):
@@ -52,7 +54,12 @@ class Video(db.Model):
             'is_private': self.is_private,
             'likes': self.count_likes(),
             'dislikes': self.count_dislikes(),
+            'view_count': self.view_count
         }
+
+    def increase_view_count(self):
+        self.view_count += 1
+        db.session.commit()
 
 
 class Comment(db.Model):

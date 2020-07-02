@@ -24,8 +24,13 @@ class UniqueUserRoute(Resource):
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
         args = parser.parse_args()
 
+
         # TODO si hay datos privados, parsear viewer_uuid y pasarlo al authsv 
         msg, code = AuthSender.get_user_info(user_id, args['x-access-token'])
+
+        if code==200:
+            viewer_id = AuthSender.get_uuid_from_token(args["x-access-token"])
+            msg["friendship_status"] = UsersDAO.get_friendship_status(user_id, viewer_id)
 
         return msg, code
         

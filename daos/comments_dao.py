@@ -23,4 +23,6 @@ class CommentDAO():
     def get_all_from(cls, vid_id):
         vid = VideoDAO.get_raw(vid_id)
 
+        vid.increase_view_count()
+
         return [c.serialize() for c in vid.comments]
