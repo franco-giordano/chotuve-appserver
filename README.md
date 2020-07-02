@@ -1,7 +1,7 @@
 # Chotuve - Application Server
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
-[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
-[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
+[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=master)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
+[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=master&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=master)
 ![api](https://img.shields.io/badge/api-v0.5-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
@@ -22,6 +22,7 @@
 
 
 ## API v0.5
+_May be outdated, check staging branch for latest updates_
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -40,6 +41,7 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 
 - Postear un video:
 `POST 0.0.0.0:5000/videos` con body (todos opcionales salvo firebase_url y thumbnail_url):
+
 ```json
 {
 	
@@ -56,10 +58,8 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 `POST 0.0.0.0:5000/videos/<id>/comments` con body (text obligatorio, vid_time opcional):
 ```json
 {
-	
 	"text":"comentario de ejemplo",
 	"vid_time":"5:43"
-	
 }
 ```
 
@@ -71,9 +71,7 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 `POST 0.0.0.0:5000/videos/<id>/reactions` con body (true es like, false es dislike; campo obligatorio):
 ```json
 {
-	
 	"likes_video":true
-	
 }
 ```
 
@@ -113,12 +111,10 @@ con body (display_name e email obligatorios, resto opcional):
 `PUT 0.0.0.0:5000/users/<id>` con body (todos opcionales):
 ```json
 {
-	
 	"email": "juanperez@gmail.com",
 	"display_name":"Matias Perez",
 	"phone_number": "+5492264511422",
 	"image_location":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"
-	
 }
 ```
 #### Amistades
