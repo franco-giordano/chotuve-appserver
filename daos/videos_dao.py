@@ -96,4 +96,4 @@ class VideoDAO():
 
     @classmethod
     def _cant_view(cls, is_private, user1_id, user2_id):
-        return is_private and not UsersDAO.are_friends(user1_id, user2_id)
+        return is_private and user1_id != user2_id and not UsersDAO.are_friends(user1_id, user2_id)
