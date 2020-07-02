@@ -53,12 +53,12 @@ class UserNotifier():
                             data=extra))
         except PushServerError as exc:
             # Encountered some likely formatting/validation error.
-            cls.logger().error(f"Failed to push notification. Token: {token}, Msg: {subtitle}, Extra: {extra}, Error: {exc.errors}, Response Data: {exc.response_data}")
+            cls.logger().error(f"Failed to push notification. Token: {token[:10]}.., Msg: {subtitle}, Extra: {extra}, Error: {exc.errors}, Response Data: {exc.response_data}")
             
         except (ConnectionError, HTTPError) as exc:
             # Encountered some Connection or HTTP error - retry a few times in
             # case it is transient.
-            cls.logger().error(f"Failed to push notification. Token: {token}, Msg: {subtitle}, Extra: {extra}, Error: {exc}")
+            cls.logger().error(f"Failed to push notification. Token: {token[:10]}.., Msg: {subtitle}, Extra: {extra}, Error: {exc}")
 
 
         try:
@@ -71,4 +71,4 @@ class UserNotifier():
             UsersDAO.delete_tkn(user_id)
         except PushResponseError as exc:
             # Encountered some other per-notification error.
-            cls.logger().error(f"Failed to push notification. Token: {token}, Msg: {subtitle}, Extra: {extra}, Error: {exc.errors}, Response Data: {exc.push_response._asdict}")
+            cls.logger().error(f"Failed to push notification. Token: {token[:10]}.., Msg: {subtitle}, Extra: {extra}, Error: {exc.errors}, Response Data: {exc.push_response._asdict}")
