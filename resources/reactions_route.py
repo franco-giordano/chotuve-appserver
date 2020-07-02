@@ -40,9 +40,7 @@ class ReactionRoute(Resource):
 
     @token_required
     def patch(self, vid_id):
-
-        parser = self.rctn_parser.parse_args()
-        parser.add_argument('x-access-token',location='headers')
+        args = self.rctn_parser.parse_args()
 
         uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
