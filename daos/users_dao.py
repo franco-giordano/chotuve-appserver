@@ -126,7 +126,7 @@ class UsersDAO():
         user1 = cls.get_raw(u1)
         user2 = cls.get_raw(u2)
 
-        if rcv.received_request_from(snd) or snd.received_request_from(rcv):
+        if user1.received_request_from(user2) or user2.received_request_from(user1):
             return True
 
         return False

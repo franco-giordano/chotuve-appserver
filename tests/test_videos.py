@@ -52,7 +52,7 @@ def test_upload_private_video(testapp):
 def test_cant_view_vid_wo_tkn(testapp):
     r = testapp.get('/videos/1')
 
-    assert r.status_code == 401
+    assert r.status_code == 400
 
 
 def test_can_view_video(testapp):
