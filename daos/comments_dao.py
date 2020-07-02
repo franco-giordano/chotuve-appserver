@@ -1,28 +1,35 @@
 from app import db
-from run import app
-from models.video_elements import Video
 
 from daos.videos_dao import VideoDAO
 
 from models.video_elements import Comment
 
+import logging
+
 class CommentDAO():
 
     @classmethod
-    def add_cmnt(cls, vid_id, uuid,text):
-        with app.app_context():
-            new_cmnt = Comment(uuid=uuid, text=text)
-            new_cmnt.video = VideoDAO.get_raw(vid_id)
-            
-            db.session.add(new_cmnt)
-            db.session.commit()
-
-            return new_cmnt.serialize()
+    def logger(cls):
+        return logging.getLogger(cls.__name__)
 
 
     @classmethod
-    def get_all_from(cls, vid_id):
-        with app.app_context():
-            vid =  VideoDAO.get_raw(vid_id)
+    def add_cmnt(cls, vid_id, uuid, text, time):
+        new_cmnt = Comment(uuid=uuid, text=text, vid_time=time)
+        new_cmnt.video = VideoDAO.get_raw(vid_id)
 
-            return [c.serialize() for c in vid.comments]
+        db.session.add(new_cmnt)
+        db.session.commit()
+        cls.logger().info(f"Succesfully appended comment to video {vid_id}. Comment: {new_cmnt.serialize()}")
+
+        return new_cmnt.serialize()
+
+    @classmethod
+    def get_all_from(cls, vid_id):
+        vid = VideoDAO.get_raw(vid_id)
+
+        count = vid.increase_view_count()
+        cls.logger().info(f"Increased view count for vid {vid_id}. New count: {count}")
+
+        cls.logger().info(f"Serializing comments for vid {vid_id}...")
+        return [c.serialize() for c in vid.comments]

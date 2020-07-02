@@ -19,18 +19,28 @@ install:
 script:
   # build docker images
   - docker build -t chotuve-appserver .
-  - docker tag chotuve-appserver registry.heroku.com/$HEROKU_APPSERVER_NAME/web
   
-  # testing the auth server
+  # testing the app server
   - docker run --rm -d --env PORT=5000 -p 5000:5000 --name chotuve-appserver chotuve-appserver
-  - docker exec -it chotuve-appserver pytest
+  - docker exec -it chotuve-appserver coverage run -m pytest
+  - docker exec -it -e TRAVIS_JOB_ID="$TRAVIS_JOB_ID" -e TRAVIS_BRANCH="$TRAVIS_BRANCH" -e COVERALLS_REPO_TOKEN="$COVERALLS_REPO_TOKEN" chotuve-appserver coveralls
 
 deploy:
-  provider: script
-  script: 
-    # push to dockerhub & heroku
-    docker push francogiordano/chotuve-appserver;
-    docker push registry.heroku.com/$HEROKU_APPSERVER_NAME/web;
-    heroku container:release web --app $HEROKU_APPSERVER_NAME
-  on:
-    branch: master
+  - provider: script
+    script: 
+      # push to dockerhub & heroku
+      docker tag chotuve-appserver registry.heroku.com/$HEROKU_APPSERVER_NAME/web;
+      docker push francogiordano/chotuve-appserver;
+      docker push registry.heroku.com/$HEROKU_APPSERVER_NAME/web;
+      heroku container:release web --app $HEROKU_APPSERVER_NAME
+    on:
+      branch: master
+  - provider: script
+    skip_cleanup: true
+    script:
+      docker tag chotuve-appserver registry.heroku.com/$HEROKU_APPSERVER_STAGING_NAME/web;
+      docker push francogiordano/chotuve-appserver-staging; 
+      docker push registry.heroku.com/$HEROKU_APPSERVER_STAGING_NAME/web; 
+      heroku container:release web --app $HEROKU_APPSERVER_STAGING_NAME
+    on:
+      branch: staging

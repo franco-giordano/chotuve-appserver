@@ -6,14 +6,16 @@ from services.authsender import AuthSender
 
 from daos.reactions_dao import ReactionDAO
 
+import logging
 
 
 class ReactionRoute(Resource):
     def __init__(self):
         self.rctn_parser = reqparse.RequestParser()
         self.rctn_parser.add_argument('x-access-token',location='headers')
-        self.rctn_parser.add_argument('likes-video', type = bool, required=True, 
+        self.rctn_parser.add_argument('likes_video', type = bool, required=True, 
             help="No reaction provided." ,location = 'json')
+        self.logger = logging.getLogger(self.__class__.__name__)
         super(ReactionRoute, self).__init__()
         
 
@@ -21,6 +23,7 @@ class ReactionRoute(Resource):
     @token_required
     def get(self, vid_id):
         reactions = ReactionDAO.get_all_from(vid_id)
+        self.logger.info(f"Returning all reactions for vid {vid_id}. RESPONSECODE:200")
         return reactions, 200
 
     @token_required
@@ -29,8 +32,9 @@ class ReactionRoute(Resource):
 
         uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
-        new_rctn = ReactionDAO.add_rctn(vid_id, uuid=uuid, likes=args['likes-video'])
+        new_rctn = ReactionDAO.add_rctn(vid_id, uuid=uuid, likes=args['likes_video'])
 
+        self.logger.info(f"Posted new reaction to vid {vid_id}. Is a like: {args['likes_video']} by {uuid}. RESPONSECODE:201")
         return new_rctn, 201
 
     # TODO delete

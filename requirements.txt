@@ -8,4 +8,8 @@ PyJWT
 requests
 gunicorn
 pytest
+pytest-env
 flask-restful
+coverage
+coveralls[yaml]
+exponent_server_sdk

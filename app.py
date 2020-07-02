@@ -1,12 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_restful import Api
 from config import app_config
-
-import os
 
 
 db = SQLAlchemy()
+
+api = Api()
+
+from resources import register_routes
+from handlers import register_error_handlers
 
 
 def create_app(config_name):
@@ -15,8 +18,6 @@ def create_app(config_name):
 
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['BUNDLE_ERRORS'] = True
 
     import logging
     logging.basicConfig(
@@ -26,7 +27,10 @@ def create_app(config_name):
     logger = logging.getLogger("App")
     logger.info("Starting app!")
 
+    register_routes(api)
+    register_error_handlers(app)
+
+    api.init_app(app)
     db.init_app(app)
 
     return app
-
