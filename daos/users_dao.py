@@ -64,7 +64,7 @@ class UsersDAO():
         cls.create_raw(user_id)
 
     @classmethod
-    def send_request(cls, snd_id, rcv_id):
+    def send_request(cls, snd_id, rcv_id, author_name):
         cls.logger().info(f"send_request: checking it's a valid request... (step 1 - no self-invitations)")
         if snd_id == rcv_id:
             raise BadRequestError(
@@ -92,8 +92,8 @@ class UsersDAO():
 
         cls.logger().info(f"send_request: saved request succesfully from user {snd_id} to {rcv_id}")
 
-        from services.usernotifier import UserNotifier, MessageTypes
-        UserNotifier.send_notification(rcv_id, "Nueva solicitud de amistad", "Ve a la seccion notificaciones!", MessageTypes.FRIEND_REQ.value, {})
+        from services.notifications_creator import NotificationsCreator
+        NotificationsCreator.notify_new_friend_req(rcv_id, author_name)
 
         return snd.serializeSentReqs()
 
