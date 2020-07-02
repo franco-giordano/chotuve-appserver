@@ -15,6 +15,7 @@ import logging
 class MessagesRoute(Resource):
     
     def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
         super(MessagesRoute, self).__init__()
         
     def get(self, other_user_id):
@@ -27,8 +28,9 @@ class MessagesRoute(Resource):
 
         uuid1 = AuthSender.get_uuid_from_token(args['x-access-token'])
 
-        msgs = ChatsDAO.get_messages_between(uuid1, other_user_id)
+        msgs = ChatsDAO.get_messages_between(uuid1, other_user_id, args["page"], args["per_page"])
 
+        self.logger.info(f"Found {len(msgs)} messages between users {uuid1, other_user_id}. RESPONSECODE:200")
         return msgs, 200
 
     def post(self, other_user_id):
@@ -48,4 +50,5 @@ class MessagesRoute(Resource):
 
         msg = ChatsDAO.send_message(sender_uuid, other_user_id, args["text"])
 
+        self.logger.info(f"Succesfully sent message from user {sender_uuid} to {other_user_id}. RESPONSECODE:200")
         return msg, 200

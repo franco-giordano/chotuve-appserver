@@ -20,8 +20,10 @@ class FriendsRoute(Resource):
     @token_required
     def get(self, user_id):
         self.logger.debug(f"Starting friends search for user {user_id}")
+        friends = UsersDAO.get_friends(user_id)
 
-        return UsersDAO.get_friends(user_id), 200
+        self.logger.info(f"Found {len(friends['friends'])} friend(s) for user {user_id}. RESPONSECODE:200")
+        return friends, 200
 
 
 # /users/id/friends/requests
@@ -42,8 +44,11 @@ class RequestsRoute(Resource):
 
         if sender_uuid != user_id:
             raise UnauthorizedError("You can't view other user's friend requests!")
+        
+        reqs = UsersDAO.view_pending_reqs(user_id)
 
-        return UsersDAO.view_pending_reqs(user_id), 200
+        self.logger.info(f"Found {len(reqs['pending_reqs'])} pending requests for user {user_id}. RESPONSECODE:200")
+        return reqs, 200
 
     @token_required
     def post(self, user_id):
@@ -54,9 +59,10 @@ class RequestsRoute(Resource):
 
         sender_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
-        msg, code = UsersDAO.send_request(sender_uuid, user_id)
+        msg = UsersDAO.send_request(sender_uuid, user_id)
 
-        return msg, code
+        self.logger.info(f"Succesfully sent request from user {sender_uuid} to {user_id}. RESPONSECODE:201")
+        return msg, 201
 
 
 # /users/myid/friends/requests/otherid
@@ -78,6 +84,7 @@ class UniqueRequestRoute(Resource):
         if viewer_uuid != my_id:
             raise UnauthorizedError("You can't respond other user's friend requests!")
 
-        msg, code = UsersDAO.respond_request(my_id, sender_id, accept=args["accept"])
+        msg = UsersDAO.respond_request(my_id, sender_id, accept=args["accept"])
 
-        return msg, code
+        self.logger.info(f"User {my_id} responded request from {sender_id}. Accepted: {args['accept']}. RESPONSECODE:200")
+        return msg, 200

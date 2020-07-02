@@ -12,9 +12,11 @@ from daos.users_dao import UsersDAO
 
 from exceptions.exceptions import EndpointNotImplementedError
 
+import logging
 
 class UniqueUserRoute(Resource):
     def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
         super(UniqueUserRoute, self).__init__()
         
 
@@ -32,6 +34,7 @@ class UniqueUserRoute(Resource):
             viewer_id = AuthSender.get_uuid_from_token(args["x-access-token"])
             msg["friendship_status"] = UsersDAO.get_friendship_status(user_id, viewer_id)
 
+        self.logger.info(f"User {user_id} info collected: {msg}. RESPONSECODE:{code}")
         return msg, code
         
 
@@ -48,6 +51,7 @@ class UniqueUserRoute(Resource):
 
         msg, code = AuthSender.modify_user(user_id ,args_dict)
 
+        self.logger.info(f"User {user_id} info edited: {msg}. RESPONSECODE:{code}")
         return msg, code
 
 
@@ -57,6 +61,7 @@ class UniqueUserRoute(Resource):
 
 class UniqueUserVidsRoute(Resource):
     def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
         super(UniqueUserVidsRoute, self).__init__()
         
 
@@ -65,15 +70,17 @@ class UniqueUserVidsRoute(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("x-access-token", location='headers')
         args = parser.parse_args()
-        uuid = AuthSender.get_uuid_from_token(args['x-access-token'])
+        viewer_uuid = AuthSender.get_uuid_from_token(args['x-access-token'])
         
-        vids = VideoDAO.get_videos_by(user_id, uuid, args["x-access-token"])
+        vids = VideoDAO.get_videos_by(user_id, viewer_uuid, args["x-access-token"])
 
+        self.logger.info(f"{len(vids)} vids collected by user {user_id}. RESPONSECODE:200")
         return vids, 200
         
 
 class UsersRoute(Resource):
     def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
         super(UsersRoute, self).__init__()
 
 
@@ -91,7 +98,10 @@ class UsersRoute(Resource):
             avatar=args['image_location'], token=args['x-access-token'])
 
         if code == 201:
+            self.logger.info(f"New user created with info: {msg}. RESPONSECODE:{code}")
             UsersDAO.add_user_to_db(msg['id'])
+        else:
+            self.logger.error(f"Failed to create user with info: {msg}. RESPONSECODE:{code}")
 
         return msg, code
 
@@ -112,5 +122,6 @@ class UsersRoute(Resource):
         args = parser.parse_args()
 
         msg, code = AuthSender.find_user(args["x-access-token"], args["name"], args["email"], args["phone"], args["per_page"], args["page"])
-
+        
+        self.logger.info(f"Executed user search with args name={args['name']}, email={args['email']}, phone={args['phone']}, per_page={args['per_page']}, page={args['page']}. RESPONSECODE:{code}")
         return msg, code

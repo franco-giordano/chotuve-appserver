@@ -27,8 +27,7 @@ class UsersDAO():
         rcv.friends.append(snd)
         db.session.commit()
 
-        cls.logger().debug(snd.serializeFriends())
-        cls.logger().debug(rcv.serializeFriends())
+        cls.logger().info(f"Added new friendship between users {rcv_id} and {sender_id}")
 
         return rcv.serializeFriends()
 
@@ -49,12 +48,13 @@ class UsersDAO():
 
     @classmethod
     def create_raw(cls, user_id):
+        cls.logger().debug(f"Creating new database entry for user {user_id} on friendships table")
         try:
             new_user = User(id=user_id)
             db.session.add(new_user)
             db.session.commit()
         except (UniqueViolation, IntegrityError) as e:
-            cls.logger().error(e)
+            cls.logger().error(f"Error when creating entry. Error: {e}")
             raise InternalError(f"User already exists with ID {user_id}")
 
         return new_user
@@ -65,6 +65,7 @@ class UsersDAO():
 
     @classmethod
     def send_request(cls, snd_id, rcv_id):
+        cls.logger().info(f"send_request: checking it's a valid request... (step 1 - no self-invitations)")
         if snd_id == rcv_id:
             raise BadRequestError(
                 "You can't send a friend request to yourself!")
@@ -72,10 +73,13 @@ class UsersDAO():
         snd = cls.get_raw(snd_id)
         rcv = cls.get_raw(rcv_id)
 
+        cls.logger().info(f"send_request: checking it's a valid request... (step 2 - no friends and can't spam requests)")
         if rcv.received_request_from(snd) or snd.is_friend_with(rcv):
             raise BadRequestError(
                 f"You already sent a request, or are already friends.")
 
+
+        cls.logger().info(f"send_request: checking it's a valid request... (step 3 - no pending request from other user)")
         if snd.received_request_from(rcv):
             raise BadRequestError(
                 f"You have a pending request from this user, try accepting or rejecting it first.")
@@ -85,17 +89,18 @@ class UsersDAO():
 
         cls.logger().debug(f"Sent requests: {snd.serializeSentReqs()}")
         cls.logger().debug(f"Received reqs: {rcv.serializeReceivedReqs()}")
-        
+
+        cls.logger().info(f"send_request: saved request succesfully from user {snd_id} to {rcv_id}")
 
         from services.usernotifier import UserNotifier, MessageTypes
         UserNotifier.send_notification(rcv_id, "Nueva solicitud de amistad", "Ve a la seccion notificaciones!", MessageTypes.FRIEND_REQ.value, {})
 
-
-        return snd.serializeSentReqs(), 201
+        return snd.serializeSentReqs()
 
     @classmethod
     def view_pending_reqs(cls, user_id):
         user = cls.get_raw(user_id)
+        cls.logger().info(f"Grabbing pending reqs for user {user_id}...")
 
         return user.serializeReceivedReqs()
 
@@ -107,17 +112,20 @@ class UsersDAO():
 
         if accept:
             me.accept_request_from(sender)
+            cls.logger().info(f"User {my_id} accepted the request from {sender_id}")
 
         else:
             me.reject_request_from(sender)
+            cls.logger().info(f"User {my_id} rejected the request from {sender_id}")
 
-        return {'message': 'OK'}, 200
+        return {'message': 'OK'}
 
     @classmethod
-    def are_friends(cls, id1, id2):
-        id1 = cls.get_raw(id1)
-        id2 = cls.get_raw(id2)
+    def are_friends(cls, uuid1, uuid2):
+        id1 = cls.get_raw(uuid1)
+        id2 = cls.get_raw(uuid2)
 
+        cls.logger().info(f"Checking if users {uuid1} and {uuid2} are friends...")
         return id2 in id1.friends
 
 
@@ -127,8 +135,10 @@ class UsersDAO():
         user2 = cls.get_raw(u2)
 
         if user1.received_request_from(user2) or user2.received_request_from(user1):
+            cls.logger().info(f"Users {u1}, {u2} already have pending requests with each other")
             return True
 
+        cls.logger().info(f"Users {u1}, {u2} dont have any pending requests with each other")
         return False
             
 
@@ -142,6 +152,7 @@ class UsersDAO():
         usr.push_token = tkn
 
         db.session.commit()
+        cls.logger().info(f"Set new push token for {id}. Token: {tkn}")
 
     @classmethod
     def delete_tkn(cls, id):
@@ -149,6 +160,7 @@ class UsersDAO():
         usr.push_token = None
 
         db.session.commit()
+        cls.logger().warn(f"Deleted push token for {id}")
 
     @classmethod
     def get_friendship_status(cls, uuid1, uuid2):

@@ -27,6 +27,8 @@ class UserNotifier():
 
     @classmethod
     def send_notification(cls, user_id, title, subtitle, message_type, extra_data):
+
+        cls.logger().info(f"send_notification: Sending to user {user_id}. Title: {title}. Subtitle: {subtitle}. MsgType: {message_type}. ExtraData: {extra_data}")
         
         token = UsersDAO.get_tkn(user_id)
 
@@ -37,6 +39,7 @@ class UserNotifier():
         data = extra_data.copy()
         data["type"] = message_type
 
+        cls.logger().info(f"send_notification: Valid token found, sending notification...")
         cls._make_push(user_id, token, title, subtitle, data)
 
 

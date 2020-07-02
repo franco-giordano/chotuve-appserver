@@ -60,6 +60,7 @@ class Video(db.Model):
     def increase_view_count(self):
         self.view_count += 1
         db.session.commit()
+        return self.view_count
 
 
 class Comment(db.Model):
