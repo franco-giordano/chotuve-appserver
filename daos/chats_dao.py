@@ -1,7 +1,7 @@
 from app import db
 from models.msg_elements import Chat, Message
 
-from services.usernotifier import UserNotifier, MessageTypes
+from services.notifications_creator import NotificationsCreator
 
 import logging
 
@@ -30,7 +30,7 @@ class ChatsDAO():
         return []
 
     @classmethod
-    def send_message(cls, sender_uuid, recver_uuid, text):
+    def send_message(cls, sender_uuid, recver_uuid, text, author_name):
 
         minUID, maxUID = cls.sort_uuids(sender_uuid, recver_uuid)
 
@@ -49,8 +49,7 @@ class ChatsDAO():
         db.session.commit()
 
         cls.logger().info("Succesfully appended message to conversation")
-
-        UserNotifier.send_notification(recver_uuid, "Nuevo mensaje sin leer", text, MessageTypes.MESSAGE.value, {"id":new_msg.id, "msg":text, "uuid": sender_uuid})
+        NotificationsCreator.notify_message(sender_uuid, recver_uuid, new_msg.id, text, author_name)
 
         return new_msg.serialize()
 

@@ -58,8 +58,9 @@ class RequestsRoute(Resource):
         args = parser.parse_args()
 
         sender_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
+        author_name = AuthSender.get_author_name(sender_uuid, args["x-access-token"])
 
-        msg = UsersDAO.send_request(sender_uuid, user_id)
+        msg = UsersDAO.send_request(sender_uuid, user_id, author_name)
 
         self.logger.info(f"Succesfully sent request from user {sender_uuid} to {user_id}. RESPONSECODE:201")
         return msg, 201

@@ -44,11 +44,12 @@ class MessagesRoute(Resource):
             raise BadRequestError("Invalid message length")
 
         sender_uuid = AuthSender.get_uuid_from_token(args['x-access-token'])
+        author_name = AuthSender.get_author_name(sender_uuid, args["x-access-token"])
 
         if not UsersDAO.are_friends(sender_uuid, other_user_id):
             raise BadRequestError("You are not friends with this user")
 
-        msg = ChatsDAO.send_message(sender_uuid, other_user_id, args["text"])
+        msg = ChatsDAO.send_message(sender_uuid, other_user_id, args["text"], author_name)
 
         self.logger.info(f"Succesfully sent message from user {sender_uuid} to {other_user_id}. RESPONSECODE:200")
         return msg, 200
