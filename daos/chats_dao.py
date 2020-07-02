@@ -3,6 +3,8 @@ from models.msg_elements import Chat, Message
 
 from services.usernotifier import UserNotifier, MessageTypes
 
+import logging
+
 class ChatsDAO():
 
     @classmethod
