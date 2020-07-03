@@ -171,6 +171,40 @@ class AuthSender():
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
+    @classmethod
+    def send_reset_code(cls, email):
+        try:
+            cls.logger().info(f"send_reset_code: Launching POST request at /reset-codes for AuthSv with email: {email}")
+            r = requests.post(cls.url + '/reset-codes',
+                              json={"email":email})
+
+            msg = cls.msg_from_authsv(r.json())
+            return msg, r.status_code
+
+        except requests.exceptions.RequestException:
+            cls.logger().error(
+                f"Failed to contact AuthSv at url {cls.url}/reset-codes with email {email}.")
+            raise FailedToContactAuthSvError(
+                f"Failed to contact user backend.")
+
+    @classmethod
+    def send_new_password(cls, email, reset_code, password):
+        try:
+            cls.logger().info(f"send_new_password: Launching POST request at /change-password-with-reset-codes for AuthSv with email: {email}, reset_code: {reset_code}, password: ********")
+            r = requests.post(cls.url + '/change-password-with-reset-code',
+                              json={"email":email, "reset_code": reset_code, "password": password})
+
+            msg = cls.msg_from_authsv(r.json())
+            return msg, r.status_code
+
+        except requests.exceptions.RequestException:
+            cls.logger().error(
+                f"Failed to contact AuthSv at url {cls.url}/change-password-with-reset-codes with email {email}, reset_code: {reset_code}.")
+            raise FailedToContactAuthSvError(
+                f"Failed to contact user backend.")
+
+
+    
         
         
 

@@ -2,7 +2,7 @@
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
 [![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
 [![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
-![api](https://img.shields.io/badge/api-v0.5.2-blueviolet)
+![api](https://img.shields.io/badge/api-v0.6-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -21,12 +21,12 @@
 ---------------------------------------------
 
 
-## API v0.5.2
+## API v0.6
 _May be outdated, check staging branch for latest updates_
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
-**Salvo por /ping, TODOS los endpoints REQUIEREN el campo "x-access-token" en los headers, con un token valido**
+**Salvo por /ping, /reset-codes y PUT /auth, TODOS los endpoints REQUIEREN el campo "x-access-token" en los headers, con un token valido**
 
 #### Videos
 
@@ -136,6 +136,31 @@ con body (display_name e email obligatorios, resto opcional):
 	"image_location":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"
 }
 ```
+
+- Crear reset code para generar una nueva contraseña (no necesita firebase token):
+`POST 0.0.0.0:4000/reset-codes` con body:
+```json
+{
+	
+    "email": "juanperez@gmail.com"
+    
+}
+
+
+```
+
+- Cambiar contraseña usando el reset code (no necesita firebase token):
+`PUT 0.0.0.0:4000/auth` con body:
+```json
+{
+	
+	"email": "juanperez@gmail.com",
+	"reset_code":"KnPlDQ",
+	"password": "Unacontraseña123"
+	
+}
+```
+
 #### Amistades
 
 - Ver amigos de un usuario:
