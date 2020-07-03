@@ -2,7 +2,7 @@
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
 [![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
 [![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
-![api](https://img.shields.io/badge/api-v0.5.1-blueviolet)
+![api](https://img.shields.io/badge/api-v0.5.2-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -21,7 +21,7 @@
 ---------------------------------------------
 
 
-## API v0.5.1
+## API v0.5.2
 _May be outdated, check staging branch for latest updates_
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
@@ -41,7 +41,6 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 
 - Postear un video:
 `POST 0.0.0.0:5000/videos` con body (todos opcionales salvo firebase_url y thumbnail_url):
-
 ```json
 {
 	
@@ -51,6 +50,18 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 	"firebase_url":"...firebase.com...",
 	"is_private":false,
 	"thumbnail_url":"www.url.com..."
+}
+```
+
+- Editar un video:
+`PATCH 0.0.0.0:5000/videos/<id>` con body (todos opcionales):
+```json
+{
+	
+	"title":"titulo video",
+	"description": "descripcion de ejemplo",
+	"location":"lugar posteado",
+	"is_private":false,
 }
 ```
 
