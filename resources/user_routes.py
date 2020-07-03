@@ -105,7 +105,7 @@ class UsersRoute(Resource):
 
         return msg, code
 
-    # TODO /users?name=...
+
     def get(self):
 
         parser = reqparse.RequestParser()

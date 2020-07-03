@@ -140,3 +140,39 @@ def test_view_vids_by(testapp):
     for k in FIRST_VIDEO_INFO.keys():
         assert data[0][k] == FIRST_VIDEO_INFO[k]
     assert data[0]["reaction"] == "none"
+
+def test_other_cant_delete_video(testapp):
+    r = testapp.delete('/videos/1', headers=create_tkn(2))
+    data = r.get_json()
+    assert r.status_code == 400
+
+    #vid still exists
+    r = testapp.get('/videos/1', headers=create_tkn(2))
+    data = r.get_json()
+    assert r.status_code == 200
+    assert data["video_id"] == 1
+    for k in FIRST_VIDEO_INFO.keys():
+        assert data[k] == FIRST_VIDEO_INFO[k]
+    assert data["reaction"] == "like"
+
+
+def test_delete_video(testapp):
+    r = testapp.delete('/videos/1', headers=create_tkn(1))
+    data = r.get_json()
+    assert r.status_code == 200
+
+def test_video_doesnt_exist_anymore(testapp):
+    r = testapp.get('/videos/1', headers=create_tkn(2))
+    data = r.get_json()
+    assert r.status_code == 404
+
+def test_reactions_dont_exist_anymore(testapp):
+    r = testapp.get('/videos/1/reactions', headers=create_tkn(2))
+    data = r.get_json()
+    assert r.status_code == 404
+
+def test_no_video_at_user_profile(testapp):
+    r = testapp.get('/users/1/videos', headers=create_tkn(1))
+    data = r.get_json()
+    assert r.status_code == 200
+    assert len(data) == 0
