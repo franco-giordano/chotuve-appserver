@@ -14,6 +14,7 @@ from enum import Enum
 class MessageTypes(Enum):
     MESSAGE = "message"
     FRIEND_REQ = "friend_req"
+    COMMENT = "comment"
 
     def __str__(self):
         return f'{self.value}'
