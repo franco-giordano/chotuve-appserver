@@ -6,7 +6,7 @@ from resources.user_routes import UniqueUserRoute, UniqueUserVidsRoute, UsersRou
 
 from resources.friends_routes import FriendsRoute, RequestsRoute, UniqueRequestRoute
 
-from resources.extra_routes import PingRoute, AuthRoutes, PushTokensRoutes
+from resources.extra_routes import PingRoute, AuthRoutes, PushTokensRoutes, ResetCodesRoute
 
 from resources.msg_routes import MessagesRoute
 
@@ -31,3 +31,4 @@ def register_routes(api):
 
     api.add_resource(PingRoute, '/ping')
     api.add_resource(AuthRoutes, '/auth')
+    api.add_resource(ResetCodesRoute, '/reset-codes')
