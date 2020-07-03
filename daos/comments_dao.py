@@ -30,7 +30,8 @@ class CommentDAO():
         # Notification build w/tkn...
         cmnt_author = AuthSender.get_author_name(uuid, tkn)
 
-        NotificationsCreator.notify_new_comment(vid.uuid, vid_id, vid.title, text, cmnt_author)
+        if uuid != vid.uuid:
+            NotificationsCreator.notify_new_comment(vid.uuid, vid_id, vid.title, text, cmnt_author)
 
         return new_cmnt.serialize()
 
