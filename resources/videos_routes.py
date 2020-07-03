@@ -45,7 +45,24 @@ class UniqueVideoRoute(Resource):
 
     # TODO delete(cls)
 
-    # TODO put
+    @token_required
+    def patch(self, vid_id):
+        edit_parser = reqparse.RequestParser()
+        edit_parser.add_argument("x-access-token", location='headers')
+        edit_parser.add_argument('description', type = str, location = 'json')
+        edit_parser.add_argument('location', type = str, location = 'json')
+        edit_parser.add_argument('title', type = str, location = 'json')
+        edit_parser.add_argument('is_private', type = bool, location = 'json')
+        args = edit_parser.parse_args()
+
+        uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
+
+        self.logger.debug("editing single vid from videoDAO")
+        vid = VideoDAO.edit(vid_id, args, uuid)
+
+        self.logger.info(f"Edited video info, id {vid_id}, info: {vid}. RESPONSECODE:200")
+        return vid, 200
+        
         
 
 
