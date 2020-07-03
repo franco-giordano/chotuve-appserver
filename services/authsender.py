@@ -192,7 +192,7 @@ class AuthSender():
         try:
             cls.logger().info(f"send_new_password: Launching POST request at /change-password-with-reset-codes for AuthSv with email: {email}, reset_code: {reset_code}, password: ********")
             r = requests.post(cls.url + '/change-password-with-reset-code',
-                              json={"email":email, "reset_code": reset_code, "password": password})
+                              json={"email":email, "code": reset_code, "password": password})
 
             msg = cls.msg_from_authsv(r.json())
             return msg, r.status_code
