@@ -148,6 +148,10 @@ class UsersDAO():
 
     @classmethod
     def set_tkn(cls, id, tkn):
+        user = User.query.filter_by(push_token=tkn).all()
+        for u in user:
+            u.push_token = None
+
         usr = cls.get_raw(id)
         usr.push_token = tkn
 
