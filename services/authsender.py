@@ -203,7 +203,21 @@ class AuthSender():
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
+    @classmethod
+    def is_admin(cls, token):
+        try:
+            cls.logger().info(f"is_admin: Launching GET request at /users/admin for AuthSv with token: {token[:10]}")
+            r = requests.get(cls.url + '/users/admin',
+                              headers={"x-access-token":token})
 
+            msg = cls.msg_from_authsv(r.json())
+            return msg, r.status_code
+
+        except requests.exceptions.RequestException:
+            cls.logger().error(
+                f"Failed to contact AuthSv at url {cls.url}/users/admin")
+            raise FailedToContactAuthSvError(
+                f"Failed to contact user backend.")
     
         
         

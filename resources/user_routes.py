@@ -125,3 +125,22 @@ class UsersRoute(Resource):
         
         self.logger.info(f"Executed user search with args name={args['name']}, email={args['email']}, phone={args['phone']}, per_page={args['per_page']}, page={args['page']}. RESPONSECODE:{code}")
         return msg, code
+
+
+class UsersAdmin(Resource):
+
+    def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
+        super(UsersAdmin, self).__init__()
+
+    def get(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
+
+        args = parser.parse_args()
+
+        msg, code = AuthSender.is_admin(args["x-access-token"])
+        
+        self.logger.info(f"Executed GET on /users/admin. Result: {msg['admin']} RESPONSECODE:{code}")
+        return msg, code
