@@ -96,12 +96,12 @@ class AuthSender():
                 f"Failed to contact user backend.")
 
     @classmethod
-    def register_user(cls, fullname, email, phone, avatar, token):
+    def register_user(cls, fullname, email, phone, avatar, token, password=""):
         if not cls.url:
             return cls._mock_register(fullname, email, phone, avatar)
 
         payload = {'email': email, 'display_name': fullname,
-                                    'phone_number': phone, 'image_location': avatar}
+                                    'phone_number': phone, 'image_location': avatar, 'password': password}
 
         try:
             cls.logger().info(f"register_user: Launching POST request at /users for AuthSv with token: {token[:10]}... . Payload: {payload}")

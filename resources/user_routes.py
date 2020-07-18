@@ -45,6 +45,8 @@ class UniqueUserRoute(Resource):
         parser.add_argument("phone_number", location="json", required=False,type=str)
         parser.add_argument("image_location", location="json", required=False, type=str)
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
+        parser.add_argument("password", location="json", required=False, default="", type=str)
+
 
         args_dict = parser.parse_args()
         args_dict = {k:v for k,v in args_dict.items() if v is not None}
@@ -90,12 +92,13 @@ class UsersRoute(Resource):
         parser.add_argument("email", location="json", required=True, help="Missing user's email.", type=str)
         parser.add_argument("phone_number", location="json", required=False, default="", type=str)
         parser.add_argument("image_location", location="json", required=False, default="", type=str)
+        parser.add_argument("password", location="json", required=False, default="", type=str)
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
 
         args = parser.parse_args()
 
         msg, code = AuthSender.register_user(fullname=args["display_name"], email=args['email'], phone=args['phone_number'],
-            avatar=args['image_location'], token=args['x-access-token'])
+            avatar=args['image_location'],token=args['x-access-token'], password=args["password"])
 
         if code == 201:
             self.logger.info(f"New user created with info: {msg}. RESPONSECODE:{code}")
