@@ -1,15 +1,14 @@
-Flask
-Flask-Migrate
-Flask-Script
-Flask-SQLAlchemy
 psycopg2-binary --no-binary psycopg2
-python-dotenv
-PyJWT
-requests
-gunicorn
-pytest
-pytest-env
-flask-restful
-coverage
 coveralls[yaml]
-exponent_server_sdk
+Flask==1.1.2
+Flask-Migrate==2.5.3
+Flask-RESTful==0.3.8
+Flask-Script==2.0.6
+Flask-SQLAlchemy==2.4.3
+gunicorn==20.0.4
+python-dotenv==0.13.0
+requests==2.24.0
+pytest==5.4.3
+pytest-env==0.6.2
+coverage==5.1
+exponent-server-sdk==0.3.1
