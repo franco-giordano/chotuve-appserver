@@ -13,3 +13,4 @@ flask-restful
 coverage
 coveralls[yaml]
 exponent_server_sdk
+Flask-Cors==3.0.8

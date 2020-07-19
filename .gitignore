@@ -3,5 +3,5 @@ __pycache__/
 venv/
 
 htmlcov/
-
+postgres_data/
 .coverage
