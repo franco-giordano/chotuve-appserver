@@ -1,5 +1,5 @@
 from flask_restful import reqparse, Resource
-from flask import make_response
+
 from daos.videos_dao import VideoDAO
 # from daos.comments_dao import CommentDAO
 
@@ -54,16 +54,7 @@ class UniqueUserRoute(Resource):
         msg, code = AuthSender.modify_user(user_id ,args_dict)
 
         self.logger.info(f"User {user_id} info edited: {msg}. RESPONSECODE:{code}")
-
-        response = make_response(msg, code)
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        return response
-
-    def options(self, user_id):
-        return {'Allow' : 'PUT,GET,POST,DELETE,PATCH'}, 200, \
-        { 'Access-Control-Allow-Origin': '*', \
-        'Access-Control-Allow-Methods' : 'PUT,GET,POST,DELETE,PATCH',
-        'Access-Control-Allow-Headers':'Content-Type,Authorization,x-access-token' }
+        return msg, code
 
 
         
