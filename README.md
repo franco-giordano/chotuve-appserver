@@ -100,7 +100,7 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 #### Usuarios
 
 - Obtener mi ID de usuario al loguearme:
-```GET 0.0.0.0:5000/auth```, devuelve {"id":int}
+```GET 0.0.0.0:5000/users/auth```, devuelve {"id":int}
 
 - Obtener datos publicos de un usuario
 ```GET 0.0.0.0:5000/users/<uuid>```
@@ -130,7 +130,7 @@ con body (display_name e email obligatorios, resto opcional):
 ```
 
 - Modificar datos de un usuario:
-`PUT 0.0.0.0:5000/users/<id>` con body (todos opcionales):
+`PATCH 0.0.0.0:5000/users/<id>` con body (todos opcionales):
 ```json
 {
 	"email": "juanperez@gmail.com",
@@ -140,29 +140,6 @@ con body (display_name e email obligatorios, resto opcional):
 }
 ```
 
-- Crear reset code para generar una nueva contraseña (no necesita firebase token):
-`POST 0.0.0.0:4000/reset-codes` con body:
-```json
-{
-	
-    "email": "juanperez@gmail.com"
-    
-}
-
-
-```
-
-- Cambiar contraseña usando el reset code (no necesita firebase token):
-`PUT 0.0.0.0:4000/auth` con body:
-```json
-{
-	
-	"email": "juanperez@gmail.com",
-	"reset_code":"KnPlDQ",
-	"password": "Unacontraseña123"
-	
-}
-```
 
 #### Amistades
 
@@ -250,18 +227,36 @@ page y per_page similares al endpoint GET /users
 }
 ```
 
-#### Estadisticas de uso
-
-_[NO IMPLEMENTADO]_
 
 #### Recuperacion de Passwords
 
-_[NO IMPLEMENTADO]_
+- Crear reset code para generar una nueva contraseña (no necesita firebase token):
+`POST 0.0.0.0:4000/users/reset-codes` con body:
+```json
+{
+    "email": "juanperez@gmail.com"   
+}
+```
+
+- Cambiar contraseña usando el reset code (no necesita firebase token):
+`POST 0.0.0.0:4000/users/change-password` con body:
+```json
+{
+	"email": "juanperez@gmail.com",
+	"reset_code":"KnPlDQ",
+	"password": "Unacontraseña123"	
+}
+```
+
 
 #### Modificar o borrar videos/comentarios/reacciones/amistades
 
 _[NO IMPLEMENTADO]_
 
 #### Ver videos sugeridos por motor de reglas
+
+_[NO IMPLEMENTADO]_
+
+#### Estadisticas de uso
 
 _[NO IMPLEMENTADO]_

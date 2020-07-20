@@ -5,7 +5,7 @@ from services.authsender import AuthSender
 
 from daos.users_dao import UsersDAO
 
-# /users/user_id/friends
+# /ping
 class PingRoute(Resource):
 
     def __init__(self):
@@ -17,7 +17,7 @@ class PingRoute(Resource):
 
         return {'appserver':'UP'}, 200
 
-# /auth
+# /users/auth
 class AuthRoutes(Resource):
 
     def __init__(self):
@@ -34,17 +34,7 @@ class AuthRoutes(Resource):
         self.logger.info(f"Responding ID query for user {id}. RESPONSECODE:200")
         return  {"id":id}, 200
 
-    def put(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument("email", location='json', type=str, required=True, help="Missing email address to recover")
-        parser.add_argument("reset_code", location='json', type=str, required=True, help="Missing reset code")
-        parser.add_argument("password", location='json', type=str, required=True, help="Missing new password")
-        args = parser.parse_args()
 
-        msg, code = AuthSender.send_new_password(args["email"], args["reset_code"], args["password"])
-
-        self.logger.info(f"User with email {args['email']} changed password. RESPONSECODE:{code}")
-        return msg, code
 
 
 # /tokens
@@ -78,7 +68,7 @@ class PushTokensRoutes(Resource):
         return {"message":"OK"}, 200
 
 
-# /reset-codes
+# /users/reset-codes
 class ResetCodesRoute(Resource):
 
     def __init__(self):
@@ -96,3 +86,21 @@ class ResetCodesRoute(Resource):
         return msg, code
         
 
+#/users/change-password
+class ChangePwRoute(Resource):
+
+    def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
+        super().__init__()
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("email", location='json', type=str, required=True, help="Missing email address to recover")
+        parser.add_argument("reset_code", location='json', type=str, required=True, help="Missing reset code")
+        parser.add_argument("password", location='json', type=str, required=True, help="Missing new password")
+        args = parser.parse_args()
+
+        msg, code = AuthSender.send_new_password(args["email"], args["reset_code"], args["password"])
+
+        self.logger.info(f"User with email {args['email']} changed password. RESPONSECODE:{code}")
+        return msg, code

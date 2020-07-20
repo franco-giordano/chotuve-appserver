@@ -38,7 +38,7 @@ class UniqueUserRoute(Resource):
         return msg, code
         
 
-    def put(self, user_id):
+    def patch(self, user_id):
         parser = reqparse.RequestParser()
         parser.add_argument("display_name", location="json", required=False, type=str)
         parser.add_argument("email", location="json", required=False, type=str)
@@ -46,7 +46,6 @@ class UniqueUserRoute(Resource):
         parser.add_argument("image_location", location="json", required=False, type=str)
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
         parser.add_argument("password", location="json", required=False, default="", type=str)
-
 
         args_dict = parser.parse_args()
         args_dict = {k:v for k,v in args_dict.items() if v is not None}

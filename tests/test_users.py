@@ -87,7 +87,7 @@ def test_get_my_info(testapp):
 
 def test_modify_my_info_name(testapp):
 
-    r = testapp.put(
+    r = testapp.patch(
         '/users/1', json={"display_name": "Carlos"}, headers={'x-access-token': '1'})
 
     data = r.get_json()
@@ -104,7 +104,7 @@ def test_modify_my_info_name(testapp):
 
 def test_modify_non_existant(testapp):
 
-    r = testapp.put(
+    r = testapp.patch(
         '/users/123123', json={"display_name": "Carlos"}, headers={'x-access-token': '123123'})
 
     assert r.status_code == 404
@@ -112,7 +112,7 @@ def test_modify_non_existant(testapp):
 
 def test_modify_my_info_phone(testapp):
 
-    r = testapp.put(
+    r = testapp.patch(
         '/users/1', json={"phone_number": "+456"}, headers={'x-access-token': '1'})
 
     data = r.get_json()
@@ -129,7 +129,7 @@ def test_modify_my_info_phone(testapp):
 
 def test_modify_my_info_mail(testapp):
 
-    r = testapp.put(
+    r = testapp.patch(
         '/users/1', json={"email": "carlos@protonmail.com"}, headers={'x-access-token': '1'})
 
     data = r.get_json()
@@ -146,7 +146,7 @@ def test_modify_my_info_mail(testapp):
 
 def test_cant_edit_others_info(testapp):
 
-    r = testapp.put(
+    r = testapp.patch(
         '/users/1', json={"email": "carlos@protonmail.com"}, headers={'x-access-token': '2'})
 
     assert r.status_code == 401
