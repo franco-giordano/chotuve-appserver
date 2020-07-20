@@ -1,8 +1,8 @@
 # Chotuve - Application Server
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
-[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=master)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=master&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=master)
-![api](https://img.shields.io/badge/api-v0.5-blueviolet)
+[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
+[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
+![api](https://img.shields.io/badge/api-v0.6.1-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -21,12 +21,12 @@
 ---------------------------------------------
 
 
-## API v0.5
+## API v0.6.1
 _May be outdated, check staging branch for latest updates_
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
-**Salvo por /ping, TODOS los endpoints REQUIEREN el campo "x-access-token" en los headers, con un token valido**
+**Salvo por /ping, /reset-codes y PUT /auth, TODOS los endpoints REQUIEREN el campo "x-access-token" en los headers, con un token valido**
 
 #### Videos
 
@@ -41,7 +41,6 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 
 - Postear un video:
 `POST 0.0.0.0:5000/videos` con body (todos opcionales salvo firebase_url y thumbnail_url):
-
 ```json
 {
 	
@@ -53,6 +52,21 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 	"thumbnail_url":"www.url.com..."
 }
 ```
+
+- Editar un video:
+`PATCH 0.0.0.0:5000/videos/<id>` con body (todos opcionales):
+```json
+{
+	
+	"title":"titulo video",
+	"description": "descripcion de ejemplo",
+	"location":"lugar posteado",
+	"is_private":false,
+}
+```
+
+- Borrar un video (y todas las racciones+comentarios):
+`DELETE 0.0.0.0:5000/videos/<id>`
 
 - Postear un comentario:
 `POST 0.0.0.0:5000/videos/<id>/comments` con body (text obligatorio, vid_time opcional):
@@ -69,6 +83,14 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 
 - Reaccionar a un video:
 `POST 0.0.0.0:5000/videos/<id>/reactions` con body (true es like, false es dislike; campo obligatorio):
+```json
+{
+	"likes_video":true
+}
+```
+
+- Editar reaccion a un video
+`PATCH 0.0.0.0:5000/videos/<id>/reactions` con body (true es like, false es dislike; campo obligatorio):
 ```json
 {
 	"likes_video":true
@@ -117,6 +139,31 @@ con body (display_name e email obligatorios, resto opcional):
 	"image_location":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"
 }
 ```
+
+- Crear reset code para generar una nueva contraseña (no necesita firebase token):
+`POST 0.0.0.0:4000/reset-codes` con body:
+```json
+{
+	
+    "email": "juanperez@gmail.com"
+    
+}
+
+
+```
+
+- Cambiar contraseña usando el reset code (no necesita firebase token):
+`PUT 0.0.0.0:4000/auth` con body:
+```json
+{
+	
+	"email": "juanperez@gmail.com",
+	"reset_code":"KnPlDQ",
+	"password": "Unacontraseña123"
+	
+}
+```
+
 #### Amistades
 
 - Ver amigos de un usuario:

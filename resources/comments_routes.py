@@ -36,7 +36,7 @@ class CommentRoute(Resource):
         args = postcmnt_parser.parse_args()
 
         uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
-        new_cmnt = CommentDAO.add_cmnt(vid_id, uuid=uuid, text=args['text'], time=args["vid_time"])
+        new_cmnt = CommentDAO.add_cmnt(vid_id, uuid=uuid, text=args['text'], time=args["vid_time"], tkn=args["x-access-token"])
 
         self.logger.info(f"Posted new comment to video {vid_id}. Comment: {new_cmnt}. RESPONSECODE:201")
         return new_cmnt, 201

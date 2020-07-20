@@ -18,9 +18,9 @@ class Video(db.Model):
 
     is_private = db.Column(db.Boolean, default=False)
 
-    comments = db.relationship('Comment', backref='video')
+    comments = db.relationship('Comment', backref='video', cascade='all, delete-orphan')
     reactions = db.relationship(
-        'VideoReaction', backref='video', lazy="subquery")
+        'VideoReaction', backref='video', lazy="subquery", cascade='all, delete-orphan')
 
     view_count = db.Column(db.Integer, default=0)
 

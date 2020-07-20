@@ -45,6 +45,8 @@ class UniqueUserRoute(Resource):
         parser.add_argument("phone_number", location="json", required=False,type=str)
         parser.add_argument("image_location", location="json", required=False, type=str)
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
+        parser.add_argument("password", location="json", required=False, default="", type=str)
+
 
         args_dict = parser.parse_args()
         args_dict = {k:v for k,v in args_dict.items() if v is not None}
@@ -90,12 +92,13 @@ class UsersRoute(Resource):
         parser.add_argument("email", location="json", required=True, help="Missing user's email.", type=str)
         parser.add_argument("phone_number", location="json", required=False, default="", type=str)
         parser.add_argument("image_location", location="json", required=False, default="", type=str)
+        parser.add_argument("password", location="json", required=False, default="", type=str)
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
 
         args = parser.parse_args()
 
         msg, code = AuthSender.register_user(fullname=args["display_name"], email=args['email'], phone=args['phone_number'],
-            avatar=args['image_location'], token=args['x-access-token'])
+            avatar=args['image_location'],token=args['x-access-token'], password=args["password"])
 
         if code == 201:
             self.logger.info(f"New user created with info: {msg}. RESPONSECODE:{code}")
@@ -105,7 +108,7 @@ class UsersRoute(Resource):
 
         return msg, code
 
-    # TODO /users?name=...
+
     def get(self):
 
         parser = reqparse.RequestParser()
@@ -124,4 +127,23 @@ class UsersRoute(Resource):
         msg, code = AuthSender.find_user(args["x-access-token"], args["name"], args["email"], args["phone"], args["per_page"], args["page"])
         
         self.logger.info(f"Executed user search with args name={args['name']}, email={args['email']}, phone={args['phone']}, per_page={args['per_page']}, page={args['page']}. RESPONSECODE:{code}")
+        return msg, code
+
+
+class UsersAdmin(Resource):
+
+    def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
+        super(UsersAdmin, self).__init__()
+
+    def get(self):
+        parser = reqparse.RequestParser()
+
+        parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
+
+        args = parser.parse_args()
+
+        msg, code = AuthSender.is_admin(args["x-access-token"])
+        
+        self.logger.info(f"Executed GET on /users/admin. Result: {msg['admin']} RESPONSECODE:{code}")
         return msg, code

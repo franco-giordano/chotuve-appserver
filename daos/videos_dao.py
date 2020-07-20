@@ -8,7 +8,7 @@ from services.authsender import AuthSender
 
 import logging
 
-from exceptions.exceptions import NotFoundError, UnauthorizedError
+from exceptions.exceptions import NotFoundError, UnauthorizedError, BadRequestError
 
 
 class VideoDAO():
@@ -58,6 +58,41 @@ class VideoDAO():
         cls.add_extra_info(vid, viewer_uuid)
 
         return vid
+
+    @classmethod
+    def edit(cls, vid_id, args, uuid):
+        vid = cls.get_raw(vid_id)
+
+        if vid.uuid != uuid:
+            raise BadRequestError(f"Only the author can edit their video!")
+
+        if args["description"]:
+            vid.description = args["description"]
+        if args["location"]:
+            vid.location = args["location"]
+        if args["title"]:
+            vid.title = args["title"]
+        if args["is_private"]:
+            vid.is_private = args["is_private"]
+
+        db.session.commit()
+
+        return vid.serialize()
+
+    @classmethod
+    def delete(cls, vid_id, actioner_uuid):
+        vid = cls.get_raw(vid_id)
+
+        if actioner_uuid != vid.uuid:
+            raise BadRequestError("Only the author can delete their video!")
+
+        vid.comments = []
+        vid.reactions = []
+
+        db.session.delete(vid)
+        db.session.commit()
+
+        
 
     @classmethod
     def get_raw(cls, vid_id):
