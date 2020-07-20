@@ -22,9 +22,8 @@ def register_routes(api):
     api.add_resource(UsersAdmin, '/users/admin')
 
     api.add_resource(FriendsRoute, '/users/<int:user_id>/friends')
-    api.add_resource(RequestsRoute, '/users/<int:user_id>/friends/requests')
-
-    api.add_resource(UniqueRequestRoute, '/users/<int:my_id>/friends/requests/<int:sender_id>')
+    api.add_resource(RequestsRoute, '/friend-requests')
+    api.add_resource(UniqueRequestRoute, '/friend-requests/<int:sender_id>')
 
     api.add_resource(MessagesRoute, '/messages/<int:other_user_id>')
 

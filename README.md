@@ -169,16 +169,20 @@ con body (display_name e email obligatorios, resto opcional):
 - Ver amigos de un usuario:
 ```GET 0.0.0.0:5000/users/<uuid>/friends```
 
-- Enviar solicitud de amistad:
-```POST 0.0.0.0:5000/users/<otheruuid>/friends/requests``` sin body (obtiene el id de quien envia desde el token)
-
+- Enviar solicitud de amistad al user 9999:
+```POST 0.0.0.0:5000/friend-requests``` con body (obligatorio):
+```json
+{
+	"to": 9999
+}
+```
 
 - Ver mis solicitudes pendientes:
-```GET 0.0.0.0:5000/users/<myuuid>/friends/requests```
+```GET 0.0.0.0:5000/friend-requests```
 
 
 - Aceptar/Rechazar solicitud pendiente:
-```POST 0.0.0.0:5000/users/<myuuid>/friends/requests/<otheruuid>``` con body (campo obligatorio)
+```POST 0.0.0.0:5000/friend-requests/<otheruuid>``` con body (campo obligatorio)
 ```json
 {
 	"accept":true
