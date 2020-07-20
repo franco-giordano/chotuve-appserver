@@ -26,7 +26,7 @@ class FriendsRoute(Resource):
         return friends, 200
 
 
-# /friend-requests
+# /users/id/friends/requests
 class RequestsRoute(Resource):
 
     def __init__(self):
@@ -34,37 +34,39 @@ class RequestsRoute(Resource):
         super(RequestsRoute, self).__init__()
 
     @token_required
-    def get(self):
+    def get(self, user_id):
 
         parser = reqparse.RequestParser()
         parser.add_argument("x-access-token", location='headers')
         args = parser.parse_args()
 
-        viewer_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
+        sender_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
-        reqs = UsersDAO.view_pending_reqs(viewer_uuid)
+        if sender_uuid != user_id:
+            raise UnauthorizedError("You can't view other user's friend requests!")
+        
+        reqs = UsersDAO.view_pending_reqs(user_id)
 
-        self.logger.info(f"Found {len(reqs['pending_reqs'])} pending requests for user {viewer_uuid}. RESPONSECODE:200")
+        self.logger.info(f"Found {len(reqs['pending_reqs'])} pending requests for user {user_id}. RESPONSECODE:200")
         return reqs, 200
 
     @token_required
-    def post(self):
+    def post(self, user_id):
 
         parser = reqparse.RequestParser()
         parser.add_argument("x-access-token", location='headers')
-        parser.add_argument("to", type=int, required=True, help="You must specify who you are sending this request to", location='json')
         args = parser.parse_args()
 
         sender_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
         author_name = AuthSender.get_author_name(sender_uuid, args["x-access-token"])
 
-        msg = UsersDAO.send_request(sender_uuid, args["to"], author_name)
+        msg = UsersDAO.send_request(sender_uuid, user_id, author_name)
 
-        self.logger.info(f"Succesfully sent request from user {sender_uuid} to {args['to']}. RESPONSECODE:201")
+        self.logger.info(f"Succesfully sent request from user {sender_uuid} to {user_id}. RESPONSECODE:201")
         return msg, 201
 
 
-# /friends-requests/otherid
+# /users/myid/friends/requests/otherid
 class UniqueRequestRoute(Resource):
     
     def __init__(self):
@@ -72,7 +74,7 @@ class UniqueRequestRoute(Resource):
         super().__init__()
 
     @token_required
-    def post(self, sender_id):
+    def post(self, my_id, sender_id):
         parser = reqparse.RequestParser()
         parser.add_argument("x-access-token", location='headers')
         parser.add_argument("accept", location='json', type=bool, required=True, help='You must specify if you either accept or reject the request')
@@ -80,7 +82,10 @@ class UniqueRequestRoute(Resource):
 
         viewer_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
-        msg = UsersDAO.respond_request(viewer_uuid, sender_id, accept=args["accept"])
+        if viewer_uuid != my_id:
+            raise UnauthorizedError("You can't respond other user's friend requests!")
 
-        self.logger.info(f"User {viewer_uuid} responded request from {sender_id}. Accepted: {args['accept']}. RESPONSECODE:200")
+        msg = UsersDAO.respond_request(my_id, sender_id, accept=args["accept"])
+
+        self.logger.info(f"User {my_id} responded request from {sender_id}. Accepted: {args['accept']}. RESPONSECODE:200")
         return msg, 200
