@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from config import app_config
 from flask_cors import CORS
+from flask_restful.utils import cors
+
 
 
 db = SQLAlchemy()
@@ -34,8 +36,18 @@ def create_app(config_name):
     api.init_app(app)
     db.init_app(app)
 
-    CORS(app, origins=["*"], send_wildcard=True)
+    CORS(app, origins=["*"], supports_credentials=True)
     app.config['CORS_HEADERS'] = 'Content-Type'
-    app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
+    # app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
+
+    api.decorators = [
+            cors.crossdomain(
+                origin='*',
+                methods = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+                attach_to_all = True,
+                automatic_options = False
+            )
+    ]
+
 
     return app
