@@ -34,7 +34,7 @@ def create_app(config_name):
     api.init_app(app)
     db.init_app(app)
 
-    CORS(app, origins=["*"], supports_credentials=True, send_wildcard=True)
+    CORS(app, origins=["*"], send_wildcard=True)
     app.config['CORS_HEADERS'] = 'Content-Type'
     app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
 
