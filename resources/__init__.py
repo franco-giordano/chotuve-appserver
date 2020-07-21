@@ -4,7 +4,7 @@ from resources.comments_routes import CommentRoute
 from resources.reactions_route import ReactionRoute
 from resources.user_routes import UniqueUserRoute, UniqueUserVidsRoute, UsersRoute, UsersAdmin
 
-from resources.friends_routes import FriendsRoute, RequestsRoute, UniqueRequestRoute
+from resources.friends_routes import FriendsRoute, RequestsRoute, UniqueRequestRoute, UniqueFriendsRoute
 
 from resources.extra_routes import PingRoute, AuthRoutes, PushTokensRoutes, ResetCodesRoute, ChangePwRoute
 
@@ -22,6 +22,8 @@ def register_routes(api):
     api.add_resource(UsersAdmin, '/users/admin')
 
     api.add_resource(FriendsRoute, '/users/<int:user_id>/friends')
+    api.add_resource(UniqueFriendsRoute, '/users/<int:user_id>/friends/<int:friend_id>')
+
     api.add_resource(RequestsRoute, '/friend-requests')
     api.add_resource(UniqueRequestRoute, '/friend-requests/<int:sender_id>')
 

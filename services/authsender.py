@@ -205,6 +205,9 @@ class AuthSender():
 
     @classmethod
     def is_admin(cls, token):
+        if not cls.url:
+            return False
+
         try:
             cls.logger().info(f"is_admin: Launching GET request at /users/admin for AuthSv with token: {token[:10]}")
             r = requests.get(cls.url + '/users/admin',
@@ -219,7 +222,9 @@ class AuthSender():
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
     
-        
+    @classmethod
+    def has_permission(cls, user_id, viewer_id):
+        return user_id == viewer_id or cls.is_admin(viewer_id)
         
 
     @classmethod

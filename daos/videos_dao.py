@@ -63,7 +63,7 @@ class VideoDAO():
     def edit(cls, vid_id, args, uuid):
         vid = cls.get_raw(vid_id)
 
-        if vid.uuid != uuid:
+        if not AuthSender.has_permission(vid.uuid, uuid):
             raise BadRequestError(f"Only the author can edit their video!")
 
         if args["description"]:
@@ -83,7 +83,7 @@ class VideoDAO():
     def delete(cls, vid_id, actioner_uuid):
         vid = cls.get_raw(vid_id)
 
-        if actioner_uuid != vid.uuid:
+        if not AuthSender.has_permission(vid.uuid, actioner_uuid):
             raise BadRequestError("Only the author can delete their video!")
 
         vid.comments = []
@@ -131,4 +131,4 @@ class VideoDAO():
 
     @classmethod
     def _cant_view(cls, is_private, user1_id, user2_id):
-        return is_private and user1_id != user2_id and not UsersDAO.are_friends(user1_id, user2_id)
+        return is_private and not AuthSender.has_permission(user1_id, user2_id) and not UsersDAO.are_friends(user1_id, user2_id)

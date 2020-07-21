@@ -140,6 +140,19 @@ class UsersDAO():
 
         cls.logger().info(f"Users {u1}, {u2} dont have any pending requests with each other")
         return False
+
+    @classmethod
+    def delete_friendship(user_id, friend_id):
+
+        if cls.are_friends(user_id, friend_id):
+            user = cls.get_raw(user_id)
+            friend = cls.get_raw(friend_id)
+
+            user.delete_friendship(friend)
+        else:
+            raise NotFoundError(f"Friendship between users {user_id} and {friend_id} not found")
+
+
             
 
     @classmethod
