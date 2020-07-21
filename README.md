@@ -1,8 +1,8 @@
 # Chotuve - Application Server
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
-[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
-![api](https://img.shields.io/badge/api-v0.6.1-blueviolet)
+[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=master)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
+[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=master&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=master)
+![api](https://img.shields.io/badge/api-v1.0.0-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -21,7 +21,7 @@
 ---------------------------------------------
 
 
-## API v0.6.1
+## API v1.0.0
 _May be outdated, check staging branch for latest updates_
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
@@ -100,7 +100,7 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 #### Usuarios
 
 - Obtener mi ID de usuario al loguearme:
-```GET 0.0.0.0:5000/auth```, devuelve {"id":int}
+```GET 0.0.0.0:5000/users/auth```, devuelve {"id":int}
 
 - Obtener datos publicos de un usuario
 ```GET 0.0.0.0:5000/users/<uuid>```
@@ -130,7 +130,7 @@ con body (display_name e email obligatorios, resto opcional):
 ```
 
 - Modificar datos de un usuario:
-`PUT 0.0.0.0:5000/users/<id>` con body (todos opcionales):
+`PATCH 0.0.0.0:5000/users/<id>` con body (todos opcionales):
 ```json
 {
 	"email": "juanperez@gmail.com",
@@ -140,45 +140,26 @@ con body (display_name e email obligatorios, resto opcional):
 }
 ```
 
-- Crear reset code para generar una nueva contraseña (no necesita firebase token):
-`POST 0.0.0.0:4000/reset-codes` con body:
-```json
-{
-	
-    "email": "juanperez@gmail.com"
-    
-}
-
-
-```
-
-- Cambiar contraseña usando el reset code (no necesita firebase token):
-`PUT 0.0.0.0:4000/auth` con body:
-```json
-{
-	
-	"email": "juanperez@gmail.com",
-	"reset_code":"KnPlDQ",
-	"password": "Unacontraseña123"
-	
-}
-```
 
 #### Amistades
 
 - Ver amigos de un usuario:
 ```GET 0.0.0.0:5000/users/<uuid>/friends```
 
-- Enviar solicitud de amistad:
-```POST 0.0.0.0:5000/users/<otheruuid>/friends/requests``` sin body (obtiene el id de quien envia desde el token)
-
+- Enviar solicitud de amistad al user 9999:
+```POST 0.0.0.0:5000/friend-requests``` con body (obligatorio):
+```json
+{
+	"to": 9999
+}
+```
 
 - Ver mis solicitudes pendientes:
-```GET 0.0.0.0:5000/users/<myuuid>/friends/requests```
+```GET 0.0.0.0:5000/friend-requests```
 
 
 - Aceptar/Rechazar solicitud pendiente:
-```POST 0.0.0.0:5000/users/<myuuid>/friends/requests/<otheruuid>``` con body (campo obligatorio)
+```POST 0.0.0.0:5000/friend-requests/<otheruuid>``` con body (campo obligatorio)
 ```json
 {
 	"accept":true
@@ -246,18 +227,36 @@ page y per_page similares al endpoint GET /users
 }
 ```
 
-#### Estadisticas de uso
-
-_[NO IMPLEMENTADO]_
 
 #### Recuperacion de Passwords
 
-_[NO IMPLEMENTADO]_
+- Crear reset code para generar una nueva contraseña (no necesita firebase token):
+`POST 0.0.0.0:4000/users/reset-codes` con body:
+```json
+{
+    "email": "juanperez@gmail.com"   
+}
+```
+
+- Cambiar contraseña usando el reset code (no necesita firebase token):
+`POST 0.0.0.0:4000/users/change-password` con body:
+```json
+{
+	"email": "juanperez@gmail.com",
+	"reset_code":"KnPlDQ",
+	"password": "Unacontraseña123"	
+}
+```
+
 
 #### Modificar o borrar videos/comentarios/reacciones/amistades
 
 _[NO IMPLEMENTADO]_
 
 #### Ver videos sugeridos por motor de reglas
+
+_[NO IMPLEMENTADO]_
+
+#### Estadisticas de uso
 
 _[NO IMPLEMENTADO]_
