@@ -36,5 +36,6 @@ def create_app(config_name):
 
     CORS(app, origins=["*"], supports_credentials=True)
     app.config['CORS_HEADERS'] = 'Content-Type'
+    app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
 
     return app
