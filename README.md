@@ -1,11 +1,13 @@
 # Chotuve - Application Server
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
-[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=master)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=master&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=master)
-![api](https://img.shields.io/badge/api-v1.0.0-blueviolet)
+[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
+[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
+![api](https://img.shields.io/badge/api-v1.0.1-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
-[![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
+[![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotuve-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
+[![sv](https://img.shields.io/badge/view-web%20front-important)](https://github.com/santiagomariani/chotuve-web-front)
+
 
 
 ## Instrucciones
@@ -21,8 +23,7 @@
 ---------------------------------------------
 
 
-## API v1.0.0
-_May be outdated, check staging branch for latest updates_
+## API v1.0.1
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -166,6 +167,9 @@ con body (display_name e email obligatorios, resto opcional):
 }
 ```
 (accept true para aceptar, accept false para rechazar)
+
+- Eliminar amigo:
+```DELETE 0.0.0.0:5000/users/<my_id>/friends/<friend_id>```
 
 #### Ping
 
