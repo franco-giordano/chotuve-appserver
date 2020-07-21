@@ -36,9 +36,9 @@ def create_app(config_name):
     api.init_app(app)
     db.init_app(app)
 
-    CORS(app, origins=["*"], supports_credentials=True)
+    CORS(app, origins=["*"], send_wildcard=True)
     app.config['CORS_HEADERS'] = 'Content-Type'
-    # app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
+    app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
 
     api.decorators = [
             cors.crossdomain(
