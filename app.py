@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
-from flask_restful.utils import cors
 from config import app_config
+from flask_cors import CORS
 
 
 db = SQLAlchemy()
@@ -34,6 +34,7 @@ def create_app(config_name):
     api.init_app(app)
     db.init_app(app)
 
-    api.decorators=[cors.crossdomain(origin='*')]
+    CORS(app, origins=["*"], supports_credentials=True)
+    app.config['CORS_HEADERS'] = 'Content-Type'
 
     return app
