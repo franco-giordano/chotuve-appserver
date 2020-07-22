@@ -203,6 +203,7 @@ class AuthSender():
             raise FailedToContactAuthSvError(
                 f"Failed to contact user backend.")
 
+    # TODO: CAMBIAR TOKEN POR UUID!
     @classmethod
     def is_admin(cls, token):
         if not cls.url:
@@ -224,7 +225,8 @@ class AuthSender():
     
     @classmethod
     def has_permission(cls, user_id, viewer_id):
-        return user_id == viewer_id or cls.is_admin(viewer_id)
+        # TODO FIX IS_ADMIN!
+        return user_id == viewer_id # or cls.is_admin(viewer_id)
         
 
     @classmethod
