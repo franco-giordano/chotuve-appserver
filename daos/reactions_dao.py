@@ -34,6 +34,8 @@ class ReactionDAO():
         db.session.add(new_rctn)
         db.session.commit()
 
+        original_vid.update_relevance()
+
         cls.logger().info(f"New reaction! Added to video {vid_id}. Is a like: {likes}, by {uuid}")
         return new_rctn.serialize()
 
@@ -67,6 +69,7 @@ class ReactionDAO():
             if r.uuid == uuid:
                 r.likes_video = likes
                 db.session.commit()
+                original_vid.update_relevance()
                 cls.logger().info(f"Reaction from user {uuid} edited for video {vid_id}. New reaction is a like: {likes}")
                 return
         

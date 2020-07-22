@@ -26,6 +26,7 @@ class CommentDAO():
         db.session.commit()
         cls.logger().info(f"Succesfully appended comment to video {vid_id}. Comment: {new_cmnt.serialize()}")
 
+        vid.update_relevance()
 
         # Notification build w/tkn...
         cmnt_author = AuthSender.get_author_name(uuid, tkn)

@@ -96,3 +96,6 @@ class User(db.Model):
         else:
             raise NotFoundError(
                 f"Friendship request from {sender.id} to {self.id} not found!")
+
+    def count_friends(self):
+        return len(self.friends.all())

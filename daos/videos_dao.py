@@ -6,6 +6,9 @@ from daos.users_dao import UsersDAO
 from services.mediasender import MediaSender
 from services.authsender import AuthSender
 
+from dateutil.parser import parse
+import datetime
+
 import logging
 
 from exceptions.exceptions import NotFoundError, UnauthorizedError, BadRequestError
@@ -46,6 +49,63 @@ class VideoDAO():
             final_vids.append(res)
 
         return final_vids
+
+
+    @classmethod
+    def get_from_search(cls, user, token, title_query):
+        videos = Video.query.filter(Video.title.contains(title_query)).limit(20).all()
+
+        final_vids = []
+
+        for v in all_vids:
+            res = v.serialize()
+
+            if cls._cant_view(res["is_private"], res["uuid"], user):
+                continue
+
+            cls.add_extra_info(res, user)
+            res["author"] = AuthSender.get_author_name(res["uuid"], token)
+            final_vids.append(res)
+
+        return final_vids
+
+    @classmethod
+    def get_recommendations(cls, viewer_uuid, token):
+        all_vids = Video.query.order_by(Video.cached_relevance.desc()).limit(50).all()
+
+        final_vids = []
+
+        for v in all_vids:
+            res = v.serialize()
+
+            if cls._cant_view(res["is_private"], res["uuid"], viewer_uuid):
+                continue
+
+            cls.add_extra_info(res, viewer_uuid)
+            res["author"] = AuthSender.get_author_name(res["uuid"], token)
+            res["popularity"] = cls._calculate_popularity(v, viewer_uuid, res["timestamp"])
+            final_vids.append(res)
+
+        final_vids = sorted(final_vids, key=lambda k: k['popularity'], reverse=True)
+
+        return final_vids
+
+    @classmethod
+    def _calculate_popularity(cls, video, viewer_uuid, timestamp):
+
+        friendship_bonus = int(UsersDAO.are_friends(video.uuid, viewer_uuid))*10
+
+        influencer_bonus = UsersDAO.count_friends(video.uuid)*2
+
+        time_bonus =  60 / (cls._minutes_passed(timestamp)/1440 + 1)
+
+        return video.cached_relevance + friendship_bonus + int(time_bonus) + influencer_bonus
+
+
+    @classmethod
+    def _minutes_passed(cls, old_timestamp):
+        date = datetime.datetime.now(datetime.timezone.utc) - parse(old_timestamp)
+        return int(date.days*24*60 + date.seconds/60)
 
     @classmethod
     def get(cls, vid_id, viewer_uuid):
@@ -92,7 +152,6 @@ class VideoDAO():
         db.session.delete(vid)
         db.session.commit()
 
-        
 
     @classmethod
     def get_raw(cls, vid_id):
@@ -128,6 +187,8 @@ class VideoDAO():
             serialized_vid['video_id'])
         serialized_vid['reaction'] = daos.reactions_dao.ReactionDAO.reaction_by(
             serialized_vid['video_id'], viewer_uuid)
+    
+
 
     @classmethod
     def _cant_view(cls, is_private, user1_id, user2_id):

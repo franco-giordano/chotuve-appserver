@@ -152,7 +152,10 @@ class UsersDAO():
         else:
             raise NotFoundError(f"Friendship between users {user_id} and {friend_id} not found")
 
-
+    @classmethod
+    def count_friends(cls, user_id):
+        user = cls.get_raw(user_id)
+        return user.count_friends()
             
 
     @classmethod

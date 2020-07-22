@@ -5,6 +5,8 @@ import logging
 
 from exceptions.exceptions import FailedToContactMediaSvError
 
+import datetime
+
 
 class MediaSender():
 
@@ -67,12 +69,12 @@ class MediaSender():
 
     @classmethod
     def _mock_send(cls, vid_id, fb_url):
-        cls.mock_db[vid_id] = fb_url
+        cls.mock_db[vid_id] = (fb_url, str(datetime.datetime.now(datetime.timezone.utc)))
 
-        return fb_url, "PREV_TIMESTAMP"
+        return fb_url, cls.mock_db[vid_id][1]
 
     @classmethod
     def _mock_get(cls, vid_id):
-        vid_url = cls.mock_db.get(vid_id, "PREVIOUS_URL")
+        vid_url, timestamp = cls.mock_db.get(vid_id)
 
-        return vid_url, "PREV_TIMESTAMP"
+        return vid_url, timestamp
