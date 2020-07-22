@@ -43,7 +43,7 @@ def create_app(config_name):
     api.decorators = [
             cors.crossdomain(
                 origin='*',
-                methods = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+                methods = ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
                 attach_to_all = True,
                 automatic_options = False
             )
