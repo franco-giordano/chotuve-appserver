@@ -142,7 +142,7 @@ class UsersDAO():
         return False
 
     @classmethod
-    def delete_friendship(user_id, friend_id):
+    def delete_friendship(cls, user_id, friend_id):
 
         if cls.are_friends(user_id, friend_id):
             user = cls.get_raw(user_id)
