@@ -167,7 +167,9 @@ class UsersDAO():
 
         cls.logger().info(f"Deleting friends, friend requests and push token for user {user_id}...")
         user = cls.get_raw(user_id)
-        user.friends = []
+        friends = user.friends
+        for f in friends:
+            user.delete_friendship(f)
         user.sent_requests = []
         user.push_token = None
         db.session.delete(user)
