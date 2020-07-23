@@ -53,25 +53,21 @@ class VideoDAO():
 
     @classmethod
     def get_from_search(cls, user, token, title_query):
-        videos = Video.query.filter(Video.title.contains(title_query)).limit(20).all()
+        all_vids = Video.query.filter(Video.title.contains(title_query)).limit(20).all()
 
-        final_vids = []
+        return cls._add_info_and_popularity(all_vids, viewer_uuid, token)
 
-        for v in all_vids:
-            res = v.serialize()
-
-            if cls._cant_view(res["is_private"], res["uuid"], user):
-                continue
-
-            cls.add_extra_info(res, user)
-            res["author"] = AuthSender.get_author_name(res["uuid"], token)
-            final_vids.append(res)
-
-        return final_vids
 
     @classmethod
     def get_recommendations(cls, viewer_uuid, token):
         all_vids = Video.query.order_by(Video.cached_relevance.desc()).limit(50).all()
+
+        return cls._add_info_and_popularity(all_vids, viewer_uuid, token)
+
+
+
+    @classmethod
+    def _add_info_and_popularity(vids, viewer_uuid, token):
 
         final_vids = []
 
