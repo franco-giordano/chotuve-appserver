@@ -19,7 +19,10 @@ def register_routes(api):
     api.add_resource(UniqueUserRoute, '/users/<int:user_id>')
     api.add_resource(UniqueUserVidsRoute, '/users/<int:user_id>/videos')
     api.add_resource(UsersRoute, '/users')
+    api.add_resource(AuthRoutes, '/users/auth')
     api.add_resource(UsersAdmin, '/users/admin')
+    api.add_resource(ResetCodesRoute, '/users/reset-codes')
+    api.add_resource(ChangePwRoute, '/users/change-password')
 
     api.add_resource(FriendsRoute, '/users/<int:user_id>/friends')
     api.add_resource(UniqueFriendsRoute, '/users/<int:user_id>/friends/<int:friend_id>')
@@ -32,6 +35,3 @@ def register_routes(api):
     api.add_resource(PushTokensRoutes, '/tokens')
 
     api.add_resource(PingRoute, '/ping')
-    api.add_resource(AuthRoutes, '/users/auth')
-    api.add_resource(ResetCodesRoute, '/users/reset-codes')
-    api.add_resource(ChangePwRoute, '/users/change-password')
