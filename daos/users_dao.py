@@ -18,20 +18,6 @@ class UsersDAO():
         return logging.getLogger(cls.__name__)
 
     @classmethod
-    def add_friendship(cls, rcv_id, sender_id):
-
-        snd = cls.get_raw(sender_id)
-        rcv = cls.get_raw(rcv_id)
-
-        snd.friends.append(rcv)
-        rcv.friends.append(snd)
-        db.session.commit()
-
-        cls.logger().info(f"Added new friendship between users {rcv_id} and {sender_id}")
-
-        return rcv.serializeFriends()
-
-    @classmethod
     def get_friends(cls, user_id):
         user = cls.get_raw(user_id)
 

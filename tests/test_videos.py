@@ -94,6 +94,12 @@ def test_view_comment(testapp):
     assert data[0]["parent_video"] == 1
 
 
+def test_cant_edt_reaction_before_posting(testapp):
+    r = testapp.patch('/videos/1/reactions', headers=create_tkn(2), json={"likes_video": True})
+    data = r.get_json()
+    assert r.status_code == 400
+
+
 def test_react_to_video(testapp):
     r = testapp.post('/videos/1/reactions',
                      json={'likes_video': True}, headers=create_tkn(2))
@@ -110,6 +116,12 @@ def test_cant_react_twice(testapp):
                      json={'likes_video': False}, headers=create_tkn(2))
     data = r.get_json()
     assert r.status_code == 400
+
+
+def test_edit_react_info(testapp):
+    r = testapp.patch('/videos/1/reactions', headers=create_tkn(2), json={"likes_video": True})
+    data = r.get_json()
+    assert r.status_code == 200
 
 
 def test_view_reactions(testapp):
@@ -141,6 +153,12 @@ def test_view_vids_by(testapp):
         assert data[0][k] == FIRST_VIDEO_INFO[k]
     assert data[0]["reaction"] == "none"
 
+def test_edit_vid_info(testapp):
+    r = testapp.patch('/videos/1', headers=create_tkn(1), json={"title": "primer video!"})
+    data = r.get_json()
+    assert r.status_code == 200
+    assert data['title'] == "primer video!"
+
 def test_other_cant_delete_video(testapp):
     r = testapp.delete('/videos/1', headers=create_tkn(2))
     data = r.get_json()
@@ -151,8 +169,6 @@ def test_other_cant_delete_video(testapp):
     data = r.get_json()
     assert r.status_code == 200
     assert data["video_id"] == 1
-    for k in FIRST_VIDEO_INFO.keys():
-        assert data[k] == FIRST_VIDEO_INFO[k]
     assert data["reaction"] == "like"
 
 
@@ -168,7 +184,7 @@ def test_pop(testapp):
 
 
 def test_search1(testapp):
-    r = testapp.get("/videos?search=first", headers=create_tkn(2))
+    r = testapp.get("/videos?search=primer", headers=create_tkn(2))
     data = r.get_json()
 
     assert r.status_code == 200

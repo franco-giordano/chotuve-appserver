@@ -12,7 +12,7 @@ def test_cant_send_to_myself(testapp):
     assert r.status_code == 400
 
 
-def test_send_message(testapp):
+def test_not_null_message(testapp):
     r = testapp.post('/friend-requests', headers=create_tkn(2), json={"to":1})
     r = testapp.post('/friend-requests/2',
                      json={'accept': True}, headers=create_tkn(1))
@@ -22,6 +22,18 @@ def test_send_message(testapp):
 
     assert data["friends"][0]["user_id"] == 2
     assert len(data["friends"]) == 1
+
+    # send a message
+    r = testapp.post('/messages/1', headers=create_tkn(2), json={"text":""})
+    assert r.status_code == 400
+
+def test_no_msgs(testapp):
+    r = testapp.get('/messages/2?page=1&per_page=20', headers=create_tkn(1))
+    data = r.get_json()
+    assert r.status_code == 200
+    assert len(data) == 0
+
+def test_send_message(testapp):
 
     # send a message
     r = testapp.post('/messages/1', headers=create_tkn(2), json=MESSAGE)
