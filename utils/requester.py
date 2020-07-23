@@ -18,7 +18,7 @@ class Requester():
     def _fetch(cls, method, url, headers, payload):
         try:
             cls.logger().info(f"Launching {method} request at {url}. Payload: {payload}")
-            cls.logger().debug(f"Using extra headers: {extra_headers}")
+            cls.logger().debug(f"Using extra headers: {headers}")
 
             r = requests.request(method, url,
                               json=payload,
