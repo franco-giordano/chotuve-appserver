@@ -52,4 +52,4 @@ class MessagesRoute(Resource):
         msg = ChatsDAO.send_message(sender_uuid, other_user_id, args["text"], author_name)
 
         self.logger.info(f"Succesfully sent message from user {sender_uuid} to {other_user_id}. RESPONSECODE:200")
-        return msg, 200
+        return msg, 201

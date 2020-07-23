@@ -48,14 +48,6 @@ class BadGatewayError(ChotuveError):
         super().__init__()
 
 
-class EndpointNotImplementedError(ChotuveError):
-    status_code = 501
-
-    def __init__(self, message):
-        self.message = message
-        super().__init__()
-
-
 class InternalError(ChotuveError):
     status_code = 500
 

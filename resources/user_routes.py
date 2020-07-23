@@ -10,8 +10,6 @@ from services.authsender import AuthSender
 
 from daos.users_dao import UsersDAO
 
-from exceptions.exceptions import EndpointNotImplementedError
-
 import logging
 
 class UniqueUserRoute(Resource):

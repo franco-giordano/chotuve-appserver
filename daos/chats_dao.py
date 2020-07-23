@@ -17,6 +17,7 @@ class ChatsDAO():
 
         minUID, maxUID = cls.sort_uuids(uuid1, uuid2)
 
+        # TODO: use pagination for msgs
         chat = Chat.query.get((minUID, maxUID))
 
         if chat:

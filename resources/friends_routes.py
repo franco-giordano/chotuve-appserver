@@ -5,7 +5,7 @@ from daos.users_dao import UsersDAO
 
 from services.authsender import AuthSender
 
-from exceptions.exceptions import EndpointNotImplementedError, BadRequestError, UnauthorizedError
+from exceptions.exceptions import BadRequestError
 
 import logging
 

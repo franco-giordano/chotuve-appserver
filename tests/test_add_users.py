@@ -84,6 +84,23 @@ def test_get_my_info(testapp):
     for k in USER_REGISTER_DATA.keys():
         assert data[k] == USER_REGISTER_DATA[k]
 
+def test_get_my_id(testapp):
+
+    r = testapp.get('/users/auth', headers={'x-access-token': '1'})
+
+    data = r.get_json()
+
+    assert r.status_code == 200
+    assert data["id"] == 1
+
+def test_not_admin(testapp):
+
+    r = testapp.get('/users/admin', headers={'x-access-token': '1'})
+
+    data = r.get_json()
+
+    assert r.status_code == 200
+    assert data["admin"] == False
 
 def test_modify_my_info_name(testapp):
 
@@ -91,8 +108,6 @@ def test_modify_my_info_name(testapp):
         '/users/1', json={"display_name": "Carlos"}, headers={'x-access-token': '1'})
 
     data = r.get_json()
-
-    print(data)
 
     assert r.status_code == 200
     assert data["display_name"] == "Carlos"
@@ -117,8 +132,6 @@ def test_modify_my_info_phone(testapp):
 
     data = r.get_json()
 
-    print(data)
-
     assert r.status_code == 200
     assert data["display_name"] == "Carlos"
     assert data["image_location"] == "https://duckduckgo.com/assets/common/dax-logo.svg"
@@ -133,8 +146,6 @@ def test_modify_my_info_mail(testapp):
         '/users/1', json={"email": "carlos@protonmail.com"}, headers={'x-access-token': '1'})
 
     data = r.get_json()
-
-    print(data)
 
     assert r.status_code == 200
     assert data["display_name"] == "Carlos"
@@ -193,7 +204,7 @@ def test_filter_name(testapp):
     r = testapp.get('/users?name=Carlos', headers={'x-access-token': '1'})
 
     data = r.get_json()["users"]
-    print(data)
+     
 
     assert r.status_code == 200
     assert len(data) == 1
@@ -224,6 +235,15 @@ def test_name_with_spaces(testapp):
     assert r.status_code == 200
     assert len(data) == 1
     assert data[0]["display_name"] == "Marcos Marcos"
+
+
+def test_search_user(testapp):
+    r = testapp.get('/users?name=Marcos', headers={'x-access-token': '1'})
+
+    data = r.get_json()
+
+    assert r.status_code == 200
+    assert data["users"][0]["id"] == 2
 
 def test_find_by_email(testapp):
     r = testapp.get('/users?email=carlos@protonmail.com', headers={'x-access-token': '1'})

@@ -207,7 +207,7 @@ class AuthSender():
     @classmethod
     def is_admin(cls, token):
         if not cls.url:
-            return False
+            return {"admin":False}, 200
 
         try:
             cls.logger().info(f"is_admin: Launching GET request at /users/admin for AuthSv with token: {token[:10]}")

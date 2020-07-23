@@ -95,7 +95,6 @@ class VideoRoute(Resource):
         else:
             videos = VideoDAO.get_recommendations(uuid, args["x-access-token"])
 
-        # # TODO reemplazar por el motor de reglas
         # videos = VideoDAO.get_all(uuid, args["x-access-token"])
 
         self.logger.info(f"Executed /videos search, found {len(videos)} videos. RESPONSECODE:200")

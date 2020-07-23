@@ -74,12 +74,12 @@ def test_canT_view_PRIVATE_video(testapp):
 
 def test_comment_video(testapp):
     r = testapp.post('/videos/1/comments',
-                     json={'text': 'My first comment!'}, headers=create_tkn(1))
+                     json={'text': 'My first comment!'}, headers=create_tkn(2))
     data = r.get_json()
     assert r.status_code == 201
     assert data["comment_id"] == 1
     assert data["text"] == "My first comment!"
-    assert data["uuid"] == 1
+    assert data["uuid"] == 2
     assert data["parent_video"] == 1
 
 
@@ -90,7 +90,7 @@ def test_view_comment(testapp):
     assert len(data) == 1
     assert data[0]["comment_id"] == 1
     assert data[0]["text"] == "My first comment!"
-    assert data[0]["uuid"] == 1
+    assert data[0]["uuid"] == 2
     assert data[0]["parent_video"] == 1
 
 
@@ -154,6 +154,36 @@ def test_other_cant_delete_video(testapp):
     for k in FIRST_VIDEO_INFO.keys():
         assert data[k] == FIRST_VIDEO_INFO[k]
     assert data["reaction"] == "like"
+
+
+def test_pop(testapp):
+    r = testapp.get("/videos", headers=create_tkn(2))
+    data = r.get_json()
+
+    # vid 2 has no interactions, must have worse popularity
+
+    assert r.status_code == 200
+    assert data[0]["popularity"] > data[1]["popularity"]
+    assert data[0]["video_id"] == 1
+
+
+def test_search1(testapp):
+    r = testapp.get("/videos?search=first", headers=create_tkn(2))
+    data = r.get_json()
+
+    assert r.status_code == 200
+    assert data[0]["video_id"] == 1
+    assert len(data) == 1
+
+
+def test_search2(testapp):
+    r = testapp.get("/videos?search=vid", headers=create_tkn(2))
+    data = r.get_json()
+
+    assert r.status_code == 200
+    assert data[0]["video_id"] == 1
+    assert data[1]["video_id"] == 2
+    assert len(data) == 2
 
 
 def test_delete_video(testapp):
