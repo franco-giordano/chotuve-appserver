@@ -33,25 +33,6 @@ class VideoDAO():
         return new_vid.serialize()
 
     @classmethod
-    def get_all(cls, viewer_uuid, token):
-        all_vids = Video.query.all()
-
-        final_vids = []
-
-        for v in all_vids:
-            res = v.serialize()
-
-            if cls._cant_view(res["is_private"], res["uuid"], viewer_uuid):
-                continue
-
-            cls.add_extra_info(res, viewer_uuid)
-            res["author"] = AuthSender.get_author_name(res["uuid"], token)
-            final_vids.append(res)
-
-        return final_vids
-
-
-    @classmethod
     def get_from_search(cls, viewer_uuid, token, title_query):
         all_vids = Video.query.filter(Video.title.contains(title_query)).limit(20).all()
 
