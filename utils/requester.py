@@ -15,7 +15,7 @@ class Requester():
 
 
     @classmethod
-    def _fetch(method, url, headers, payload):
+    def _fetch(cls, method, url, headers, payload):
         try:
             cls.logger().info(f"Launching {method} request at {url}. Payload: {payload}")
             cls.logger().debug(f"Using extra headers: {extra_headers}")
