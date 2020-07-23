@@ -52,7 +52,7 @@ class VideoDAO():
 
 
     @classmethod
-    def get_from_search(cls, user, token, title_query):
+    def get_from_search(cls, viewer_uuid, token, title_query):
         all_vids = Video.query.filter(Video.title.contains(title_query)).limit(20).all()
 
         return cls._add_info_and_popularity(all_vids, viewer_uuid, token)
@@ -62,12 +62,12 @@ class VideoDAO():
     def get_recommendations(cls, viewer_uuid, token):
         all_vids = Video.query.order_by(Video.cached_relevance.desc()).limit(50).all()
 
-        return cls._add_info_and_popularity(all_vids, viewer_uuid, token)
+        return cls._add_info_and_popularity(all_vids, viewer_uuid, token, sort_by_pop=True)
 
 
 
     @classmethod
-    def _add_info_and_popularity(vids, viewer_uuid, token):
+    def _add_info_and_popularity(vids, viewer_uuid, token, sort_by_pop=False):
 
         final_vids = []
 
@@ -79,10 +79,12 @@ class VideoDAO():
 
             cls.add_extra_info(res, viewer_uuid)
             res["author"] = AuthSender.get_author_name(res["uuid"], token)
-            res["popularity"] = cls._calculate_popularity(v, viewer_uuid, res["timestamp"])
+            if sort_by_pop:
+                res["popularity"] = cls._calculate_popularity(v, viewer_uuid, res["timestamp"])
             final_vids.append(res)
 
-        final_vids = sorted(final_vids, key=lambda k: k['popularity'], reverse=True)
+        if sort_by_pop:
+            final_vids = sorted(final_vids, key=lambda k: k['popularity'], reverse=True)
 
         return final_vids
 
