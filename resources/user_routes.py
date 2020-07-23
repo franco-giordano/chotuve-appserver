@@ -64,7 +64,7 @@ class UniqueUserRoute(Resource):
 
         if not AuthSender.has_permission(user_id, viewer_uuid):
             self.logger.info(f"User {viewer_uuid} attempted to delete user's {user_id} account. Access Denied.")
-            raise BadRequest(f"You can't delete other users profiles!")
+            raise BadRequestError(f"You can't delete other users profiles!")
 
         UsersDAO.delete_user(user_id, args["x-access-token"])
 

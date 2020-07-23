@@ -18,6 +18,11 @@ SECOND_VIDEO_INFO = {
     "is_private": True,
     "thumbnail_url":"www.google.com/thumbnail2"}
 
+def test_cant_delete_others_accounts(testapp):
+    r = testapp.delete("/users/1", headers=create_tkn(2))
+    assert r.status_code == 400
+
+
 
 def test_delete_user(testapp):
     # upload a vid

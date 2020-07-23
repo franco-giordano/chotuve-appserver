@@ -55,17 +55,3 @@ class InternalError(ChotuveError):
         self.message = message
         super().__init__()
 
-
-# ---------------------------------------------------
-
-
-class FailedToContactAuthSvError(BadGatewayError):
-    def __init__(self, message):
-        self.message = message
-        super().__init__(message)
-
-
-class FailedToContactMediaSvError(BadGatewayError):
-    def __init__(self, message):
-        self.message = message
-        super().__init__(message)
