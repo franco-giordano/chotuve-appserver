@@ -67,7 +67,7 @@ class VideoDAO():
 
 
     @classmethod
-    def _add_info_and_popularity(vids, viewer_uuid, token, sort_by_pop=False):
+    def _add_info_and_popularity(cls, vids, viewer_uuid, token, sort_by_pop=False):
 
         final_vids = []
 
