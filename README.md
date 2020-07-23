@@ -259,13 +259,10 @@ page y per_page similares al endpoint GET /users
 ```
 
 
-#### Modificar o borrar videos/comentarios/reacciones/amistades
+#### Borrar usuario
 
 _[NO IMPLEMENTADO]_
 
-#### Ver videos sugeridos por motor de reglas
-
-_[NO IMPLEMENTADO]_
 
 #### Estadisticas de uso
 
