@@ -1,8 +1,8 @@
-import requests
 import os
 
 import logging
 
+from utils.requester import Requester
 
 import datetime
 
@@ -24,21 +24,11 @@ class MediaSender():
         
         payload = {'videoId': vid_id, 'url': fb_url}
 
-        try:
-            cls.logger().info(f"send_url: Launching POST request at /video for MediaSv. Payload: {payload}")
-            r = requests.post(cls.url + '/video',
-                              json=payload)
+        msg, code = Requester.media_fetch('POST', '/video', {}, payload)
+        if code != 201:
+            cls.logger().error(f"Error uploading video for ID: {vid_id}. Response: {msg}, code {code}")
 
-            if r.status_code != 201:
-                cls.logger().error(f"Error uploading video for ID: {vid_id}. Response: {r.json()}, code {r.status_code}")
-
-
-            cls.logger().debug(f"MediaSv response: {r.json()}")
-            return r.json()['url'], r.json()['timestamp']
-
-        except requests.exceptions.RequestException:
-            cls.logger().error(
-                f"Failed to contact MediaSv at url {cls.url}/video with payload videoId: {vid_id}, url:{fb_url}.")
+        return msg['url'], msg['timestamp']
 
 
     @classmethod
@@ -47,19 +37,12 @@ class MediaSender():
         if not cls.url:
             return cls._mock_get(vid_id)
 
-        try:
-            cls.logger().info(f"send_url: Launching GET request at /video for MediaSv at video {vid_id}")
-            r = requests.get(cls.url + '/video', json={'videoId': vid_id})
+        msg, code = Requester.media_fetch('GET', '/video', {}, {"videoId": vid_id})
 
-            if r.status_code != 200:
-                cls.logger().error(f"Error getting video info for ID: {vid_id}. Response: {r.json()}, code {r.status_code}")
+        if code != 200:
+            cls.logger().error(f"Error getting video info for ID: {vid_id}. Response: {msg}, code {code}")
 
-
-            return r.json()['url'], r.json()['timestamp']
-
-        except requests.exceptions.RequestException:
-            cls.logger().error(
-                f"Failed to contact MediaSv at url {cls.url}/video with payload videoId: {vid_id}.")
+        return msg['url'], msg['timestamp']
 
 
     @classmethod
