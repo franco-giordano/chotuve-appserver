@@ -34,14 +34,14 @@ class Requester():
 
     @classmethod
     def media_fetch(cls, method, url, extra_headers, payload):
-        header = {"x-client-token": MEDIA_TOKEN}
+        header = {"x-client-token": cls.MEDIA_TOKEN}
         header.update(extra_headers)
 
         return cls._fetch(method, url, header, payload)
     
     @classmethod
     def auth_fetch(cls, method, url, extra_headers, payload):
-        header = {"x-client-token": AUTH_TOKEN}
+        header = {"x-client-token": cls.AUTH_TOKEN}
         header.update(extra_headers)
 
         return cls._fetch(method, url, header, payload)
