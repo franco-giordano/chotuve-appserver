@@ -28,13 +28,13 @@ class User(db.Model):
     friends = db.relationship(
         'User', secondary=friends,
         primaryjoin=(friends.c.user1_id == id),
-        secondaryjoin=(friends.c.user2_id == id), lazy='dynamic', passive_deletes=True)
+        secondaryjoin=(friends.c.user2_id == id), lazy='dynamic', passive_deletes=True, cascade='all')
 
     sent_requests = db.relationship(
         'User', secondary=requests,
         primaryjoin=(requests.c.sender_id == id),
         secondaryjoin=(requests.c.recver_id == id),
-        backref=db.backref('pending_requests', lazy='dynamic'), lazy='dynamic', passive_deletes=True)
+        backref=db.backref('pending_requests', lazy='dynamic'), lazy='dynamic', passive_deletes=True, cascade='all')
 
     push_token = db.Column(db.String(50), unique=True)
 
