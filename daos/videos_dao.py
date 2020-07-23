@@ -131,6 +131,10 @@ class VideoDAO():
         db.session.delete(vid)
         db.session.commit()
 
+    @classmethod
+    def delete_all_user_videos(cls, user_id):
+        count = Video.query.filter(Video.uuid == user_id).delete()
+        cls.logger().info(f"Deleted {count} videos from DB by user {user_id}")
 
     @classmethod
     def get_raw(cls, vid_id):
@@ -144,6 +148,7 @@ class VideoDAO():
     @classmethod
     def get_videos_by(cls, user_id, viewer_uuid, token):
         cls.logger().info(f"Grabbing all videos by user {user_id}")
+        UsersDAO.check_exists(user_id)
         videos = [v.serialize()
                   for v in Video.query.filter(Video.uuid == user_id)]
 

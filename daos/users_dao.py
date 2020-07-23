@@ -10,7 +10,6 @@ from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
 
 
-
 class UsersDAO():
 
     @classmethod
@@ -44,6 +43,10 @@ class UsersDAO():
             raise InternalError(f"User already exists with ID {user_id}")
 
         return new_user
+
+    @classmethod
+    def check_exists(cls, user_id):
+        UsersDAO.get_raw(user_id)
 
     @classmethod
     def add_user_to_db(cls, user_id):
@@ -142,7 +145,41 @@ class UsersDAO():
     def count_friends(cls, user_id):
         user = cls.get_raw(user_id)
         return user.count_friends()
-            
+    
+    @classmethod
+    def delete_user(cls, user_id, token):
+
+        cls.logger().info(f"Deleting videos uploaded by user {user_id}...")
+        from daos.videos_dao import VideoDAO
+        VideoDAO.delete_all_user_videos(user_id)
+
+        cls.logger().info(f"Deleting comments made by user {user_id}...")
+        from daos.comments_dao import CommentDAO
+        CommentDAO.delete_all_user_comments(user_id)
+
+        cls.logger().info(f"Deleting reactions given by user {user_id}...")
+        from daos.reactions_dao import ReactionDAO
+        ReactionDAO.delete_all_user_reactions(user_id)
+
+        cls.logger().info(f"Deleting chats posted by user {user_id}...")
+        from daos.chats_dao import ChatsDAO
+        ChatsDAO.delete_all_user_chats(user_id)
+
+        cls.logger().info(f"Deleting friends, friend requests and push token for user {user_id}...")
+        user = cls.get_raw(user_id)
+        user.friends = []
+        user.sent_requests = []
+        user.push_token = None
+        db.session.delete(user)
+        db.session.commit()
+
+        cls.logger().info(f"Deleting user {user_id} from AuthSv...")
+        from services.authsender import AuthSender
+        AuthSender.delete_user(user_id, token)
+
+
+
+
 
     @classmethod
     def get_tkn(cls, id):

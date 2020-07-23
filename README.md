@@ -2,7 +2,7 @@
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
 [![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
 [![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
-![api](https://img.shields.io/badge/api-v1.0.2-blueviolet)
+![api](https://img.shields.io/badge/api-v1.1.2-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotuve-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
@@ -23,7 +23,7 @@
 ---------------------------------------------
 
 
-## API v1.0.2
+## API v1.1.2
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -146,6 +146,9 @@ con body (display_name e email obligatorios, resto opcional):
 	"image_location":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"
 }
 ```
+
+- Borrar mi usuario
+```DELETE 0.0.0.0:5000/users/<uuid>```
 
 
 #### Amistades

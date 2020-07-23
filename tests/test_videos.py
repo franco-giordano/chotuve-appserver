@@ -153,6 +153,10 @@ def test_view_vids_by(testapp):
         assert data[0][k] == FIRST_VIDEO_INFO[k]
     assert data[0]["reaction"] == "none"
 
+def test_error_if_unknown_user(testapp):
+    r = testapp.get('/users/99999999999/videos', headers=create_tkn(1))
+    assert r.status_code == 404
+
 def test_edit_vid_info(testapp):
     r = testapp.patch('/videos/1', headers=create_tkn(1), json={"title": "primer video!"})
     data = r.get_json()

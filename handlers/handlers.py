@@ -9,8 +9,7 @@ def not_found(error):
 
 def handle(error):
     res = jsonify(error.to_dict())
-    res.status_code = error.status_code
-    return res
+    return res, error.status_code
 
 
 def register_error_handlers(app):

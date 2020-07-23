@@ -45,3 +45,10 @@ class CommentDAO():
 
         cls.logger().info(f"Serializing comments for vid {vid_id}...")
         return [c.serialize() for c in vid.comments]
+
+    @classmethod
+    def delete_all_user_comments(cls, user_id):
+        count = Comment.query.filter(Comment.uuid == user_id).delete()
+        cls.logger().info(f"Deleted {count} comments from DB by user {user_id}")
+        
+

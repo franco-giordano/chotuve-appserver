@@ -10,6 +10,8 @@ from services.authsender import AuthSender
 
 from daos.users_dao import UsersDAO
 
+from exceptions.exceptions import BadRequestError
+
 import logging
 
 class UniqueUserRoute(Resource):
@@ -53,18 +55,22 @@ class UniqueUserRoute(Resource):
         self.logger.info(f"User {user_id} info edited: {msg}. RESPONSECODE:{code}")
         return msg, code
 
+    def delete(self, user_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
+        args = parser.parse_args()
 
-    # def options(self, user_id):
-    #     return {'Allow' : 'PUT,GET,POST,DELETE,PATCH'}, 200, \
-    #     { 'Access-Control-Allow-Origin': '*', \
-    #     'Access-Control-Allow-Methods' : 'PUT,GET,POST,DELETE,PATCH',
-    #     'Access-Control-Allow-Headers':'Content-Type,Authorization,x-access-token' }
+        viewer_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
+
+        if not AuthSender.has_permission(user_id, viewer_uuid):
+            self.logger.info(f"User {viewer_uuid} attempted to delete user's {user_id} account. Access Denied.")
+            raise BadRequest(f"You can't delete other users profiles!")
+
+        UsersDAO.delete_user(user_id, args["x-access-token"])
+
+        return {"msg":"OK"}, 200
 
 
-
-
-
-        
         
 
 

@@ -11,7 +11,7 @@ class Chat(db.Model):
     user1_id = db.Column(db.Integer, primary_key=True)
     user2_id = db.Column(db.Integer, primary_key=True)
 
-    messages = db.relationship('Message', backref='chat')
+    messages = db.relationship('Message', backref='chat', cascade='all, delete-orphan')
 
     def __repr__(self):
         return '<Chat {}-{}>'.format(self.user1_id, self.user2_id)

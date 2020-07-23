@@ -33,6 +33,11 @@ def test_no_msgs(testapp):
     assert r.status_code == 200
     assert len(data) == 0
 
+
+def test_error_if_unknown_recipient(testapp):
+    r = testapp.get('/messages/999999999999?page=1&per_page=20', headers=create_tkn(1))
+    assert r.status_code == 404
+
 def test_send_message(testapp):
 
     # send a message

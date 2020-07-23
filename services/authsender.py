@@ -172,6 +172,26 @@ class AuthSender():
                 f"Failed to contact user backend.")
 
     @classmethod
+    def delete_user(cls, user_id, token):
+        if not cls.url:
+            cls.mock_db[user_id-1] = {"DELETED":True}
+            return
+
+        try:
+            cls.logger().info(f"delete_user: Launching DELETE request at /users/{user_id} for AuthSv")
+            r = requests.delete(cls.url + f'/users/{user_id}')
+
+            msg = cls.msg_from_authsv(r.json())
+            return msg, r.status_code
+
+        except requests.exceptions.RequestException:
+            cls.logger().error(
+                f"Failed to contact AuthSv at url {cls.url}/users/{user_id}")
+            raise FailedToContactAuthSvError(
+                f"Failed to contact user backend.")
+
+
+    @classmethod
     def send_reset_code(cls, email):
         try:
             cls.logger().info(f"send_reset_code: Launching POST request at /reset-codes for AuthSv with email: {email}")

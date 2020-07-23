@@ -52,6 +52,11 @@ class ChatsDAO():
 
         return new_msg.serialize()
 
+    @classmethod
+    def delete_all_user_chats(cls, user_id):
+        count = Chat.query.filter((Chat.user1_id == user_id) | (Chat.user2_id == user_id)).delete()
+        cls.logger().info(f"Deleted {count} chats from DB by user {user_id}")
+
 
 
 

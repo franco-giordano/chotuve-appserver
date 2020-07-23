@@ -28,6 +28,9 @@ class MessagesRoute(Resource):
 
         uuid1 = AuthSender.get_uuid_from_token(args['x-access-token'])
 
+        UsersDAO.check_exists(uuid1)
+        UsersDAO.check_exists(other_user_id)
+        
         msgs = ChatsDAO.get_messages_between(uuid1, other_user_id, args["page"], args["per_page"])
 
         self.logger.info(f"Found {len(msgs)} messages between users {uuid1, other_user_id}. RESPONSECODE:200")

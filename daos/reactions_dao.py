@@ -74,3 +74,8 @@ class ReactionDAO():
                 return
         
         raise BadRequestError(f"User {uuid} hasn't reacted to video {vid_id} yet, try POST'ing one first.")
+
+    @classmethod
+    def delete_all_user_reactions(cls, user_id):
+        count = VideoReaction.query.filter(VideoReaction.uuid == user_id).delete()
+        cls.logger().info(f"Deleted {count} reactions from DB by user {user_id}")
