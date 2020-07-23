@@ -5,15 +5,15 @@ from exceptions.exceptions import NotFoundError
 
 friends = db.Table('friends',
                    db.Column('user1_id', db.Integer,
-                             db.ForeignKey('users.id')),
-                   db.Column('user2_id', db.Integer, db.ForeignKey('users.id'))
+                             db.ForeignKey('users.id', ondelete='CASCADE')),
+                   db.Column('user2_id', db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
                    )
 
 requests = db.Table('requests',
                     db.Column('sender_id', db.Integer,
-                              db.ForeignKey('users.id')),
+                              db.ForeignKey('users.id', ondelete='CASCADE')),
                     db.Column('recver_id', db.Integer,
-                              db.ForeignKey('users.id'))
+                              db.ForeignKey('users.id', ondelete='CASCADE'))
                     )
 
 # modelo
@@ -28,13 +28,13 @@ class User(db.Model):
     friends = db.relationship(
         'User', secondary=friends,
         primaryjoin=(friends.c.user1_id == id),
-        secondaryjoin=(friends.c.user2_id == id), lazy='dynamic')
+        secondaryjoin=(friends.c.user2_id == id), lazy='dynamic', passive_deletes=True, cascade='all, delete-orphan')
 
     sent_requests = db.relationship(
         'User', secondary=requests,
         primaryjoin=(requests.c.sender_id == id),
         secondaryjoin=(requests.c.recver_id == id),
-        backref=db.backref('pending_requests', lazy='dynamic'), lazy='dynamic')
+        backref=db.backref('pending_requests', lazy='dynamic'), lazy='dynamic', passive_deletes=True, cascade='all, delete-orphan')
 
     push_token = db.Column(db.String(50), unique=True)
 

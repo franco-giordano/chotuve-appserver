@@ -41,7 +41,7 @@ class Message(db.Model):
     chat_user1 = db.Column(db.Integer, nullable=False)
     chat_user2 = db.Column(db.Integer, nullable=False)
 
-    __table_args__ = (db.ForeignKeyConstraint(['chat_user1', 'chat_user2'],['chats.user1_id', 'chats.user2_id'],ondelete='CASCADE'),)
+    __table_args__ = (db.ForeignKeyConstraint(['chat_user1', 'chat_user2'],['chats.user1_id', 'chats.user2_id'], ondelete='CASCADE'),)
     
 
     def __repr__(self):
