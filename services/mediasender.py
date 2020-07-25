@@ -44,6 +44,15 @@ class MediaSender():
 
         return msg['url'], msg['timestamp']
 
+    @classmethod
+    def delete_vid(cls, vid_id):
+        if not cls.url:
+            return cls.mock_db
+        
+        msg, code = Requester.media_fetch('DELETE', cls.url + '/video', {}, {"videoId": vid_id})
+
+        if code != 200:
+            cls.logger().error(f"Error deleting video {vid_id}")
 
     @classmethod
     def _mock_send(cls, vid_id, fb_url):

@@ -149,6 +149,8 @@ class VideoDAO():
         db.session.delete(vid)
         db.session.commit()
 
+        MediaSender.delete_vid(vid_id)
+
     @classmethod
     def delete_all_user_videos(cls, user_id):
         count = Video.query.filter(Video.uuid == user_id).delete()

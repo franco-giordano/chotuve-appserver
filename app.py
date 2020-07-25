@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from config import app_config
@@ -48,6 +48,11 @@ def create_app(config_name):
                 automatic_options = False
             )
     ]
+
+    @app.before_request
+    def new_req():
+        logger.info("NUEVA REQUEST AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        logger.info(request)
 
 
     return app
