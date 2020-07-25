@@ -75,7 +75,7 @@ class AuthSender():
         payload = {'email': email, 'display_name': fullname,
                                     'phone_number': phone, 'image_location': avatar, 'password': password}
 
-        return Requester.auth_fetch('POST', '/users', cls.tkn_hdr(token), payload)
+        return Requester.auth_fetch('POST', cls.url + '/users', cls.tkn_hdr(token), payload)
 
 
     @classmethod
