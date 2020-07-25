@@ -144,12 +144,18 @@ class AuthSender():
         msg, code = Requester.auth_fetch('GET', cls.url + '/users/admin', cls.tkn_hdr(token), payload={})
         return msg, code
 
+    @classmethod
+    def is_user_admin(cls, uuid):
+        if not cls.url:
+            return {"admin":False}, 200
+
+        msg, code = Requester.auth_fetch('GET', cls.url + '/users/' + uuid + '/admin', {}, payload={})
+        return msg, code
 
     
     @classmethod
     def has_permission(cls, user_id, viewer_id):
-        # TODO FIX IS_ADMIN!
-        return user_id == viewer_id # or cls.is_admin(viewer_id)
+        return user_id == viewer_id or cls.is_user_admin(viewer_id).get("admin", False)
         
 
     @classmethod
