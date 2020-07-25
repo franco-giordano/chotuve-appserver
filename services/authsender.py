@@ -155,7 +155,7 @@ class AuthSender():
     
     @classmethod
     def has_permission(cls, user_id, viewer_id):
-        return user_id == viewer_id or cls.is_user_admin(viewer_id).get("admin", False)
+        return user_id == viewer_id or cls.is_user_admin(viewer_id)[0].get("admin", False)
         
 
     @classmethod
