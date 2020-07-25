@@ -149,7 +149,7 @@ class AuthSender():
         if not cls.url:
             return {"admin":False}, 200
 
-        msg, code = Requester.auth_fetch('GET', cls.url + '/users/' + uuid + '/admin', {}, payload={})
+        msg, code = Requester.auth_fetch('GET', cls.url + '/users/' + str(uuid) + '/admin', {}, payload={})
         return msg, code
 
     
