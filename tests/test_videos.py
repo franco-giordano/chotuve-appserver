@@ -21,7 +21,7 @@ def test_get_videos(testapp):
     r = testapp.get("/videos", headers=create_tkn(1))
 
     assert r.status_code == 200
-    assert r.get_json() == []
+    assert r.get_json()["videos"] == []
 
 
 def test_upload_video(testapp):
@@ -178,7 +178,7 @@ def test_other_cant_delete_video(testapp):
 
 def test_pop(testapp):
     r = testapp.get("/videos", headers=create_tkn(2))
-    data = r.get_json()
+    data = r.get_json()["videos"]
 
     # vid 2 has no interactions, must have worse popularity
 
@@ -189,7 +189,7 @@ def test_pop(testapp):
 
 def test_search1(testapp):
     r = testapp.get("/videos?search=primer", headers=create_tkn(2))
-    data = r.get_json()
+    data = r.get_json()["videos"]
 
     assert r.status_code == 200
     assert data[0]["video_id"] == 1
@@ -198,7 +198,7 @@ def test_search1(testapp):
 
 def test_search2(testapp):
     r = testapp.get("/videos?search=vid", headers=create_tkn(2))
-    data = r.get_json()
+    data = r.get_json()["videos"]
 
     assert r.status_code == 200
     assert data[0]["video_id"] == 1

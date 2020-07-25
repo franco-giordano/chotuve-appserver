@@ -33,17 +33,35 @@ class VideoDAO():
         return new_vid.serialize()
 
     @classmethod
-    def get_from_search(cls, viewer_uuid, token, title_query):
-        all_vids = Video.query.filter(Video.title.contains(title_query)).limit(20).all()
+    def get_from_search(cls, viewer_uuid, token, title_query, page, per_page):
+        query = Video.query.filter(Video.title.contains(title_query))
+        pagination = query.paginate(per_page=per_page, page=page)
+        all_vids = pagination.items
 
-        return cls._add_info_and_popularity(all_vids, viewer_uuid, token)
+        vid_array = cls._add_info_and_popularity(all_vids, viewer_uuid, token)
+
+        return {
+            "total": query.count(),
+            "page": pagination.page,
+            "videos": vid_array
+        }
 
 
     @classmethod
-    def get_recommendations(cls, viewer_uuid, token):
-        all_vids = Video.query.order_by(Video.cached_relevance.desc()).limit(50).all()
+    def get_recommendations(cls, viewer_uuid, token, page, per_page):
+        query = Video.query.order_by(Video.cached_relevance.desc())
+        pagination = query.paginate(per_page=per_page, page=page)
+        all_vids = pagination.items
 
-        return cls._add_info_and_popularity(all_vids, viewer_uuid, token, sort_by_pop=True)
+        vid_array = cls._add_info_and_popularity(all_vids, viewer_uuid, token, sort_by_pop=True)
+
+        return {
+            "total": query.count(),
+            "page": pagination.page,
+            "videos": vid_array
+        }
+
+
 
 
 

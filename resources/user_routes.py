@@ -68,7 +68,7 @@ class UniqueUserRoute(Resource):
 
         UsersDAO.delete_user(user_id, args["x-access-token"])
 
-        return {"msg":"OK"}, 200
+        return {"message":"OK"}, 200
 
 
         

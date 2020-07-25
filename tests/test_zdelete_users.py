@@ -54,7 +54,7 @@ def test_delete_user(testapp):
     assert r.get_json()["friends"] == []
 
     r = testapp.get("/videos", headers=create_tkn(2))
-    assert len(r.get_json()) == 1
+    assert len(r.get_json()["videos"]) == 1
 
     data = testapp.get("/videos/2/reactions", headers=create_tkn(2)).get_json()
     assert data == []
