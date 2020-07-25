@@ -123,13 +123,13 @@ class VideoDAO():
         if not AuthSender.has_permission(vid.uuid, uuid):
             raise BadRequestError(f"Only the author can edit their video!")
 
-        if args["description"]:
+        if "description" in args:
             vid.description = args["description"]
-        if args["location"]:
+        if "location" in args:
             vid.location = args["location"]
-        if args["title"]:
+        if "title" in args:
             vid.title = args["title"]
-        if args["is_private"]:
+        if "is_private" in args:
             vid.is_private = args["is_private"]
 
         db.session.commit()

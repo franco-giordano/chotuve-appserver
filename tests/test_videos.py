@@ -163,6 +163,8 @@ def test_edit_vid_info(testapp):
     assert r.status_code == 200
     assert data['title'] == "primer video!"
 
+    
+
 def test_other_cant_delete_video(testapp):
     r = testapp.delete('/videos/1', headers=create_tkn(2))
     data = r.get_json()
