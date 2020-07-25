@@ -86,8 +86,8 @@ class VideoRoute(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("x-access-token", location='headers')
         parser.add_argument("search", type=str, required=False, location='args', default=None)
-        parser.add_argument("page", type=str, required=False, location='args', default=1)
-        parser.add_argument("per_page", type=str, required=False, location='args', default=50)
+        parser.add_argument("page", type=int, required=False, location='args', default=1)
+        parser.add_argument("per_page", type=int, required=False, location='args', default=50)
         args = parser.parse_args()
 
         uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
