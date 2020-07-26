@@ -197,7 +197,10 @@ class VideoDAO():
         privates = Video.query.filter(Video.is_private == True).count()
         total = Video.query.count()
 
-        return privates, total
+        from sqlalchemy import func
+        total_views = Video.query.with_entities(func.avg(Video.view_count).label('average')).all()[0][0]
+
+        return privates, total, total_views
 
     @classmethod
     def _cant_view(cls, is_private, user1_id, user2_id):
