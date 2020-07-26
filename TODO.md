@@ -69,7 +69,7 @@ En extra un campo type que define el tipo 'message' o 'request/friendreq' es un 
     "msg":"Hola como estas"
 }
 
-endpoints de mandar y obtener mensajes (primeros 20 por ej)
+<!-- endpoints de mandar y obtener mensajes (primeros 20 por ej)
 
 endpoint de mandar un push token (donde guardarlo?)
 
@@ -82,6 +82,6 @@ POST /messages
     "to":1123,
     "msg":"que onda",
 }
-
+ -->
 
 

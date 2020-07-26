@@ -85,15 +85,21 @@ class VideoRoute(Resource):
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument("x-access-token", location='headers')
+        parser.add_argument("search", type=str, required=False, location='args', default=None)
+        parser.add_argument("page", type=int, required=False, location='args', default=1)
+        parser.add_argument("per_page", type=int, required=False, location='args', default=50)
         args = parser.parse_args()
 
-        # TODO esto de uuid esta repetido en todos los route, ver como generalizar (decorator?)
         uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
 
-        # TODO reemplazar por el motor de reglas
-        videos = VideoDAO.get_all(uuid, args["x-access-token"])
+        if args["search"]:
+            videos = VideoDAO.get_from_search(uuid, args["x-access-token"], args["search"], page=args["page"], per_page=args["per_page"])
+        else:
+            videos = VideoDAO.get_recommendations(uuid, args["x-access-token"], page=args["page"], per_page=args["per_page"])
 
-        self.logger.info(f"Executed /videos search, found {len(videos)} videos. RESPONSECODE:200")
+        # videos = VideoDAO.get_all(uuid, args["x-access-token"])
+
+        self.logger.info(f"Executed /videos search, found {len(videos['videos'])} videos. RESPONSECODE:200")
         return videos, 200
 
     @token_required

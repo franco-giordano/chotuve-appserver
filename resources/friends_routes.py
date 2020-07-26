@@ -5,7 +5,7 @@ from daos.users_dao import UsersDAO
 
 from services.authsender import AuthSender
 
-from exceptions.exceptions import EndpointNotImplementedError, BadRequestError, UnauthorizedError
+from exceptions.exceptions import BadRequestError
 
 import logging
 
@@ -24,6 +24,31 @@ class FriendsRoute(Resource):
 
         self.logger.info(f"Found {len(friends['friends'])} friend(s) for user {user_id}. RESPONSECODE:200")
         return friends, 200
+
+
+# /users/user_id/friends/friend_id
+class UniqueFriendsRoute(Resource):
+    
+    def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
+        super().__init__()
+    
+    def delete(self, user_id, friend_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument("x-access-token", location='headers')
+        args = parser.parse_args()
+
+        viewer_uuid = AuthSender.get_uuid_from_token(args["x-access-token"])
+
+        if not AuthSender.has_permission(user_id, viewer_uuid):
+            raise BadRequestError(f"You don't have permission to delete other users' friends")
+        
+        UsersDAO.delete_friendship(user_id, friend_id)
+
+        return {"msg": "OK"}, 200
+
+
+
 
 
 # /friend-requests
@@ -64,7 +89,7 @@ class RequestsRoute(Resource):
         return msg, 201
 
 
-# /friends-requests/otherid
+# /friend-requests/otherid
 class UniqueRequestRoute(Resource):
     
     def __init__(self):

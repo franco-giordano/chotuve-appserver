@@ -17,6 +17,7 @@ class ChatsDAO():
 
         minUID, maxUID = cls.sort_uuids(uuid1, uuid2)
 
+        # TODO: use pagination for msgs
         chat = Chat.query.get((minUID, maxUID))
 
         if chat:
@@ -50,6 +51,11 @@ class ChatsDAO():
         NotificationsCreator.notify_message(sender_uuid, recver_uuid, new_msg.id, text, author_name)
 
         return new_msg.serialize()
+
+    @classmethod
+    def delete_all_user_chats(cls, user_id):
+        count = Chat.query.filter((Chat.user1_id == user_id) | (Chat.user2_id == user_id)).delete()
+        cls.logger().info(f"Deleted {count} chats from DB by user {user_id}")
 
 
 

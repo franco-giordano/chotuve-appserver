@@ -13,6 +13,19 @@ def test_no_friends(testapp):
     assert b.get_json()["friends"] == []
 
 
+def test_cant_reject_unexistant(testapp):
+    r = testapp.post('/friend-requests/2',
+                     json={'accept': False}, headers=create_tkn(1))
+
+    assert r.status_code == 404
+
+    # deletes req
+    r = testapp.get('/friend-requests', headers=create_tkn(1))
+    data = r.get_json()
+    assert r.status_code == 200
+    assert data["pending_reqs"] == []
+
+
 def test_send_request(testapp):
     r = testapp.post('/friend-requests', headers=create_tkn(2), json={"to":1})
     data = r.get_json()
@@ -111,3 +124,23 @@ def test_cant_add_myself(testapp):
     r = testapp.post('/friend-requests', headers=create_tkn(1), json={"to":1})
 
     assert r.status_code == 400
+
+def test_cant_delete_not_friend(testapp):
+    r = testapp.delete('/users/2/friends/3', headers=create_tkn(2))
+    assert r.status_code == 404
+
+def test_cant_delete_others_friends(testapp):
+    r = testapp.delete('/users/1/friends/2', headers=create_tkn(2))
+    assert r.status_code == 400
+
+def test_delete_friend(testapp):
+    r = testapp.delete('/users/2/friends/1', headers=create_tkn(2))
+
+    assert r.status_code == 200
+
+    r = testapp.get('/users/2/friends', headers=create_tkn(2))
+    data = r.get_json()
+
+    assert len(data["friends"]) == 0
+
+

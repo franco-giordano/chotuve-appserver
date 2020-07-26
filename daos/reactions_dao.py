@@ -34,6 +34,8 @@ class ReactionDAO():
         db.session.add(new_rctn)
         db.session.commit()
 
+        original_vid.update_relevance()
+
         cls.logger().info(f"New reaction! Added to video {vid_id}. Is a like: {likes}, by {uuid}")
         return new_rctn.serialize()
 
@@ -67,7 +69,13 @@ class ReactionDAO():
             if r.uuid == uuid:
                 r.likes_video = likes
                 db.session.commit()
+                original_vid.update_relevance()
                 cls.logger().info(f"Reaction from user {uuid} edited for video {vid_id}. New reaction is a like: {likes}")
                 return
         
         raise BadRequestError(f"User {uuid} hasn't reacted to video {vid_id} yet, try POST'ing one first.")
+
+    @classmethod
+    def delete_all_user_reactions(cls, user_id):
+        count = VideoReaction.query.filter(VideoReaction.uuid == user_id).delete()
+        cls.logger().info(f"Deleted {count} reactions from DB by user {user_id}")

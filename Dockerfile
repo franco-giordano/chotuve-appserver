@@ -13,6 +13,8 @@ ENV FLASK_APP=run.py
 ENV FLASK_ENV=production
 ENV APP_SETTINGS=production
 ENV CH_MEDIASV_URL=http://chotuve-media-server.herokuapp.com:80
-ENV CH_AUTHSV_URL=http://chotuve-auth-server.herokuapp.com:80
+ENV CH_MEDIASV_TOKEN=CAMBIARESTO
+ENV CH_AUTHSV_URL=http://chotuve-auth-server-11.herokuapp.com:80
+ENV CH_AUTHSV_TOKEN=CAMBIARESTO
 
 ENTRYPOINT ["sh", "/app/docker-entrypoint-prod.sh"]

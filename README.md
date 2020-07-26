@@ -1,11 +1,13 @@
 # Chotuve - Application Server
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
-[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=master)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=master&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=master)
-![api](https://img.shields.io/badge/api-v1.0.0-blueviolet)
+[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
+[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
+![api](https://img.shields.io/badge/api-v1.1.2-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
-[![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
+[![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotuve-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
+[![sv](https://img.shields.io/badge/view-web%20front-important)](https://github.com/santiagomariani/chotuve-web-front)
+
 
 
 ## Instrucciones
@@ -21,8 +23,7 @@
 ---------------------------------------------
 
 
-## API v1.0.0
-_May be outdated, check staging branch for latest updates_
+## API v1.1.2
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
@@ -30,8 +31,11 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 
 #### Videos
 
-- Obtener todos los videos guardados en la database:
+- Obtener todos los videos recomendados en base a popularidad (top 50):
 `GET 0.0.0.0:5000/videos`
+
+- Buscar video con un titulo en particular (top 20):
+`GET 0.0.0.0:5000/videos?search=<title>`
 
 - Obtener datos de un solo video (sin comentarios):
 `GET 0.0.0.0:5000/videos/<id>`
@@ -102,6 +106,9 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 - Obtener mi ID de usuario al loguearme:
 ```GET 0.0.0.0:5000/users/auth```, devuelve {"id":int}
 
+- Ver si soy admin:
+```GET 0.0.0.0:5000/users/admin```, devuelve {"admin":bool}
+
 - Obtener datos publicos de un usuario
 ```GET 0.0.0.0:5000/users/<uuid>```
 
@@ -140,6 +147,9 @@ con body (display_name e email obligatorios, resto opcional):
 }
 ```
 
+- Borrar mi usuario
+```DELETE 0.0.0.0:5000/users/<uuid>```
+
 
 #### Amistades
 
@@ -166,6 +176,9 @@ con body (display_name e email obligatorios, resto opcional):
 }
 ```
 (accept true para aceptar, accept false para rechazar)
+
+- Eliminar amigo:
+```DELETE 0.0.0.0:5000/users/<my_id>/friends/<friend_id>```
 
 #### Ping
 
@@ -249,13 +262,10 @@ page y per_page similares al endpoint GET /users
 ```
 
 
-#### Modificar o borrar videos/comentarios/reacciones/amistades
+#### Borrar usuario
 
 _[NO IMPLEMENTADO]_
 
-#### Ver videos sugeridos por motor de reglas
-
-_[NO IMPLEMENTADO]_
 
 #### Estadisticas de uso
 
