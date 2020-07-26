@@ -73,6 +73,21 @@ class httpDAO():
         return cls._tuple_to_map(vids)
 
     @classmethod
+    def count_posted_comments_in_30_days(cls):
+        current_time = datetime.utcnow()
+
+        thirty_days_ago = current_time - timedelta(days=30)
+
+        vids = HTTPResponse.query\
+                            .filter(HTTPResponse.timestamp > thirty_days_ago)\
+                            .filter(HTTPResponse.method.contains('POST'))\
+                            .filter(HTTPResponse.path.contains('comments'))\
+                            .with_entities(extract('day', HTTPResponse.timestamp).label('d'), func.count(HTTPResponse.id))\
+                            .group_by('d').all()
+
+        return cls._tuple_to_map(vids)
+
+    @classmethod
     def _tuple_to_map(cls, tuple_list):
         my_map = {}
 

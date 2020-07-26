@@ -217,3 +217,6 @@ class UsersDAO():
 
         return 'unknown'
 
+    @classmethod
+    def count_total_registered_users(cls):
+        return User.query.count()
