@@ -3,6 +3,8 @@ from app import db
 
 from sqlalchemy import extract, func
 
+from datetime import datetime, timedelta
+
 
 class httpDAO():
 
@@ -39,6 +41,36 @@ class httpDAO():
         reqs = HTTPResponse.query.with_entities(extract('hour', HTTPResponse.timestamp).label('h'), func.count(HTTPResponse.id)).group_by('h').all()
 
         return cls._tuple_to_map(reqs)
+
+    @classmethod
+    def count_registered_users_in_30_days(cls):
+        current_time = datetime.utcnow()
+
+        thirty_days_ago = current_time - timedelta(days=30)
+
+        users = HTTPResponse.query\
+                            .filter(HTTPResponse.timestamp > thirty_days_ago)\
+                            .filter(HTTPResponse.path.contains('users'))\
+                            .filter(HTTPResponse.method.contains('POST'))\
+                            .with_entities(extract('day', HTTPResponse.timestamp).label('d'), func.count(HTTPResponse.id))\
+                            .group_by('d').all()
+
+        return cls._tuple_to_map(users)
+
+    @classmethod
+    def count_uploaded_vids_in_30_days(cls):
+        current_time = datetime.utcnow()
+
+        thirty_days_ago = current_time - timedelta(days=30)
+
+        vids = HTTPResponse.query\
+                            .filter(HTTPResponse.timestamp > thirty_days_ago)\
+                            .filter(HTTPResponse.method.contains('POST'))\
+                            .filter(HTTPResponse.path == '/videos')\
+                            .with_entities(extract('day', HTTPResponse.timestamp).label('d'), func.count(HTTPResponse.id))\
+                            .group_by('d').all()
+
+        return cls._tuple_to_map(vids)
 
     @classmethod
     def _tuple_to_map(cls, tuple_list):
