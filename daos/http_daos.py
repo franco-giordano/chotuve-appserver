@@ -112,8 +112,8 @@ class httpDAO():
         reqs = query.with_entities(extract('day', HTTPResponse.timestamp).label('d'), func.count(HTTPResponse.id))\
                             .group_by('d').all()
 
-        reqs_per_path = query.with_entities(HTTPResponse.path, func.count(HTTPResponse.id))\
-                            .group_by(HTTPResponse.path).all()
+        reqs_per_path = query.with_entities(HTTPResponse.method, HTTPResponse.path, func.count(HTTPResponse.id))\
+                            .group_by(HTTPResponse.method, HTTPResponse.path).all()
 
         return cls._tuple_to_map(reqs), cls._double_tuple_to_map(reqs_per_path)
 
