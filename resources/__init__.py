@@ -10,6 +10,8 @@ from resources.extra_routes import PingRoute, AuthRoutes, PushTokensRoutes, Rese
 
 from resources.msg_routes import MessagesRoute
 
+from resources.stats_routes import StatsRoutes
+
 def register_routes(api):
     api.add_resource(VideoRoute, '/videos')
     api.add_resource(UniqueVideoRoute, '/videos/<int:vid_id>')
@@ -35,3 +37,5 @@ def register_routes(api):
     api.add_resource(PushTokensRoutes, '/tokens')
 
     api.add_resource(PingRoute, '/ping')
+
+    api.add_resource(StatsRoutes, '/stats')

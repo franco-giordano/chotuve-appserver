@@ -14,6 +14,7 @@ api = Api()
 from resources import register_routes
 from handlers import register_error_handlers
 
+from daos.http_daos import httpDAO
 
 def create_app(config_name):
 
@@ -49,10 +50,16 @@ def create_app(config_name):
             )
     ]
 
-    @app.before_request
-    def new_req():
-        logger.info("NUEVA REQUEST AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        logger.info(request)
+        
+    @app.after_request
+    def after_request(response):
+
+        httpDAO.add_entry(path=request.path,
+                        method=request.method,
+                        response_code=response.status_code,
+                        client_ip=request.remote_addr)
+
+        return response
 
 
     return app
