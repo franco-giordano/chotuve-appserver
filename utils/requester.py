@@ -2,6 +2,7 @@ from exceptions.exceptions import BadGatewayError
 import requests
 import os
 import logging
+from json import JSONDecodeError
 
 
 class Requester():
@@ -26,7 +27,7 @@ class Requester():
 
             return r.json(), r.status_code
 
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException, JSONDecodeError:
             cls.logger().error(
                 f"Failed to contact {url} with method {method} and payload {payload}")
             raise BadGatewayError(
