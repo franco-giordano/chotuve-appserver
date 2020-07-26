@@ -11,7 +11,10 @@ class StatsRoutes(Resource):
 
         requests_per_hour = httpDAO.count_reqs_per_hour()
 
+        requests_per_method = httpDAO.count_reqs_per_method()
+
         return {
             "requests_per_hour": requests_per_hour,
+            "requests_per_method": requests_per_method,
             "total_count": count
         }

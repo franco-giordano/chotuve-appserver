@@ -20,6 +20,19 @@ class httpDAO():
     def count_total(cls):
         return HTTPResponse.query.count()
 
+
+    @classmethod
+    def count_reqs_per_method(cls):
+        reqs = HTTPResponse.query.with_entities(HTTPResponse.method, func.count(HTTPResponse.id)).group_by(HTTPResponse.method).all()
+
+        req_map = {}
+
+        for r in reqs:
+            req_map[r[0]] = r[1]
+
+        return req_map
+
+
     @classmethod
     def count_reqs_per_hour(cls):
         reqs = HTTPResponse.query.with_entities(extract('hour', HTTPResponse.timestamp).label('h'), func.count(HTTPResponse.id)).group_by('h').all()
