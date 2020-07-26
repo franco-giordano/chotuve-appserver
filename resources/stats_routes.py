@@ -13,8 +13,11 @@ class StatsRoutes(Resource):
 
         requests_per_method = httpDAO.count_reqs_per_method()
 
+        requests_per_response = httpDAO.count_reqs_per_response_code()
+
         return {
             "requests_per_hour": requests_per_hour,
             "requests_per_method": requests_per_method,
+            "requests_per_code": requests_per_response,
             "total_count": count
         }

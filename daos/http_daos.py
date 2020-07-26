@@ -22,24 +22,29 @@ class httpDAO():
 
 
     @classmethod
+    def count_reqs_per_response_code(cls):
+        reqs = HTTPResponse.query.with_entities(HTTPResponse.response_code, func.count(HTTPResponse.id)).group_by(HTTPResponse.response_code).all()
+
+        return cls._tuple_to_map(reqs)
+
+    @classmethod
     def count_reqs_per_method(cls):
         reqs = HTTPResponse.query.with_entities(HTTPResponse.method, func.count(HTTPResponse.id)).group_by(HTTPResponse.method).all()
 
-        req_map = {}
-
-        for r in reqs:
-            req_map[r[0]] = r[1]
-
-        return req_map
+        return cls._tuple_to_map(reqs)
 
 
     @classmethod
     def count_reqs_per_hour(cls):
         reqs = HTTPResponse.query.with_entities(extract('hour', HTTPResponse.timestamp).label('h'), func.count(HTTPResponse.id)).group_by('h').all()
 
-        req_map = {}
+        return cls._tuple_to_map(reqs)
 
-        for r in reqs:
-            req_map[r[0]] = r[1]
+    @classmethod
+    def _tuple_to_map(cls, tuple_list):
+        my_map = {}
 
-        return req_map
+        for t in tuple_list:
+            my_map[t[0]] = t[1]
+
+        return my_map
