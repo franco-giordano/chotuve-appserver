@@ -192,7 +192,15 @@ class VideoDAO():
         serialized_vid['reaction'] = daos.reactions_dao.ReactionDAO.reaction_by(
             serialized_vid['video_id'], viewer_uuid)
     
+    @classmethod
+    def count_private_over_total_vids(cls):
+        privates = Video.query.filter(Video.is_private == True).count()
+        total = Video.query.count()
 
+        from sqlalchemy import func
+        total_views = Video.query.with_entities(func.avg(Video.view_count).label('average')).scalar()
+
+        return privates, total, float(total_views)
 
     @classmethod
     def _cant_view(cls, is_private, user1_id, user2_id):

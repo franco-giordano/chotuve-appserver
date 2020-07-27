@@ -17,12 +17,3 @@ class HTTPResponse(db.Model):
     def __repr__(self):
         return '<HTTPResponse {}>'.format(self.id)
 
-    # def serialize(self):
-    #     return {
-    #         'reaction_id': self.id,
-    #         'uuid': self.uuid,
-    #         'likes_video': self.likes_video,
-    #         'timestamp': str(self.timestamp),
-    #         'parent_video': self.parent_video
-    #     }
-
