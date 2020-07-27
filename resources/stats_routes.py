@@ -9,7 +9,7 @@ class StatsRoutes(Resource):
 
     def get(self):
 
-        count = httpDAO.count_total()
+        count = httpDAO.count_total_30_days()
 
         requests_per_hour = httpDAO.count_reqs_per_hour()
 
@@ -53,5 +53,5 @@ class StatsRoutes(Resource):
             "average_views": average_views,
             "private_and_total_vids_count": [private_vids_count, total_vids_count],
             "registered_users_count": total_registered_users_count,
-            "total_count": count
+            "total_count_in_last_30_days": count
         }
