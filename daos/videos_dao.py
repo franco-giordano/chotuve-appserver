@@ -198,7 +198,7 @@ class VideoDAO():
         total = Video.query.count()
 
         from sqlalchemy import func
-        total_views = Video.query.with_entities(func.avg(Video.view_count).label('average')).all()[0][0]
+        total_views = Video.query.with_entities(func.avg(Video.view_count).label('average')).scalar()
 
         return privates, total, total_views
 
