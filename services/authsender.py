@@ -131,7 +131,7 @@ class AuthSender():
     def send_new_password(cls, email, reset_code, password):
         payload = {"email":email, "code": reset_code, "password": password}
 
-        msg, code = Requester.auth_fetch('POST', cls.url + '/change-password-with-reset-codes', {}, payload=payload)
+        msg, code = Requester.auth_fetch('POST', cls.url + '/change-password-with-reset-code', {}, payload=payload)
         return msg, code
 
 
