@@ -19,8 +19,13 @@ class httpDAO():
         db.session.commit()
 
     @classmethod
-    def count_total(cls):
-        return HTTPResponse.query.count()
+    def count_total_30_days(cls):
+        current_time = datetime.utcnow()
+
+        thirty_days_ago = current_time - timedelta(days=30)
+        return HTTPResponse.query\
+                        .filter(HTTPResponse.timestamp > thirty_days_ago)\
+                        .count()
 
 
     @classmethod

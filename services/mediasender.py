@@ -24,7 +24,7 @@ class MediaSender():
         
         payload = {'videoId': vid_id, 'url': fb_url}
 
-        msg, code = Requester.media_fetch('POST', cls.url + '/video', {}, payload)
+        msg, code = Requester.media_fetch('POST', cls.url + '/videos', {}, payload)
         if code != 201:
             cls.logger().error(f"Error uploading video for ID: {vid_id}. Response: {msg}, code {code}")
 
@@ -37,7 +37,7 @@ class MediaSender():
         if not cls.url:
             return cls._mock_get(vid_id)
 
-        msg, code = Requester.media_fetch('GET', cls.url + '/video', {}, {"videoId": vid_id})
+        msg, code = Requester.media_fetch('GET', cls.url + '/videos/' + str(vid_id), {}, {})
 
         if code != 200:
             cls.logger().error(f"Error getting video info for ID: {vid_id}. Response: {msg}, code {code}")
@@ -49,7 +49,7 @@ class MediaSender():
         if not cls.url:
             return cls.mock_db
         
-        msg, code = Requester.media_fetch('DELETE', cls.url + '/video', {}, {"videoId": vid_id})
+        msg, code = Requester.media_fetch('DELETE', cls.url + '/videos/' + str(vid_id), {}, {})
 
         if code != 200:
             cls.logger().error(f"Error deleting video {vid_id}")
