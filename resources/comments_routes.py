@@ -40,5 +40,3 @@ class CommentRoute(Resource):
 
         self.logger.info(f"Posted new comment to video {vid_id}. Comment: {new_cmnt}. RESPONSECODE:201")
         return new_cmnt, 201
-
-    # TODO delete

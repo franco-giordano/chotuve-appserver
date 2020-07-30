@@ -1,0 +1,1362 @@
+swagger: "2.0"
+
+info:
+  version: 1.0.0
+  title: "Chotuve Application Server "
+  description: "API Rama Master"
+
+schemes: 
+  - "https"
+host: "chotuve-appserver.herokuapp.com"
+basePath: "/"
+tags:
+- name: "videos"
+  description: "Recurso Video"
+- name: "users"
+  description: "Recurso Usuarios"
+- name: "friends"
+  description: "Dentro de users, recurso de amigos y solicitudes"
+- name: "messages"
+  description: "Recurso Mensajes"
+- name: "extras"
+  description: "Recursos Varios"
+
+paths:
+  /videos:
+    post:
+      tags:
+      - videos
+      summary: "Subir un nuevo video"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: '#/definitions/VideoToUpload'
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      responses:
+        "201":
+          description: "Recurso creado"
+          schema:
+            $ref: "#/definitions/Video"
+        "400":
+          description: "Faltan argumentos o headers requeridos"
+        "401":
+          description: "Token de acceso de Firebase invalido"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+    get:
+      tags:
+      - videos
+      summary: "Busqueda de videos o recomendaciones"
+      description: "Si se pasa el argumento 'search' se realiza una busqueda, de lo contrario se recomiendan videos segun popularidad"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "search"
+        description: "Titulo del video a buscar"
+        required: false
+        type: string
+      - in: "query"
+        name: "page"
+        description: "Numero de pagina a mostrar"
+        default: 1
+        type: integer
+      - in: "query"
+        name: "per_page"
+        description: "Cantidad de videos por pagina a mostrar"
+        default: 50
+        type: integer
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      responses:
+        "200":
+          description: "Operacion exitosa"
+          schema:
+            $ref: "#/definitions/FoundVideos"
+        "400":
+          description: "Faltan argumentos o headers requeridos"
+        "401":
+          description: "Token de acceso de Firebase invalido"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+          
+  /videos/{video_id}:
+    get:
+      tags:
+        - videos
+      summary: "Ver datos de un video singular"
+      description: "Obtener informacion sobre un video en particular"
+      produces:
+      - "application/json"
+      consumes:
+        - "application/json"
+      parameters:
+      - name: "video_id"
+        in: "path"
+        description: "ID de un video"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      responses:
+        "200":
+          description: "Operacion exitosa"
+          schema:
+            $ref: "#/definitions/Video"
+        "400":
+          description: "Faltan argumentos o headers requeridos"
+        "401":
+          description: "Token de acceso de Firebase invalido, o el video es privado y no tiene permiso de acceso"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+    patch:
+      tags:
+        - videos
+      summary: "Modificar datos de un video"
+      description: ""
+      produces:
+      - "application/json"
+      consumes:
+      - "application/json"
+      parameters:
+      - name: "video_id"
+        in: "path"
+        description: "ID de un video"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: '#/definitions/VideoToEdit'
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      responses:
+        "200":
+          description: "Operacion exitosa"
+          schema:
+            $ref: "#/definitions/Video"
+        "400":
+          description: "Faltan argumentos o headers requeridos, el usuario no es autor del video, o no es admin"
+        "401":
+          description: "Token de acceso de Firebase invalido, o el video es privado y no tiene permiso de acceso"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+    delete:
+      tags:
+      - videos
+      summary: "Eliminar Video"
+      description: "El autor o un administrador puede eliminar el video de la base de datos, incluyendo comentarios y reacciones asociadas"
+      parameters:
+      - name: "video_id"
+        in: "path"
+        description: "ID de un video"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      responses:
+        "200":
+          description: "Operacion exitosa"
+        "400":
+          description: "Faltan argumentos o headers requeridos, el usuario no es autor del video, o no es admin"
+        "401":
+          description: "Token de acceso de Firebase invalido, o el video es privado y no tiene permiso de acceso"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+  /videos/{video_id}/comments:
+    get:
+      tags:
+        - videos
+      summary: "Ver comentarios de un video"
+      description: "Ver todos los comentarios posteados en un video."
+      produces:
+      - "application/json"
+      consumes:
+        - "application/json"
+      parameters:
+      - name: "video_id"
+        in: "path"
+        description: "ID de un video"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      responses:
+        "200":
+          description: "Operacion exitosa"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Comment"
+        "400":
+          description: "Faltan argumentos o headers requeridos"
+        "401":
+          description: "Token de acceso de Firebase invalido, o el video es privado y no tiene permiso de acceso"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+    post:
+      tags:
+      - videos
+      summary: "Comentar un video"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          properties:
+            text: 
+              type: string
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      - name: "video_id"
+        in: "path"
+        description: "ID de un video"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "201":
+          description: "Recurso creado"
+          schema:
+            $ref: "#/definitions/Comment"
+        "400":
+          description: "Faltan argumentos o headers requeridos"
+        "401":
+          description: "Token de acceso de Firebase invalido"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+  /videos/{video_id}/reactions:
+    get:
+      tags:
+        - videos
+      summary: "Ver reacciones de un video"
+      description: "Ver todas las reacciones posteadas en un video."
+      produces:
+      - "application/json"
+      consumes:
+        - "application/json"
+      parameters:
+      - name: "video_id"
+        in: "path"
+        description: "ID de un video"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      responses:
+        "200":
+          description: "Operacion exitosa"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Reaction"
+        "400":
+          description: "Faltan argumentos o headers requeridos"
+        "401":
+          description: "Token de acceso de Firebase invalido, o el video es privado y no tiene permiso de acceso"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+    post:
+      tags:
+      - videos
+      summary: "Reaccionar a un video"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          properties:
+            likes_video: 
+              type: boolean
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      - name: "video_id"
+        in: "path"
+        description: "ID de un video"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "201":
+          description: "Recurso creado"
+          schema:
+            $ref: "#/definitions/Reaction"
+        "400":
+          description: "Faltan argumentos o headers requeridos, o el usuario ya creo una reaccion a este video."
+        "401":
+          description: "Token de acceso de Firebase invalido"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+    patch:
+      tags:
+      - videos
+      summary: "Cambiar la reaccion a un video"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          properties:
+            likes_video: 
+              type: boolean
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      - name: "video_id"
+        in: "path"
+        description: "ID de un video"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "Recurso modificado"
+          schema:
+            $ref: "#/definitions/Reaction"
+        "400":
+          description: "Faltan argumentos o headers requeridos, o el usuario aun no creo una reaccion a este video."
+        "401":
+          description: "Token de acceso de Firebase invalido"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+  /users:
+    get:
+      tags:
+      - users
+      summary: Obtener usuarios
+      description: Se pueden obtener usuarios con paginacion y filtrando por parametros query. Se hace un OR con email, phone, y name. Es case sensitive.
+      produces:
+      - application/json
+      parameters:
+        - in: query
+          name: email
+          type: string
+          description: Valor que quiero que este contenido en el email del usuario.
+        - in: query
+          name: phone
+          type: string
+          description: Valor que quiero que este contenido en el phone number del usuario.
+        - in: query
+          name: name
+          type: string
+          description: Valor que quiero que este contenido en el display name del usuario.
+        - in: query
+          name: per_page
+          type: integer
+          description: Numero de usuarios que quiero obtener (como maximo) por pagina.
+        - in: query
+          name: page
+          type: integer
+          description: Numero de pagina de usuarios que quiero obtener.
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Se devolvieron los usuarios satisfactoriamente
+          schema:
+            type: object
+            properties:
+              page:
+                type: integer
+              total:
+                type: integer
+              users:
+                type: array
+                items:
+                  $ref: '#/definitions/Usuario'
+        "400":
+          description: Header requerido faltante.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido o revocado).
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+    post:
+      tags:
+      - users
+      summary: Crear usuario
+      description: Registra un usuario.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              display_name:
+                type: string
+              email:
+                type: string
+              image_location:
+                type: string
+              phone_number:
+                type: string
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "201":
+          description: Se registra el usuario satisfactoriamente.
+          schema:
+            $ref: '#/definitions/Usuario'
+        "400":
+          description: Request mal formado.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado, o email asociado a token es distinto al que se envia)
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+  /users/{user_id}:
+    get:
+      tags:
+      - users
+      summary: Obtener datos de un usuario.
+      description: Se obtienen los datos del usuario con id user_id.
+      produces:
+      - application/json
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          type: integer
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Se devuelven satisfactoriamente los datos del usuario con id user_id.
+          schema:
+            $ref: '#/definitions/Usuario'
+        "400":
+          description: Request mal formado.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado)
+        "404":
+          description: No se encontro el usuario con id user_id.
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+    patch:
+      tags:
+      - users
+      summary: Modificar datos de un usuario.
+      description: Se modifican los datos del usuario con id user_id.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          type: integer
+        - in: body
+          name: body
+          schema:
+            type: object
+            properties:
+              display_name:
+                type: string
+              email:
+                type: string
+              image_location:
+                type: string
+              phone_number:
+                type: string
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Se devuelven los datos del usuario (modificado) con id user_id.
+          schema:
+            $ref: '#/definitions/Usuario'
+        "400":
+          description: Request mal formado.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado o se intento modificar los datos de un usuario ajeno sin ser admin)
+        "404":
+          description: No se encontro el usuario con id user_id.
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+    delete:
+      tags:
+      - users
+      summary: Borrar un usuario.
+      description: Se borra el usuario con id user_id.
+      produces:
+      - application/json
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          type: integer
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Se borra satisfactoriamente el usuario con id user_id.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado o se intento eliminar un usuario ajeno sin ser admin) 
+        "404":
+          description: No se encontro el usuario con id user_id.
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+  /users/{user_id}/videos:
+    get:
+      tags:
+      - users
+      summary: Ver videos subidos por un usuario
+      description: ""
+      produces:
+      - application/json
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          type: integer
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Se devuelven satisfactoriamente los videos del usuario con id user_id.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Video'
+        "400":
+          description: Request mal formado.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado) .
+        "404":
+          description: No se encontro el usuario con id user_id.
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+  /users/auth:
+    get:
+      tags:
+      - users
+      summary: Obtener id de usuario a partir del token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Se obtiene el user_id del usuario asociado al token id.
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado) .
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+  /users/admin:
+    get:
+      tags:
+      - users
+      summary: Obtengo informacion sobre si el usuario es admin o no.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Se obtiene informacion sobre si el usuario asociado al token id es admin o no.
+          schema:
+            type: object
+            properties:
+              admin:
+                type: boolean
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado) .
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+      parameters:
+
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+  
+  /users/reset-codes:
+    post:
+      tags:
+      - users
+      summary: Genera un reset code y lo envia por email, para resetear la contraseña de la cuenta asociada al email indicado.
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Se genero el reset code y se envio por email satisfactoriamente.
+        "404":
+          description: No se encontro un usuario asociado al email indicado.
+        "400":
+          description: Request mal formado.
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              email:
+                type: string
+  /users/change-password:
+    post:
+      tags:
+      - users
+      summary: Recibe el reset code y cambia la contraseña del usuario (si el reset code es valido).
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Se cambio la contraseña del usuario satisfactoriamente.
+        "401":
+          description: Reset code invalido o expirado.
+        "400":
+          description: Request mal formado.
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+              code:
+                type: string
+                
+  /users/{user_id}/friends:
+    get:
+      tags:
+      - friends
+      summary: Obtener amigos de un usuario.
+      description: ""
+      produces:
+      - application/json
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          type: integer
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Se devuelven satisfactoriamente los amigos del usuario con id user_id.
+          schema:
+            type: object
+            properties:
+              friends:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+        "400":
+          description: Request mal formado.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado).
+        "404":
+          description: No se encontro el usuario con id user_id.
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+  /friend-requests:
+    get:
+      tags:
+      - friends
+      summary: Ver mis solicitudes pendientes
+      description: ""
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Se devuelven satisfactoriamente las solicitudes recibidas por el usuario que consulto.
+          schema:
+            type: object
+            properties:
+              friends:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+        "400":
+          description: Request mal formado.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado).
+        "404":
+          description: No se encontro el usuario con id user_id.
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+    post:
+      tags:
+      - friends
+      summary: Enviar una solicitud de amistad
+      description: ""
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              to:
+                type: integer
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "201":
+          description: Se envia la solicitud correctamente, devuelve todas las solicitudes enviadas hasta el momento.
+          schema:
+            type: object
+            properties:
+              sent_reqs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+        "400":
+          description: Request mal formado, ya se envio una solicitud al usuario, ya se recibio una o ya son amigos.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido).
+        "404":
+          description: "Usuario no encontrado"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+  /friend-requests/{other_user_id}:
+    post:
+      tags:
+      - friends
+      summary: Aceptar o rechazar una solicitud de amistad
+      description: ""
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: path
+          name: other_user_id
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              accept:
+                type: boolean
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "201":
+          description: Se acepta o rechaza la solicitud, eliminandola de las solicitudes pedientes.
+        "400":
+          description: Request mal formado.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido).
+        "404":
+          description: "El usuario no envio ninguna solicitud"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+  /users/{my_id}/friends/{other_user_id}:
+    delete:
+      tags:
+      - friends
+      summary: "Eliminar amigo"
+      description: "El usuario puede eliminar una amistad con otro usuario, siempre y cuando hayan entablado una amistad previamente."
+      parameters:
+      - name: "other_user_id"
+        in: "path"
+        description: "ID del usuario a eliminar la amistad"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "my_id"
+        in: "path"
+        description: "ID de mi usuario"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "header"
+        name: x-access-token
+        required: true
+        type: string
+        description: Token de acceso provisto por Firebase
+      responses:
+        "200":
+          description: "Operacion exitosa"
+        "400":
+          description: "Faltan argumentos o headers requeridos, o el usuario no tiene permiso para eliminar esta amistad (no coincide my_id ni es admin)"
+        "401":
+          description: "Token de acceso de Firebase invalido"
+        "404":
+          description: "Usuarios o amistad no encontrada"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+
+  /messages/{other_user_id}:
+    get:
+      tags:
+      - messages
+      summary: Ver mensajes entre mi usuario y other_user_id
+      description: ""
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+        - name: "other_user_id"
+          in: "path"
+          description: "ID del usuario al que se dirigen los mensajes"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "200":
+          description: Se devuelven satisfactoriamente los mensajes entre el usuario actual y other_user_id
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Message'
+        "401":
+          description: Usuario no autorizado (token expirado, invalido, revocado).
+        "404":
+          description: No se encontro el usuario con id other_user_id.
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+    post:
+      tags:
+      - messages
+      summary: Enviar un mensaje a other_user_id
+      description: ""
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: path
+          name: other_user_id
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              text:
+                type: string
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "201":
+          description: Se envia el mensaje
+        "400":
+          description: Request mal formado, texto vacio, o el usuario no es amigo.
+        "401":
+          description: Usuario no autorizado (token expirado, invalido).
+        "404":
+          description: "El usuario no envio ninguna solicitud"
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+          
+  /stats:
+    get:
+      tags:
+      - extras
+      summary: Obtener estadisticas sobre uso de recursos del servicio
+      description: ""
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Estadisticas recopiladas
+          schema:
+            type: object
+            properties:
+              "requests_per_hour":
+                type: object
+              "requests_per_method": 
+                type: object
+              "requests_per_code":
+                type: object
+              "requests_in_last_30_days":
+                type: object
+              "sv_errors_in_last_30_days": 
+                type: object
+              "sv_errors_per_path_in_last_30_days":
+                type: object
+              "cli_errors_in_last_30_days": 
+                type: object
+              "cli_errors_per_path_in_last_30_days":
+                type: object
+              "new_users_in_last_30_days": 
+                type: object
+              "new_vids_in_last_30_days": 
+                type: object
+              "new_cmnts_in_last_30_days": 
+                type: object
+              "views_in_last_30_days": 
+                type: object
+              "average_views": 
+                type: number
+              "private_and_total_vids_count":
+                type: array
+                items:
+                  maxItems: 2
+                  minItems: 2
+                  type: integer
+              "registered_users_count": 
+                type: integer
+              "total_count_in_last_30_days": 
+                type: integer
+        "500":
+          description: "Error interno de servidor"
+        "503":
+          description: "Servicio no disponible"
+          
+  /tokens:
+    get:
+      tags:
+      - extras
+      summary: Obtener mi ExponentPushToken para recibir notificaciones
+      description: ""
+      produces:
+      - application/json
+      parameters:
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Se devuelve el push token encontrado para el usuario actual (string vacia si no se encuentra).
+          schema:
+            type: object
+            properties:
+              push_token:
+                type: string
+        "401":
+          description: Usuario no autorizado (firebase token expirado, invalido, revocado).
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+    post:
+      tags:
+      - extras
+      summary: Publicar al servidor mi Exponent Push Token
+      description: "El servidor utilizara este token para enviar notificaciones Exponent Push. De no tenerlo no se enviaran dicho tipo de notificaciones de eventos al usuario"
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              push_token:
+                type: string
+        - in: header
+          name: x-access-token
+          required: true
+          type: string
+      responses:
+        "201":
+          description: Se publica el Push Token
+        "400":
+          description: Request mal formado.
+        "401":
+          description: Usuario no autorizado (firebase token expirado, invalido).
+        "500":
+          description: "Error interno de servidor"
+        "502":
+          description: "Error al contactar un servicio externo (AuthServer o MediaServer)"
+        "503":
+          description: "Servicio no disponible"
+  
+  /ping:
+    get:
+      tags:
+      - extras
+      summary: Obtener una respuesta rapida del servidor sobre su estado
+      description: ""
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Servidor operacional
+          schema:
+            type: object
+            properties:
+              appserver:
+                type: string
+        "500":
+          description: "Error interno de servidor"
+        "503":
+          description: "Servicio no disponible o servidor aun iniciandose"
+definitions:
+  FoundVideos:
+    type: object
+    properties:
+      total:
+        type: integer
+      page:
+        type: integer
+      videos:
+        type: array
+        items:
+          $ref: '#/definitions/Video'
+  VideoToUpload:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      location:
+        type: string
+      is_private:
+        type: boolean
+      firebase_url:
+        type: string
+      thumbnail_url:
+        type: string
+  VideoToEdit:
+    type: object
+    properties:
+      title:
+        type: string
+      description:
+        type: string
+      location:
+        type: string
+      is_private:
+        type: boolean
+  Video:
+    type: object
+    properties:
+      video_id:
+        type: integer
+      title:
+        type: string
+      description:
+        type: string
+      reaction:
+        type: string
+        enum:
+          - "like"
+          - "dislike"
+          - "unknown"
+      timestamp:
+        type: string
+        format: date-time
+      uuid:
+        type: integer
+      location:
+        type: string
+      is_private:
+        type: boolean
+      likes:
+        type: integer
+      dislikes:
+        type: integer
+      view_count:
+        type: integer
+      thumbnail_url:
+        type: string
+      firebase_url:
+        type: string
+      author:
+        type: string
+      popularity:
+        type: integer
+  Usuario:
+    type: object
+    properties:
+      id:
+        type: integer
+      display_name:
+        type: string
+      email:
+        type: string
+      image_location:
+        type: string
+      phone_number:
+        type: string
+  Comment:
+    type: object
+    properties:
+      comment_id:
+        type: integer
+      uuid:
+        type: integer
+      text:
+        type: string
+      parent_video:
+        type: integer
+      vid_time:
+        type: string
+      timestamp:
+        type: string
+        format: date-time
+  Reaction:
+    type: object
+    properties:
+      reaction_id:
+        type: integer
+      uuid:
+        type: integer
+      likes_video:
+        type: boolean
+      parent_video:
+        type: integer
+      timestamp:
+        type: string
+        format: date-time
+  Message:
+    type: object
+    properties:
+      id:
+        type: integer
+      sender_id:
+        type: integer
+      recver_id:
+        type: integer
+      text:
+        type: string
+      timestamp:
+        type: string
+        format: date-time

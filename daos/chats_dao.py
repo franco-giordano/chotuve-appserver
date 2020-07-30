@@ -13,11 +13,10 @@ class ChatsDAO():
 
 
     @classmethod
-    def get_messages_between(cls, uuid1, uuid2, page, per_page):
+    def get_messages_between(cls, uuid1, uuid2):
 
         minUID, maxUID = cls.sort_uuids(uuid1, uuid2)
 
-        # TODO: use pagination for msgs
         chat = Chat.query.get((minUID, maxUID))
 
         if chat:

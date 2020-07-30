@@ -21,9 +21,6 @@ class MessagesRoute(Resource):
     def get(self, other_user_id):
         parser = reqparse.RequestParser()
         parser.add_argument("x-access-token", location='headers', required=True, help='Missing user token!')
-        parser.add_argument("page", location='args', type=int, required=True, help='Page number to retrieve messages')
-        parser.add_argument("per_page", location='args', type=int, required=True, help='Amount of messages to download')
-        
         args = parser.parse_args()
 
         uuid1 = AuthSender.get_uuid_from_token(args['x-access-token'])
@@ -31,7 +28,7 @@ class MessagesRoute(Resource):
         UsersDAO.check_exists(uuid1)
         UsersDAO.check_exists(other_user_id)
         
-        msgs = ChatsDAO.get_messages_between(uuid1, other_user_id, args["page"], args["per_page"])
+        msgs = ChatsDAO.get_messages_between(uuid1, other_user_id)
 
         self.logger.info(f"Found {len(msgs)} messages between users {uuid1, other_user_id}. RESPONSECODE:200")
         return msgs, 200
