@@ -135,7 +135,6 @@ class AuthSender():
         return msg, code
 
 
-    # TODO: CAMBIAR TOKEN POR UUID!
     @classmethod
     def is_admin(cls, token):
         if not cls.url:

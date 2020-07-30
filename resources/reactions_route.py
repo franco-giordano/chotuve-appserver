@@ -18,8 +18,6 @@ class ReactionRoute(Resource):
         self.logger = logging.getLogger(self.__class__.__name__)
         super(ReactionRoute, self).__init__()
         
-
-    # TODO asi todas las reacciones son publicas, quitar de otro modo
     @token_required
     def get(self, vid_id):
         reactions = ReactionDAO.get_all_from(vid_id)
@@ -49,5 +47,3 @@ class ReactionRoute(Resource):
         self.logger.info(f"Edited reaction to vid {vid_id}. Is a like: {args['likes_video']} by {uuid}. RESPONSECODE:201")
         return edited_rctn, 200
 
-
-    # TODO delete
