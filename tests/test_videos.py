@@ -190,7 +190,7 @@ def test_pop(testapp):
 
 
 def test_search1(testapp):
-    r = testapp.get("/videos?search=primer", headers=create_tkn(2))
+    r = testapp.get("/videos?search=Primer", headers=create_tkn(2))
     data = r.get_json()["videos"]
 
     assert r.status_code == 200

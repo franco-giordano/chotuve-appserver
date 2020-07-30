@@ -11,6 +11,8 @@ import datetime
 
 import logging
 
+from sqlalchemy import func
+
 from exceptions.exceptions import NotFoundError, UnauthorizedError, BadRequestError
 
 
@@ -34,7 +36,7 @@ class VideoDAO():
 
     @classmethod
     def get_from_search(cls, viewer_uuid, token, title_query, page, per_page):
-        query = Video.query.filter(Video.title.contains(title_query))
+        query = Video.query.filter(func.lower(Video.title).contains(func.lower(title_query)))
         pagination = query.paginate(per_page=per_page, page=page)
         all_vids = pagination.items
 
