@@ -39,4 +39,4 @@ Para deployear, basta con pushear a master y Travis se encargara del resto. Para
 
 ## API
 
-Ver archivo [OpenApi.yaml aqui](https://github.com/Franco-Giordano/chotuve-appserver/blob/master/OPENAPI.yaml)
+Ver archivo [OpenApi.yaml aqui](https://github.com/Franco-Giordano/chotuve-appserver/blob/master/OPENAPI.yaml), o su version renderizada en [Swagger Hub aqui](https://app.swaggerhub.com/apis-docs/C6115/application-server-chotuve/1.0.0)
