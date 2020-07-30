@@ -12,11 +12,25 @@
 
 ## Instrucciones
 
+### Desarrollo
+
 1. Instalar [Docker Engine](https://docs.docker.com/engine/install/) y [Docker Compose](https://docs.docker.com/compose/install/)
 
-2. Levantar server + database: `docker-compose up`
+2. Levantar server + database: `docker-compose up --build`
 
-4. Probar la REST API en `0.0.0.0:5000`
+4. Probar la REST API en `0.0.0.0:5000`. Utilizara los servidores de Staging para comunicaciones externas, URLs definidas en .env.dev
+
+### Produccion
+
+1. Instalar Docker Engine
+
+2. Buildear la imagen: `docker build -t chotuve-appserver .`
+
+3. Levantar la imagen: `docker run --env PORT=5000 -p 5000:5000 --name chotuve-appserver chotuve-appserver`. URLs definidas en Dockerfile
+
+### Deploy
+
+Para deployear, basta con pushear a master y Travis se encargara del resto. Para deployear a Staging es la misma idea: deployear a rama Staging. Utiliza las variables de entorno definidas en el mismo Heroku.
 
 
 
