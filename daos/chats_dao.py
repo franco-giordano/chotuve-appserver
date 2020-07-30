@@ -13,15 +13,13 @@ class ChatsDAO():
 
 
     @classmethod
-    def get_messages_between(cls, uuid1, uuid2, page, per_page):
+    def get_messages_between(cls, uuid1, uuid2):
 
         minUID, maxUID = cls.sort_uuids(uuid1, uuid2)
 
         chat = Chat.query.get((minUID, maxUID))
 
         if chat:
-            cls.logger().debug(f"Tipo de chat.messages: {type(chat.messages)}")
-
             cls.logger().info(f"Found chat between users {uuid1}, {uuid1}. Serializing...")
             return [m.serialize() for m in chat.messages]
 
@@ -52,6 +50,11 @@ class ChatsDAO():
         NotificationsCreator.notify_message(sender_uuid, recver_uuid, new_msg.id, text, author_name)
 
         return new_msg.serialize()
+
+    @classmethod
+    def delete_all_user_chats(cls, user_id):
+        count = Chat.query.filter((Chat.user1_id == user_id) | (Chat.user2_id == user_id)).delete()
+        cls.logger().info(f"Deleted {count} chats from DB by user {user_id}")
 
 
 

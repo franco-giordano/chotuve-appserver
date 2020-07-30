@@ -1,9 +1,11 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from config import app_config
-from flask_restful.utils import cors
 from flask_cors import CORS
+from flask_restful.utils import cors
+
+
 
 db = SQLAlchemy()
 
@@ -31,8 +33,12 @@ def create_app(config_name):
     register_routes(api)
     register_error_handlers(app)
 
-    CORS(app, origins=["*"], supports_credentials=True)
+    api.init_app(app)
+    db.init_app(app)
+
+    CORS(app, origins=["*"], send_wildcard=True)
     app.config['CORS_HEADERS'] = 'Content-Type'
+    app.config['CORS_RESOURCES'] = {r"/*": {"origins": "*"}}
 
     api.decorators = [
             cors.crossdomain(
@@ -43,7 +49,17 @@ def create_app(config_name):
             )
     ]
 
-    api.init_app(app)
-    db.init_app(app)
+        
+    from daos.http_daos import httpDAO
+    @app.after_request
+    def after_request(response):
+
+        httpDAO.add_entry(path=request.path,
+                        method=request.method,
+                        response_code=response.status_code,
+                        client_ip=request.remote_addr)
+
+        return response
+
 
     return app

@@ -18,11 +18,13 @@ class Video(db.Model):
 
     is_private = db.Column(db.Boolean, default=False)
 
-    comments = db.relationship('Comment', backref='video')
+    comments = db.relationship('Comment', backref='video', cascade='all, delete-orphan')
     reactions = db.relationship(
-        'VideoReaction', backref='video', lazy="subquery")
+        'VideoReaction', backref='video', lazy="subquery", cascade='all, delete-orphan')
 
     view_count = db.Column(db.Integer, default=0)
+
+    cached_relevance = db.Column(db.Integer, default=0)
 
     # EL TIMESTAMP LO GUARDA EL MEDIASV!!!
 
@@ -58,7 +60,14 @@ class Video(db.Model):
     def increase_view_count(self):
         self.view_count += 1
         db.session.commit()
+        self.update_relevance()
         return self.view_count
+
+    def update_relevance(self):
+        self.cached_relevance = 15*len(self.comments) + 7*self.count_likes() - 7*self.count_dislikes() + self.view_count
+        db.session.commit()
+
+
 
 
 class Comment(db.Model):

@@ -10,26 +10,11 @@ from psycopg2.errors import UniqueViolation
 from sqlalchemy.exc import IntegrityError
 
 
-
 class UsersDAO():
 
     @classmethod
     def logger(cls):
         return logging.getLogger(cls.__name__)
-
-    @classmethod
-    def add_friendship(cls, rcv_id, sender_id):
-
-        snd = cls.get_raw(sender_id)
-        rcv = cls.get_raw(rcv_id)
-
-        snd.friends.append(rcv)
-        rcv.friends.append(snd)
-        db.session.commit()
-
-        cls.logger().info(f"Added new friendship between users {rcv_id} and {sender_id}")
-
-        return rcv.serializeFriends()
 
     @classmethod
     def get_friends(cls, user_id):
@@ -58,6 +43,10 @@ class UsersDAO():
             raise InternalError(f"User already exists with ID {user_id}")
 
         return new_user
+
+    @classmethod
+    def check_exists(cls, user_id):
+        UsersDAO.get_raw(user_id)
 
     @classmethod
     def add_user_to_db(cls, user_id):
@@ -140,7 +129,59 @@ class UsersDAO():
 
         cls.logger().info(f"Users {u1}, {u2} dont have any pending requests with each other")
         return False
-            
+
+    @classmethod
+    def delete_friendship(cls, user_id, friend_id):
+
+        if cls.are_friends(user_id, friend_id):
+            user = cls.get_raw(user_id)
+            friend = cls.get_raw(friend_id)
+
+            user.delete_friendship(friend)
+        else:
+            raise NotFoundError(f"Friendship between users {user_id} and {friend_id} not found")
+
+    @classmethod
+    def count_friends(cls, user_id):
+        user = cls.get_raw(user_id)
+        return user.count_friends()
+    
+    @classmethod
+    def delete_user(cls, user_id, token):
+
+        cls.logger().info(f"Deleting videos uploaded by user {user_id}...")
+        from daos.videos_dao import VideoDAO
+        VideoDAO.delete_all_user_videos(user_id)
+
+        cls.logger().info(f"Deleting comments made by user {user_id}...")
+        from daos.comments_dao import CommentDAO
+        CommentDAO.delete_all_user_comments(user_id)
+
+        cls.logger().info(f"Deleting reactions given by user {user_id}...")
+        from daos.reactions_dao import ReactionDAO
+        ReactionDAO.delete_all_user_reactions(user_id)
+
+        cls.logger().info(f"Deleting chats posted by user {user_id}...")
+        from daos.chats_dao import ChatsDAO
+        ChatsDAO.delete_all_user_chats(user_id)
+
+        cls.logger().info(f"Deleting friends, friend requests and push token for user {user_id}...")
+        user = cls.get_raw(user_id)
+        friends = user.friends
+        for f in friends:
+            user.delete_friendship(f)
+        user.sent_requests = []
+        user.push_token = None
+        db.session.delete(user)
+        db.session.commit()
+
+        cls.logger().info(f"Deleting user {user_id} from AuthSv...")
+        from services.authsender import AuthSender
+        AuthSender.delete_user(user_id, token)
+
+
+
+
 
     @classmethod
     def get_tkn(cls, id):
@@ -148,6 +189,10 @@ class UsersDAO():
 
     @classmethod
     def set_tkn(cls, id, tkn):
+        user = User.query.filter_by(push_token=tkn).all()
+        for u in user:
+            u.push_token = None
+
         usr = cls.get_raw(id)
         usr.push_token = tkn
 
@@ -172,3 +217,6 @@ class UsersDAO():
 
         return 'unknown'
 
+    @classmethod
+    def count_total_registered_users(cls):
+        return User.query.count()

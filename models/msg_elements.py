@@ -11,7 +11,7 @@ class Chat(db.Model):
     user1_id = db.Column(db.Integer, primary_key=True)
     user2_id = db.Column(db.Integer, primary_key=True)
 
-    messages = db.relationship('Message', backref='chat')
+    messages = db.relationship('Message', backref='chat', passive_deletes=True)
 
     def __repr__(self):
         return '<Chat {}-{}>'.format(self.user1_id, self.user2_id)
@@ -41,7 +41,7 @@ class Message(db.Model):
     chat_user1 = db.Column(db.Integer, nullable=False)
     chat_user2 = db.Column(db.Integer, nullable=False)
 
-    __table_args__ = (db.ForeignKeyConstraint(['chat_user1', 'chat_user2'],['chats.user1_id', 'chats.user2_id'],),)
+    __table_args__ = (db.ForeignKeyConstraint(['chat_user1', 'chat_user2'],['chats.user1_id', 'chats.user2_id'], ondelete='CASCADE'),)
     
 
     def __repr__(self):

@@ -1,11 +1,13 @@
 # Chotuve - Application Server
 ![Grupo](https://img.shields.io/badge/grupo-11-blue)
-[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=development&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=development)
-[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=development)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
-![api](https://img.shields.io/badge/api-v0.5-blueviolet)
+[![Build Status](https://travis-ci.com/Franco-Giordano/chotuve-appserver.svg?token=7zpnJJggDS7tTpxSzkvp&branch=staging)](https://travis-ci.com/Franco-Giordano/chotuve-appserver)
+[![Coverage Status](https://coveralls.io/repos/github/Franco-Giordano/chotuve-appserver/badge.svg?branch=staging&t=hXdO0j)](https://coveralls.io/github/Franco-Giordano/chotuve-appserver?branch=staging)
+![api](https://img.shields.io/badge/api-v1.1.2-blueviolet)
 [![sv](https://img.shields.io/badge/view-media%20sv-important)](https://github.com/sebalogue/chotuve-mediaserver)
-[![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotube-auth-server)
+[![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotuve-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
+[![sv](https://img.shields.io/badge/view-web%20front-important)](https://github.com/santiagomariani/chotuve-web-front)
+
 
 
 ## Instrucciones
@@ -21,16 +23,19 @@
 ---------------------------------------------
 
 
-## API v0.5
+## API v1.1.2
 
 Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman.com/downloads/)
 
-**Salvo por /ping, TODOS los endpoints REQUIEREN el campo "x-access-token" en los headers, con un token valido**
+**Salvo por /ping, /reset-codes y PUT /auth, TODOS los endpoints REQUIEREN el campo "x-access-token" en los headers, con un token valido**
 
 #### Videos
 
-- Obtener todos los videos guardados en la database:
+- Obtener todos los videos recomendados en base a popularidad (top 50):
 `GET 0.0.0.0:5000/videos`
+
+- Buscar video con un titulo en particular (top 20):
+`GET 0.0.0.0:5000/videos?search=<title>`
 
 - Obtener datos de un solo video (sin comentarios):
 `GET 0.0.0.0:5000/videos/<id>`
@@ -52,14 +57,27 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 }
 ```
 
+- Editar un video:
+`PATCH 0.0.0.0:5000/videos/<id>` con body (todos opcionales):
+```json
+{
+	
+	"title":"titulo video",
+	"description": "descripcion de ejemplo",
+	"location":"lugar posteado",
+	"is_private":false,
+}
+```
+
+- Borrar un video (y todas las racciones+comentarios):
+`DELETE 0.0.0.0:5000/videos/<id>`
+
 - Postear un comentario:
 `POST 0.0.0.0:5000/videos/<id>/comments` con body (text obligatorio, vid_time opcional):
 ```json
 {
-	
 	"text":"comentario de ejemplo",
 	"vid_time":"5:43"
-	
 }
 ```
 
@@ -71,16 +89,25 @@ Para ejecutar las requests, se recomienda utilizar [Postman](https://www.postman
 `POST 0.0.0.0:5000/videos/<id>/reactions` con body (true es like, false es dislike; campo obligatorio):
 ```json
 {
-	
 	"likes_video":true
-	
+}
+```
+
+- Editar reaccion a un video
+`PATCH 0.0.0.0:5000/videos/<id>/reactions` con body (true es like, false es dislike; campo obligatorio):
+```json
+{
+	"likes_video":true
 }
 ```
 
 #### Usuarios
 
 - Obtener mi ID de usuario al loguearme:
-```GET 0.0.0.0:5000/auth```, devuelve {"id":int}
+```GET 0.0.0.0:5000/users/auth```, devuelve {"id":int}
+
+- Ver si soy admin:
+```GET 0.0.0.0:5000/users/admin```, devuelve {"admin":bool}
 
 - Obtener datos publicos de un usuario
 ```GET 0.0.0.0:5000/users/<uuid>```
@@ -110,38 +137,48 @@ con body (display_name e email obligatorios, resto opcional):
 ```
 
 - Modificar datos de un usuario:
-`PUT 0.0.0.0:5000/users/<id>` con body (todos opcionales):
+`PATCH 0.0.0.0:5000/users/<id>` con body (todos opcionales):
 ```json
 {
-	
 	"email": "juanperez@gmail.com",
 	"display_name":"Matias Perez",
 	"phone_number": "+5492264511422",
 	"image_location":"https://image.freepik.com/foto-gratis/playa-tropical_74190-188.jpg"
-	
 }
 ```
+
+- Borrar mi usuario
+```DELETE 0.0.0.0:5000/users/<uuid>```
+
+
 #### Amistades
 
 - Ver amigos de un usuario:
 ```GET 0.0.0.0:5000/users/<uuid>/friends```
 
-- Enviar solicitud de amistad:
-```POST 0.0.0.0:5000/users/<otheruuid>/friends/requests``` sin body (obtiene el id de quien envia desde el token)
-
+- Enviar solicitud de amistad al user 9999:
+```POST 0.0.0.0:5000/friend-requests``` con body (obligatorio):
+```json
+{
+	"to": 9999
+}
+```
 
 - Ver mis solicitudes pendientes:
-```GET 0.0.0.0:5000/users/<myuuid>/friends/requests```
+```GET 0.0.0.0:5000/friend-requests```
 
 
 - Aceptar/Rechazar solicitud pendiente:
-```POST 0.0.0.0:5000/users/<myuuid>/friends/requests/<otheruuid>``` con body (campo obligatorio)
+```POST 0.0.0.0:5000/friend-requests/<otheruuid>``` con body (campo obligatorio)
 ```json
 {
 	"accept":true
 }
 ```
 (accept true para aceptar, accept false para rechazar)
+
+- Eliminar amigo:
+```DELETE 0.0.0.0:5000/users/<my_id>/friends/<friend_id>```
 
 #### Ping
 
@@ -203,18 +240,33 @@ page y per_page similares al endpoint GET /users
 }
 ```
 
-#### Estadisticas de uso
-
-_[NO IMPLEMENTADO]_
 
 #### Recuperacion de Passwords
 
+- Crear reset code para generar una nueva contraseña (no necesita firebase token):
+`POST 0.0.0.0:4000/users/reset-codes` con body:
+```json
+{
+    "email": "juanperez@gmail.com"   
+}
+```
+
+- Cambiar contraseña usando el reset code (no necesita firebase token):
+`POST 0.0.0.0:4000/users/change-password` con body:
+```json
+{
+	"email": "juanperez@gmail.com",
+	"reset_code":"KnPlDQ",
+	"password": "Unacontraseña123"	
+}
+```
+
+
+#### Borrar usuario
+
 _[NO IMPLEMENTADO]_
 
-#### Modificar o borrar videos/comentarios/reacciones/amistades
 
-_[NO IMPLEMENTADO]_
-
-#### Ver videos sugeridos por motor de reglas
+#### Estadisticas de uso
 
 _[NO IMPLEMENTADO]_

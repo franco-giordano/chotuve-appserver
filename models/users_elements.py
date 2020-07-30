@@ -36,7 +36,7 @@ class User(db.Model):
         secondaryjoin=(requests.c.recver_id == id),
         backref=db.backref('pending_requests', lazy='dynamic'), lazy='dynamic')
 
-    push_token = db.Column(db.String(50))
+    push_token = db.Column(db.String(50), unique=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.id)
@@ -80,6 +80,13 @@ class User(db.Model):
             raise NotFoundError(
                 f"Friendship request from {sender.id} to {self.id} not found!")
 
+    def delete_friendship(self, other_user):
+        self.friends.remove(other_user)
+        other_user.friends.remove(self)
+
+        db.session.commit()
+
+
     def reject_request_from(self, sender):
         if self.received_request_from(sender):
             self.pending_requests.remove(sender)
@@ -89,3 +96,6 @@ class User(db.Model):
         else:
             raise NotFoundError(
                 f"Friendship request from {sender.id} to {self.id} not found!")
+
+    def count_friends(self):
+        return len(self.friends.all())
