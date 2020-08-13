@@ -7,8 +7,11 @@
 [![sv](https://img.shields.io/badge/view-auth%20sv-important)](https://github.com/santiagomariani/chotuve-auth-server)
 [![sv](https://img.shields.io/badge/view-android-important)](https://github.com/javier2409/Chotuve-Android)
 [![sv](https://img.shields.io/badge/view-web%20front-important)](https://github.com/santiagomariani/chotuve-web-front)
+[![sv](https://img.shields.io/badge/view-landing-important)](https://github.com/Franco-Giordano/chotuve-landing)
 
+## Pagina Web
 
+Visita https://chotuve.video en tu navegador!
 
 ## Instrucciones
 
